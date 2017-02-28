@@ -1,0 +1,36 @@
+Engine Design Ideas:
+
+Initial goals: Get classes done?
+
+Classes:
+Board
+    InitialBoard
+    Piece
+        CurPosition
+        Color
+        Pawn
+        Legal Moves
+        
+        Knight
+        Legal Moves
+        
+        King
+        Legal Moves
+        
+        Queen
+        Legal Moves
+        
+        Bishop
+        Legal Moves
+        
+        Rook
+        Legal Moves
+
+
+Movement:
+
+a2a4
+
+Task List:
+
+Board
