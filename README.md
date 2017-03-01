@@ -3,8 +3,8 @@
 
 Members:
 
-Andrew Brogan - Grahpics and Networking
-Thomas Morgan - Graphics and Networking
+Andrew Brogo - Grahpics and Networking
+Tomo - Morgan - Graphics and Networking
 Harrison Boutorf? - Networking
 Alec Pararas - Graphics
 David Lackey - Engine
