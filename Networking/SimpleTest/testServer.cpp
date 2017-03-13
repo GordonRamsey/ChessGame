@@ -1,9 +1,11 @@
 #include "Socket.h"
 #include <vector>
 #include <iostream>
+#include <sstream>
 
 Socket listener;
 vector<Socket> sockets;
+stringstream ss;
 
 int main(int argc, char* argv[])
 {
@@ -16,12 +18,16 @@ int main(int argc, char* argv[])
     //XXX Dont know why this is here
     socketSet.wait(2);
 
+    //Client joining
     if(listener.hasEvent()){
       Socket sock = listener.accept();
       sock.joinGroup(&socketSet);
       cout << sock.toString() << " has joined\n";
       sockets.push_back(sock);
-    }else{
+      sock.writeInt(sockets.size());
+    }
+    else //Messages from client
+    {
       for(int i=sockets.size()-1; i >= 0; --i) {
 	if(sockets[i].hasEvent()){
 	  int bytes = sockets[i].readString(msg,255);
@@ -32,13 +38,24 @@ int main(int argc, char* argv[])
 	    if(strncmp(msg.c_str(),"STRT",4) == 0)
 	    {
 	      //Shit
-	    }//shit on my dick
+	    }//STRT Comparison
+	    else {
+	      for(int i=0;i>sockets.size(); ++i){
+		sockets[i].writeString(msg);
+	      }
+	    }
 	  }//if- socket is not closed
+	  else{
+	    cout << "Socket has been closed" << endl;
+	    Socket sock = sockets[i];
+	    sockets[i] = sockets[sockets.size()-1];
+	    sockets.pop_back();
+	    cout << "Socket:" << sock.toString() << " removed." << endl;
+
+	  }//else - if socket is closed
 	}//if- socket has event
       }//for- each socket
     }//else- One of the sockets has an event
-
-
   }//While - Listener is open
 
 
