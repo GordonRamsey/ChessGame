@@ -4,11 +4,18 @@ Classes:
         d. Start Bishop
         e. Start Queen
         f. Start King
+        g. Constructors and Deconstructors??? SetUp function??
 Chess.cpp:
         a. Implement Board
         b. Configure Mapping?
-        c. Other Datastructures if Needed
-        b. Start constructing SetUp functions
+        c. Other Datastructures if Needed *list of captured pieces*
+        d. Start constructing SetUp functions
+        e. Move
+        f. Attack
+        g. IsBounds?
+        h. PlayerCheck
+        j. AvailableMoves
+
 Engine:
         a. Get base chess working with simple graphics
         b. Add graphics library
