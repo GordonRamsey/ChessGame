@@ -1,0 +1,16 @@
+Classes:
+        b. Start Knight
+        c. Start Rook
+        d. Start Bishop
+        e. Start Queen
+        f. Start King
+Chess.cpp:
+        a. Implement Board
+        b. Configure Mapping?
+        c. Other Datastructures if Needed
+        b. Start constructing SetUp functions
+Engine:
+        a. Get base chess working with simple graphics
+        b. Add graphics library
+        c. Add network protocols
+
