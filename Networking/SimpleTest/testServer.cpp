@@ -39,7 +39,13 @@ int main(int argc, char* argv[])
 	    {
 	      //Shit
 	    }//STRT Comparison
-	    else {
+	    if(strncmp(msg.c_str(),"STRT",4) == 0)
+	    {
+	      //Shit
+	    }//STRT Comparison
+	    else //Anything that isnt a command
+	    {
+	      cerr << "Sending message to clients.." << endl;
 	      for(int i=0;i>sockets.size(); ++i){
 		sockets[i].writeString(msg);
 	      }
