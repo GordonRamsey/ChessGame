@@ -28,9 +28,11 @@ class Piece
     SDL_Rect box;
     SDL_Rect* clip;
     int num;
+    SDL_Surface* sheet;
 
   public:
     Piece(int x, int y, int num);
+    void setTeam(int x);
     void setPos(int x, int y);
     void setClip(int x);
     int  getNum();
@@ -122,6 +124,16 @@ Piece::Piece(int x, int y, int it)
   clip = &clips[CLIP_PAWN];
 }
 
+void Piece::setTeam(int x)
+{
+  if(x == 0)
+  {
+    sheet = pieceSheet1;
+  }
+  else
+    sheet = pieceSheet2;
+}
+
 void Piece::handle_events()
 {
   int x = 0, y = 0;
@@ -137,7 +149,7 @@ void Piece::handle_events()
       if ((x > box.x) && (x < box.x + box.w) && (y > box.y) && (y < box.y + box.h))
       {
 	if(selected == NULL){
-	  clip = &clips[CLIP_KING];
+	  //clip = &clips[CLIP_KING];
 	  selected = this;
 	}
       }
@@ -147,7 +159,8 @@ void Piece::handle_events()
 
 void Piece::show()
 {
-  apply_surface(box.x, box.y, pieceSheet1, screen, clip);
+  
+  apply_surface(box.x, box.y, sheet, screen, clip);
 }
 
 void Piece::setPos(int x, int y)
@@ -239,28 +252,57 @@ void clean_up()
 void generatePieces()
 {
   int it = 0;
-  for(int i=0;i<8;i++){
-    for(int j=0;j<2;j++){
-      Piece newPiece = Piece(i*32+128, j*32+160, it);
+  for(int j=0;j<2;j++){
+    for(int i=0;i<8;i++){
+      Piece newPiece = Piece(i*32+128, j*32+128, it); 
       it++;
+      newPiece.setTeam(0);
+      if(j == 1)
+	newPiece.setClip(CLIP_PAWN);
+      else{
+	if(i==0 || i ==7)
+	  newPiece.setClip(CLIP_ROOK);
+	if(i==1 || i ==6)
+	  newPiece.setClip(CLIP_KNIGHT);
+	if(i==2 || i ==5)
+	  newPiece.setClip(CLIP_BISHOP);
+	if(i==4)
+	  newPiece.setClip(CLIP_KING);
+	if(i==3)
+	  newPiece.setClip(CLIP_QUEEN);
+      }
       pieces.push_back(newPiece);
     }
   }
-  
-  for(int i=0;i<8;i++){
-    for(int j=0;j<2;j++){
-      Piece newPiece = Piece(i*32+128, j*32+320, it);
+  for(int j=2;j>0;j--){
+    for(int i=0;i<8;i++){
+      Piece newPiece = Piece(i*32+128, j*32+288, it); 
       it++;
+      newPiece.setTeam(2);
+      if(j == 1)
+	newPiece.setClip(CLIP_PAWN);
+      else{
+	if(i==0 || i ==7)
+	  newPiece.setClip(CLIP_ROOK);
+	if(i==1 || i ==6)
+	  newPiece.setClip(CLIP_KNIGHT);
+	if(i==2 || i ==5)
+	  newPiece.setClip(CLIP_BISHOP);
+	if(i==4)
+	  newPiece.setClip(CLIP_KING);
+	if(i==3)
+	  newPiece.setClip(CLIP_QUEEN);
+      }
       pieces.push_back(newPiece);
     }
-  }
+  } 
 }
 
 int connectServer(int argc, char* argv[])
 {
   s_socket.open(argv[1], argv[2]);
   s_socket.joinGroup(&socketSet);
-  
+
   if(!s_socket.isClosed())
     return 0;
   printf("Cannot establish connection to server\n");
@@ -305,7 +347,7 @@ int main ( int argc, char* argv[] )
 	  ss.str("");
 	  ss << selected->getNum() << " " << x-16 << " " << y-16;
 	  s_socket.writeString(ss.str());
-	  
+
 	  selected = NULL;
 	  continue;
 	}
@@ -320,7 +362,7 @@ int main ( int argc, char* argv[] )
       }
 
     }//While- SDL_PollEvent
-    
+
     //Connection
     if(s_socket.isClosed()){
       printf("Lost connection with server\n");
