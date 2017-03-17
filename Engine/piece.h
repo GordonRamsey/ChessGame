@@ -42,7 +42,7 @@ class Piece {
 	void show();
 	int  getNum();
 	void setClip(int x);
-	int* getSpot();
+	coord getSpot();
 	void setTeam(int x);
 };
 #endif

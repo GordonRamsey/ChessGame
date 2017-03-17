@@ -293,12 +293,15 @@ int main ( int argc, char* argv[] )
 	  x = event.button.x;
 	  y = event.button.y;
 
-	  selected->setPos(x-16,y-16);
+	  x = x - x%32;
+	  y = y - y%32;
+
+	  selected->setPos(x,y);
 	  //selected->setClip(CLIP_DEFAULT);
 
 	  stringstream ss;
 	  ss.str("");
-	  ss << selected->getNum() << " " << x-16 << " " << y-16;
+	  ss << selected->getNum() << " " << x << " " << y;
 	  s_socket.writeString(ss.str());
 
 	  selected = NULL;
