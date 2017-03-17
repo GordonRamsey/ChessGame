@@ -114,7 +114,7 @@ void Move(int cur_x, int cur_y, int new_x, int new_y)
     {
         Piece* defending_piece = board[new_x][new_y];
 
+}
 
 
-int main()
-{return 0;}
+
