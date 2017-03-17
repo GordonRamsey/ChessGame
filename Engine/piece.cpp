@@ -1,17 +1,24 @@
 #include "piece.h"
 using namespace std;
 
-Piece::Piece(int x, int y, int num) : color('\0'), position(0,0), captured(false)
+Piece::Piece(int x, int y, int it)
 {
+  m_color = '\0';
+  m_position.x = 0;
+  m_position.y = 0;
+  m_captured = false;
+
   box.x = x;
   box.y = y;
-  box.w = 24;
-  box.h = 24;
+  box.w = 32;
+  box.h = 32;
 
+  num = it;
 }
 
 Piece::~Piece()
-{}
+{
+}
 
 char Piece::getColor() const
 {
@@ -23,15 +30,18 @@ void Piece::setColor(const char color)
     m_color = color;
 }
 
-coord Piece::getPosition() const
+coord Piece::getPos() const
 {
-    return m_position;
+    coord newcord;
+    newcord.x = box.x;
+    newcord.y = box.y;
+    return newcord;
 }
 
-void Piece::setPosition(const int x, const int y)
+void Piece::setPos(const int x, const int y)
 {
-    m_position.x = x;
-    m_position.y = y;
+    box.x = x;
+    box.y = y;
 }
 
 bool Piece::getCaptured() const
@@ -49,37 +59,26 @@ int Piece::getNum()
     return num;
 }
 
-void Piece::handle_events()
+//void Piece::handle_events();
+  //Defined in game code
+
+//void Piece::show()
+  //Defined in game code
+
+
+//void Piece::setClip(int x)
+  //Defined in game code
+
+
+//void Piece::setTeam(int x)
+  //Defined in game code
+
+
+int* Piece::getSpot()
 {
-  int x = 0, y = 0;
-
-  if(event.type == SDL_MOUSEBUTTONDOWN)
-  {
-    if(event.button.buton == SDL_BUTTON_LEFT)
-    {
-      x = event.button.x;
-      y = event.button.y;
-
-      if ((x > box.x) && (x < box.x + box.w) && (y > box.y) && (y < box.y + box.h))
-      {
-	if(selected == NULL){
-	  clip = &clips[CLIP_SELECTED];
-	  selected = this;
-	}
-      }
-    }
-  }
+  int array [2];
+  array[0] = (box.y-128) / 32;//row
+  array[1] = (box.x-128) / 32;
+  return array;
 }
-
-void Piece::show()
-{
-  //XXX Piecesheet
-  apply_surface(box.x, box.y, pieceSheet, screen, clip);
-}
-
-void setClip(int x)
-{
-  clip = &clips[x];
-}
-
 
