@@ -1,0 +1,31 @@
+CC=g++
+CFLAGS= -c
+LDFLAGS=
+COMMON_SOURCES=Socket.cpp SocketSet.cpp
+SERVER_SOURCES=testServer.cpp
+CLIENT_SOURCES=testClient.cpp
+COMMON_OBJECTS=$(COMMON_SOURCES:.cpp=.o)
+SERVER_OBJECTS=$(SERVER_SOURCES:.cpp=.o)
+CLIENT_OBJECTS=$(CLIENT_SOURCES:.cpp=.o)
+SERVER_EXECUTABLE=Server
+CLIENT_EXECUTABLE=Client
+
+.PHONY: all Server Client
+
+all: Server Client
+
+Server: $(SERVER_EXECUTABLE)
+
+Client: $(CLIENT_EXECUTABLE)
+
+$(SERVER_EXECUTABLE): $(COMMON_OBJECTS) $(SERVER_OBJECTS) 
+	$(CC) $(LDFLAGS) $^ -o $@
+
+$(CLIENT_EXECUTABLE): $(COMMON_OBJECTS) $(CLIENT_OBJECTS) 
+	$(CC) $(LDFLAGS) $^ -o $@
+
+.cpp.o:
+	$(CC) $(CFLAGS) $< -o $@
+
+clean:	
+	rm *o $(SERVER_EXECUTABLE) $(CLIENT_EXECUTABLE)

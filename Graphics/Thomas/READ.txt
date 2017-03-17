@@ -1,0 +1,7 @@
+Compile:
+
+g++ -g leason(xx).cpp -lSDL -lSDL_image -o chess
+
+Run:
+
+./chess
