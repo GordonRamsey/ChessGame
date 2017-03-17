@@ -2,14 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "piece.h"
-#include "pawn.h"
-#include "rook.h"
-#include "knight.h"
-#include "bishop.h"
-#include "queen.h"
-#include "king.h"
-using namespace std;
+#include "chess.h"
 
 Piece* game_board[8][8];
 
@@ -115,6 +108,27 @@ void Move(int cur_x, int cur_y, int new_x, int new_y)
         Piece* defending_piece = board[new_x][new_y];
 
 }
+
+vector<coord> ValidMoves(const int x, const int y)
+{
+    vector<coord> allpos;
+    Piece* cur_piece = board[y][x];
+    
+    allpos = cur_piece->isValid();
+
+   //CHECK FOR COLLISION OF PIECES IN THE WAY, IF 
+    for(int i = 0; i < allpos.size(); ++i)
+    {
+        Piece* temp_piece = board[allpos[i].y][allpos[i].x]
+        if(temp_piece != NULL)
+        {
+            if(temp_piece->getColor() != cur_piece->getColor())
+            {
+                //enemy piece, so valid move
+                
+
+
+
 
 
 
