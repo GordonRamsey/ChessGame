@@ -74,11 +74,11 @@ int Piece::getNum()
   //Defined in game code
 
 
-int* Piece::getSpot()
+coord Piece::getSpot()
 {
-  int array [2];
-  array[0] = (box.y-128) / 32;//row
-  array[1] = (box.x-128) / 32;
-  return array;
+  coord newcord;
+  newcord.x = (box.y-128) / 32;//row
+  newcord.y = (box.x-128) / 32;
+  return newcord;
 }
 
