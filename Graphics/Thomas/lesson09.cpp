@@ -219,13 +219,15 @@ void generatePieces()
 {
    for(int i=0; i<8; ++i){
       for(int j=0; j<2; ++j){
-	 Piece newPiece = Piece(i*32+128, j*32+160);
+	 Piece newPiece = Piece(i*32+128, j*32+128);
+	 pieces.push_back(newPiece);
       }
    }
 
    for(int i=0; i<8; ++i){
       for(int j=0; j<2; ++j){
 	 Piece newPiece = Piece(i*32+128, j*32+320);
+	 pieces.push_back(newPiece);
       }
    }
 }
@@ -243,12 +245,6 @@ int main(int argc, char* args[])
    //Load the file
    if(load_files() == false)
       return 1;
-
-   //Fill the screen white
-   SDL_FillRect(screen, &screen->clip_rect, SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF));
-
-   //Place board
-   apply_surface(0, 0, board, screen);
 
    set_clips();
    generatePieces();
@@ -268,6 +264,12 @@ int main(int argc, char* args[])
 	       continue;
 	    }
 	 }
+	 //Fill the screen white
+	 SDL_FillRect(screen, &screen->clip_rect, SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF));
+
+	 //Place board
+	 apply_surface(0, 0, board, screen);
+
 
 	 for(int i=0; i<pieces.size(); ++i)
 	    pieces[i].handle_events();
