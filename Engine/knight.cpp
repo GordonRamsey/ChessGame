@@ -1,34 +1,25 @@
 #include "knight.h"
 using namespace std;
 
-bool Knight::isValidMove(const string position)
+bool Knight::isValid()
 {
+  //Used to be for the param, have to change this.
   string current = getPosition();
+  //Checking color first.
   if (getColor=='w')
   {
-    if (m_first == false)
-    {
+	
+  }
 
-      if (((int) current.substring(1,1)))
-      {
-
-      }
-    }
+  else if (getColor =='b')
+  {
+	
   }
 }
 
 void Knight::Move(const string posiiton)
 {
-  if(m_first == false)
-  {
-    m_first == true;
-  }
-  setPosition(position);
-}
-
-void Knight::Attack(const string position, Piece* piece)
-{
-  piece->setCaptured(true);
-  setPosition(position);
+	//Check isValid first, then:
+  	setPosition(position);
 }
 
