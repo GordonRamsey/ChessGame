@@ -34,3 +34,4 @@ a2a4
 Task List:
 
 Board
+	-When making graphical interface of board, do we draw the board as one big object holding individual coords as other objects??
