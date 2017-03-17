@@ -1,7 +1,7 @@
 #include "piece.h"
 using namespace std;
 
-Piece::Piece() : color('\0'), position(""), captured(false)
+Piece::Piece() : color('\0'), position(0,0), captured(false)
 {}
 
 Piece::~Piece()
@@ -17,14 +17,15 @@ void Piece::setColor(const char color)
     m_color = color;
 }
 
-string Piece::getPosition() const
+coord Piece::getPosition() const
 {
     return m_position;
 }
 
-void Piece::setPosition(const string position)
+void Piece::setPosition(const int x, const int y)
 {
-    m_position = position;
+    m_position.x = x;
+    m_position.y = y;
 }
 
 bool Piece::getCaptured() const
