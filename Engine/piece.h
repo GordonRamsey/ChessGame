@@ -1,3 +1,5 @@
+#include "bridge.h"
+
 #ifndef PIECE_H
 #define PIECE_H
 
@@ -17,6 +19,7 @@ class Piece {
 	SDL_Rect box; //Bounding box of sprite
 	SDL_Rect* clip; //Sprite of... sprite
 	int num; //Piece number, for network purposes
+	SDL_Surface* sheet;
 
 
     public:
@@ -28,8 +31,8 @@ class Piece {
         char getColor() const;
         void setColor(const char color);
         
-        coord getPosition() const;
-        void setPosition(int x, int y);
+        coord getPos() const;
+        void setPos(int x, int y);
         
         bool getCaptured() const;
         void setCaptured(const bool captured);
@@ -39,5 +42,7 @@ class Piece {
 	void show();
 	int  getNum();
 	void setClip(int x);
+	int* getSpot();
+	void setTeam(int x);
 };
 #endif

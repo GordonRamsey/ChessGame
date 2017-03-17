@@ -1,11 +1,9 @@
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
 #include <stdio.h>
 #include <iostream>
 #include <vector>
 #include <sstream>
-#include "Net_Assets/Socket.h"
-#include "Net_Assets/SocketSet.h"
+#include "bridge.h"
+#include "../../Engine/piece.h"
 
 using namespace std;
 
@@ -21,22 +19,6 @@ int CLIP_KNIGHT = 3;
 int CLIP_QUEEN = 4;
 int CLIP_KING = 5;
 
-
-class Piece
-{
-  private:
-    SDL_Rect box;
-    SDL_Rect* clip;
-    int num;
-
-  public:
-    Piece(int x, int y, int num);
-    void setPos(int x, int y);
-    void setClip(int x);
-    int  getNum();
-    void handle_events();
-    void show();
-};
 
 //Our connection to the server
 Socket s_socket;
@@ -57,7 +39,6 @@ SDL_Rect clips[6];
 Piece* selected = NULL;
 std::vector<Piece> pieces;
 
-
 void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL)
 {
   //Temp rectangle to hold the offset
@@ -69,6 +50,46 @@ void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination,
 
   //blit the surface
   SDL_BlitSurface( source, clip, destination, &offset );
+}
+
+void Piece::handle_events()
+{
+  int x = 0, y = 0;
+
+  if(event.type == SDL_MOUSEBUTTONDOWN)
+  {
+    if(event.button.button == SDL_BUTTON_LEFT)
+    {
+      x = event.button.x;
+      y = event.button.y;
+
+      if ((x > box.x) && (x < box.x + box.w) && (y > box.y) && (y < box.y + box.h))
+      {
+	if(selected == NULL){
+	  //clip = &clips[CLIP_SELECTED];
+	  selected = this;
+	}
+      }
+    }
+  }
+}
+
+void Piece::show()
+{
+  apply_surface(box.x, box.y, sheet, screen, clip);
+}
+
+void Piece::setClip(int x)
+{
+  clip = &clips[x];
+}
+
+void Piece::setTeam(int x)
+{
+  if(x == 0)
+    sheet = pieceSheet1;
+  else
+    sheet = pieceSheet2;
 }
 
 void set_clips()
@@ -108,62 +129,6 @@ void set_clips()
   clips[CLIP_KING].w = 32;
   clips[CLIP_KING].h = 32;
 
-}
-
-Piece::Piece(int x, int y, int it)
-{
-  box.x = x;
-  box.y = y;
-  box.w = 32;
-  box.h = 32;
-
-  num = it;
-
-  clip = &clips[CLIP_PAWN];
-}
-
-void Piece::handle_events()
-{
-  int x = 0, y = 0;
-
-  if(event.type == SDL_MOUSEBUTTONDOWN)
-  {
-    //If we click on a piece
-    if(event.button.button == SDL_BUTTON_LEFT)
-    {
-      x = event.button.x;
-      y = event.button.y;
-
-      if ((x > box.x) && (x < box.x + box.w) && (y > box.y) && (y < box.y + box.h))
-      {
-	if(selected == NULL){
-	  clip = &clips[CLIP_KING];
-	  selected = this;
-	}
-      }
-    }
-  }
-}
-
-void Piece::show()
-{
-  apply_surface(box.x, box.y, pieceSheet1, screen, clip);
-}
-
-void Piece::setPos(int x, int y)
-{
-  box.x = x;
-  box.y = y;
-}
-
-void Piece::setClip(int x)
-{
-  clip = &clips[x];
-}
-
-int Piece::getNum()
-{
-  return num;
 }
 
 SDL_Surface *load_image( std::string filename )
@@ -239,28 +204,58 @@ void clean_up()
 void generatePieces()
 {
   int it = 0;
-  for(int i=0;i<8;i++){
-    for(int j=0;j<2;j++){
-      Piece newPiece = Piece(i*32+128, j*32+160, it);
+  for(int j=0;j<2;j++){
+    for(int i=0;i<8;i++){
+      Piece newPiece = Piece(i*32+128, j*32+128, it); 
       it++;
+      newPiece.setTeam(0);
+      if(j == 1)
+	newPiece.setClip(CLIP_PAWN);
+      else{
+	if(i==0 || i ==7)
+	  newPiece.setClip(CLIP_ROOK);
+	if(i==1 || i ==6)
+	  newPiece.setClip(CLIP_KNIGHT);
+	if(i==2 || i ==5)
+	  newPiece.setClip(CLIP_BISHOP);
+	if(i==4)
+	  newPiece.setClip(CLIP_KING);
+	if(i==3)
+	  newPiece.setClip(CLIP_QUEEN);
+      }
+      newPiece.getSpot();
       pieces.push_back(newPiece);
     }
   }
-  
-  for(int i=0;i<8;i++){
-    for(int j=0;j<2;j++){
-      Piece newPiece = Piece(i*32+128, j*32+320, it);
+  for(int j=2;j>0;j--){
+    for(int i=0;i<8;i++){
+      Piece newPiece = Piece(i*32+128, j*32+288, it); 
       it++;
+      newPiece.setTeam(2);
+      if(j == 1)
+	newPiece.setClip(CLIP_PAWN);
+      else{
+	if(i==0 || i ==7)
+	  newPiece.setClip(CLIP_ROOK);
+	if(i==1 || i ==6)
+	  newPiece.setClip(CLIP_KNIGHT);
+	if(i==2 || i ==5)
+	  newPiece.setClip(CLIP_BISHOP);
+	if(i==4)
+	  newPiece.setClip(CLIP_KING);
+	if(i==3)
+	  newPiece.setClip(CLIP_QUEEN);
+      }
       pieces.push_back(newPiece);
     }
-  }
+  } 
 }
 
 int connectServer(int argc, char* argv[])
 {
   s_socket.open(argv[1], argv[2]);
   s_socket.joinGroup(&socketSet);
-  
+
   if(!s_socket.isClosed())
     return 0;
   printf("Cannot establish connection to server\n");
@@ -305,7 +300,7 @@ int main ( int argc, char* argv[] )
 	  ss.str("");
 	  ss << selected->getNum() << " " << x-16 << " " << y-16;
 	  s_socket.writeString(ss.str());
-	  
+
 	  selected = NULL;
 	  continue;
 	}
@@ -320,7 +315,7 @@ int main ( int argc, char* argv[] )
       }
 
     }//While- SDL_PollEvent
-    
+
     //Connection
     if(s_socket.isClosed()){
       printf("Lost connection with server\n");
@@ -333,7 +328,7 @@ int main ( int argc, char* argv[] )
       //Message: <num> <x> <y>
       string msg = "DEFAULT";
       int bytes = s_socket.readString(msg,24);
-      cerr << "Message Received:" << msg << endl;
+      cerr << "Message Received:" << msg << " | " << bytes << endl;
 
       int index, last;
       index = msg.find(" ");
@@ -363,7 +358,7 @@ int main ( int argc, char* argv[] )
     apply_surface(0, 0, board, screen, NULL);
 
     //Show() pieces
-    for(int i=0;i<pieces.size();i++)
+    for(unsigned int i=0;i<pieces.size();i++)
       pieces[i].show();
 
     //Update screen
