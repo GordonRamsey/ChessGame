@@ -264,6 +264,18 @@ int connectServer(int argc, char* argv[])
 
 int main ( int argc, char* argv[] )
 {
+
+	// Error check
+	if (argc <= 1)
+	{
+		cout << "Please retry and enter the ip address"
+			  << " and a port number." << endl
+			  << "Example: Tom 8000" << endl
+			  << "Shutting Down." << endl;
+		return 1;
+	}
+	
+
   if(connectServer(argc, argv) == -1)
     return 1;
   //We should have "socket" as our connection now
