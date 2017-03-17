@@ -7,9 +7,8 @@ class Pawn : public Piece {
         bool m_first;
     public:
         //Look up inheritance constructor and deconstructor
-        bool isValid(const string position);
+        bool isValid();
         void Move(const string position); //Use piece m_position and compare
-        void Attack(const string position, Piece* piece); //Use piece m_position and compare, then capture
         void Exchange();
 };
 #endif

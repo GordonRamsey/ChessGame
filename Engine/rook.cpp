@@ -1,34 +1,24 @@
 #include "rook.h"
 using namespace std;
 
-bool Rook::isValidMove(const string position)
+bool Rook::isValid()
 {
+  //Used to be for the param, need to fix this
   string current = getPosition();
+  //Check color first.
   if (getColor=='w')
   {
-    if (m_first == false)
-    {
+	
+  }
 
-      if (((int) current.substring(1,1)))
-      {
-
-      }
-    }
+  else if (getColor == 'b')
+  {
+	
   }
 }
 
 void Rook::Move(const string posiiton)
 {
-  if(m_first == false)
-  {
-    m_first == true;
-  }
+  //Check if valid, then:  
   setPosition(position);
 }
-
-void Rook::Attack(const string position, Piece* piece)
-{
-  piece->setCaptured(true);
-  setPosition(position);
-}
-
