@@ -10,12 +10,17 @@
 using namespace std;
 
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 640;
+const int SCREEN_WIDTH = 512;
+const int SCREEN_HEIGHT = 512;
 const int SCREEN_BPP = 32;
 
-int CLIP_DEFAULT = 0;
-int CLIP_SELECTED = 1;
+int CLIP_PAWN = 0;
+int CLIP_ROOK = 1;
+int CLIP_BISHOP = 2;
+int CLIP_KNIGHT = 3;
+int CLIP_QUEEN = 4;
+int CLIP_KING = 5;
+
 
 class Piece
 {
@@ -39,13 +44,14 @@ SocketSet socketSet;
 
 //The surfaces
 SDL_Surface *board = NULL;
-SDL_Surface *pieceSheet = NULL;
+SDL_Surface *pieceSheet1 = NULL;
+SDL_Surface *pieceSheet2 = NULL;
 SDL_Surface *screen = NULL;
 
 //The event structure
 SDL_Event event;
 
-SDL_Rect clips[2];
+SDL_Rect clips[6];
 
 //Our "held" piece
 Piece* selected = NULL;
@@ -67,27 +73,53 @@ void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination,
 
 void set_clips()
 {
-  clips[CLIP_DEFAULT].x = 0;
-  clips[CLIP_DEFAULT].y = 0;
-  clips[CLIP_DEFAULT].w = 80;
-  clips[CLIP_DEFAULT].h = 80;
+  clips[CLIP_PAWN].x = 0;
+  clips[CLIP_PAWN].y = 0;
+  clips[CLIP_PAWN].w = 32;
+  clips[CLIP_PAWN].h = 32;
 
-  clips[CLIP_SELECTED].x = 80;
-  clips[CLIP_SELECTED].y = 0;
-  clips[CLIP_SELECTED].w = 80;
-  clips[CLIP_SELECTED].h = 80;
+  //clip range for the rook
+  clips[CLIP_ROOK].x = 32;
+  clips[CLIP_ROOK].y = 0;
+  clips[CLIP_ROOK].w = 32;
+  clips[CLIP_ROOK].h = 32;
+
+  //clip range for the bishop
+  clips[CLIP_BISHOP].x = 64;
+  clips[CLIP_BISHOP].y = 0;
+  clips[CLIP_BISHOP].w = 32;
+  clips[CLIP_BISHOP].h = 32;
+
+  //clip range for the knight
+  clips[CLIP_KNIGHT].x = 96;
+  clips[CLIP_KNIGHT].y = 0;
+  clips[CLIP_KNIGHT].w = 32;
+  clips[CLIP_KNIGHT].h = 32;
+
+  //clip range for the queen
+  clips[CLIP_QUEEN].x = 128;
+  clips[CLIP_QUEEN].y = 0;
+  clips[CLIP_QUEEN].w = 32;
+  clips[CLIP_QUEEN].h = 32;
+
+  //clip range for the king
+  clips[CLIP_KING].x = 160;
+  clips[CLIP_KING].y = 0;
+  clips[CLIP_KING].w = 32;
+  clips[CLIP_KING].h = 32;
+
 }
 
 Piece::Piece(int x, int y, int it)
 {
   box.x = x;
   box.y = y;
-  box.w = 80;
-  box.h = 80;
+  box.w = 32;
+  box.h = 32;
 
   num = it;
 
-  clip = &clips[CLIP_DEFAULT];
+  clip = &clips[CLIP_PAWN];
 }
 
 void Piece::handle_events()
@@ -105,7 +137,7 @@ void Piece::handle_events()
       if ((x > box.x) && (x < box.x + box.w) && (y > box.y) && (y < box.y + box.h))
       {
 	if(selected == NULL){
-	  clip = &clips[CLIP_SELECTED];
+	  clip = &clips[CLIP_KING];
 	  selected = this;
 	}
       }
@@ -115,7 +147,7 @@ void Piece::handle_events()
 
 void Piece::show()
 {
-  apply_surface(box.x, box.y, pieceSheet, screen, clip);
+  apply_surface(box.x, box.y, pieceSheet1, screen, clip);
 }
 
 void Piece::setPos(int x, int y)
@@ -179,14 +211,15 @@ bool init()
 bool load_files()
 {
   //Load the image
-  board = load_image("chessboard.png");
-  pieceSheet = load_image("piece.png");
+  board = load_image("twoPlayerBoard.png");
+  pieceSheet1 = load_image("basicPieces.png");
+  pieceSheet2 = load_image("basicPieces2.png");
 
   if(board == NULL)
   {
     return false;
   }
-  else if (pieceSheet == NULL)
+  else if (pieceSheet1 == NULL || pieceSheet2 == NULL)
   {
     return false;
   }
@@ -197,7 +230,8 @@ bool load_files()
 void clean_up()
 {
   SDL_FreeSurface(board);
-  SDL_FreeSurface(pieceSheet);
+  SDL_FreeSurface(pieceSheet1);
+  SDL_FreeSurface(pieceSheet2);
 
   SDL_Quit();
 }
@@ -207,7 +241,7 @@ void generatePieces()
   int it = 0;
   for(int i=0;i<8;i++){
     for(int j=0;j<2;j++){
-      Piece newPiece = Piece(i*80, j*80, it);
+      Piece newPiece = Piece(i*32+128, j*32+160, it);
       it++;
       pieces.push_back(newPiece);
     }
@@ -215,7 +249,7 @@ void generatePieces()
   
   for(int i=0;i<8;i++){
     for(int j=0;j<2;j++){
-      Piece newPiece = Piece(i*80, j*80+480, it);
+      Piece newPiece = Piece(i*32+128, j*32+320, it);
       it++;
       pieces.push_back(newPiece);
     }
@@ -264,12 +298,12 @@ int main ( int argc, char* argv[] )
 	  x = event.button.x;
 	  y = event.button.y;
 
-	  selected->setPos(x-40,y-40);
-	  selected->setClip(CLIP_DEFAULT);
+	  selected->setPos(x-16,y-16);
+	  //selected->setClip(CLIP_DEFAULT);
 
 	  stringstream ss;
 	  ss.str("");
-	  ss << selected->getNum() << " " << x-40 << " " << y-40;
+	  ss << selected->getNum() << " " << x-16 << " " << y-16;
 	  s_socket.writeString(ss.str());
 	  
 	  selected = NULL;
