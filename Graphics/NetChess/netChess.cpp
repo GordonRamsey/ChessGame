@@ -378,7 +378,7 @@ int main ( int argc, char* argv[] )
 	  //ss.str("");
 	  //ss << selected->getNum() << " " << x << " " << y;
 	  ss.str("");
-	  ss << "MOVE " << selected->getNum() << x << " " << y;
+	  ss << "MOVE " << selected->getNum() << " " << x << " " << y;
 
 	  s_socket.writeString(ss.str());
 
