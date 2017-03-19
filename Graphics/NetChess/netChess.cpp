@@ -103,8 +103,12 @@ void Piece::setTeam(int x)
 {
   if(x == 0)
     sheet = pieceSheet1;
-  else
+  else if(x == 1)
     sheet = pieceSheet2;
+  else if(x == 2)
+    sheet = pieceSheet3;
+  else if(x == 3)
+    sheet = pieceSheet4;
 }
 
 void set_clips()
@@ -135,14 +139,12 @@ void set_clips()
   clips[CLIP_BISHOP].y = 0;
   clips[CLIP_BISHOP].w = SPRITE_SIZE;
   clips[CLIP_BISHOP].h = SPRITE_SIZE;
-  
+
   clips[CLIP_BISHOP_SELECT].x = SPRITE_SIZE*2;
   clips[CLIP_BISHOP_SELECT].y = SPRITE_SIZE;
   clips[CLIP_BISHOP_SELECT].w = SPRITE_SIZE;
   clips[CLIP_BISHOP_SELECT].h = SPRITE_SIZE;
   
-
-
   //clip range for the knight
   clips[CLIP_KNIGHT].x = SPRITE_SIZE*3;
   clips[CLIP_KNIGHT].y = 0;
@@ -153,6 +155,7 @@ void set_clips()
   clips[CLIP_KNIGHT_SELECT].y = SPRITE_SIZE;
   clips[CLIP_KNIGHT_SELECT].w = SPRITE_SIZE;
   clips[CLIP_KNIGHT_SELECT].h = SPRITE_SIZE;
+
   //clip range for the queen
   clips[CLIP_QUEEN].x = SPRITE_SIZE*4;
   clips[CLIP_QUEEN].y = 0;
@@ -163,16 +166,18 @@ void set_clips()
   clips[CLIP_QUEEN_SELECT].y = SPRITE_SIZE;
   clips[CLIP_QUEEN_SELECT].w = SPRITE_SIZE;
   clips[CLIP_QUEEN_SELECT].h = SPRITE_SIZE;
+  
   //clip range for the king
   clips[CLIP_KING].x = SPRITE_SIZE*5;
   clips[CLIP_KING].y = 0;
   clips[CLIP_KING].w = SPRITE_SIZE;
   clips[CLIP_KING].h = SPRITE_SIZE;
-
+  
   clips[CLIP_KING_SELECT].x = SPRITE_SIZE*5;
   clips[CLIP_KING_SELECT].y = SPRITE_SIZE;
   clips[CLIP_KING_SELECT].w = SPRITE_SIZE;
   clips[CLIP_KING_SELECT].h = SPRITE_SIZE;
+
 }
 
 SDL_Surface *load_image( std::string filename )
@@ -223,12 +228,14 @@ bool load_files()
   board = load_image("fourPlayerBoard64.png");
   pieceSheet1 = load_image("basicPieces64.png");
   pieceSheet2 = load_image("basicPieces642.png");
+  pieceSheet3 = load_image("basicPieces643.png");
+  pieceSheet4 = load_image("basicPieces644.png");
 
   if(board == NULL)
   {
     return false;
   }
-  else if (pieceSheet1 == NULL || pieceSheet2 == NULL)
+  else if (pieceSheet1 == NULL || pieceSheet2 == NULL || pieceSheet3 == NULL || pieceSheet4 == NULL)
   {
     return false;
   }
@@ -241,6 +248,8 @@ void clean_up()
   SDL_FreeSurface(board);
   SDL_FreeSurface(pieceSheet1);
   SDL_FreeSurface(pieceSheet2);
+  SDL_FreeSurface(pieceSheet3);
+  SDL_FreeSurface(pieceSheet4);
 
   SDL_Quit();
 }
@@ -268,7 +277,6 @@ void generatePieces()
 	if(i==3)
 	  newPiece.setClip(CLIP_QUEEN);
       }
-      newPiece.getSpot();
       pieces.push_back(newPiece);
     }
   }
@@ -295,6 +303,55 @@ void generatePieces()
       pieces.push_back(newPiece);
     }
   } 
+  //Player 3 gen
+  for(int j=0;j<2;j++){
+    for(int i=0;i<8;i++){
+      Piece newPiece = Piece(j*SPRITE_SIZE+BORDER_SIZE, i*SPRITE_SIZE+(SPRITE_SIZE*3 + BORDER_SIZE), it); 
+      it++;
+      newPiece.setTeam(2);
+      if(j == 1)
+	newPiece.setClip(CLIP_PAWN);
+      else{
+	if(i==0 || i ==7)
+	  newPiece.setClip(CLIP_ROOK);
+	if(i==1 || i ==6)
+	  newPiece.setClip(CLIP_KNIGHT);
+	if(i==2 || i ==5)
+	  newPiece.setClip(CLIP_BISHOP);
+	if(i==4)
+	  newPiece.setClip(CLIP_KING);
+	if(i==3)
+	  newPiece.setClip(CLIP_QUEEN);
+      }
+      newPiece.getSpot();
+      pieces.push_back(newPiece);
+    }
+  }
+
+  //Player 4 gen
+  for(int j=2;j>0;j--){
+    for(int i=0;i<8;i++){
+      Piece newPiece = Piece(j*SPRITE_SIZE+BORDER_SIZE+(SPRITE_SIZE*11), i*SPRITE_SIZE+(SPRITE_SIZE*3 + BORDER_SIZE), it); 
+      it++;
+      newPiece.setTeam(3);
+      if(j == 1)
+	newPiece.setClip(CLIP_PAWN);
+      else{
+	if(i==0 || i ==7)
+	  newPiece.setClip(CLIP_ROOK);
+	if(i==1 || i ==6)
+	  newPiece.setClip(CLIP_KNIGHT);
+	if(i==2 || i ==5)
+	  newPiece.setClip(CLIP_BISHOP);
+	if(i==4)
+	  newPiece.setClip(CLIP_KING);
+	if(i==3)
+	  newPiece.setClip(CLIP_QUEEN);
+      }
+      newPiece.getSpot();
+      pieces.push_back(newPiece);
+    }
+  }
 }
 
 int connectServer(int argc, char* argv[])
