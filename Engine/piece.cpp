@@ -82,3 +82,7 @@ coord Piece::getSpot()
   return newcord;
 }
 
+int Piece::getClip()
+{
+  return clip_num;
+}

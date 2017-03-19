@@ -66,6 +66,12 @@ void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination,
   SDL_BlitSurface( source, clip, destination, &offset );
 }
 
+void Piece::setClip(int x)
+{
+  clip = &clips[x];
+  clip_num = x;
+}
+
 void Piece::handle_events()
 {
   int x = 0, y = 0;
@@ -80,7 +86,7 @@ void Piece::handle_events()
       if ((x > box.x) && (x < box.x + box.w) && (y > box.y) && (y < box.y + box.h))
       {
 	if(selected == NULL){
-	  //clip = &clips[CLIP_SELECTED];
+	  this->setClip(this->getClip()+6);
 	  selected = this;
 	}
       }
@@ -91,11 +97,6 @@ void Piece::handle_events()
 void Piece::show()
 {
   apply_surface(box.x, box.y, sheet, screen, clip);
-}
-
-void Piece::setClip(int x)
-{
-  clip = &clips[x];
 }
 
 void Piece::setTeam(int x)
@@ -322,7 +323,7 @@ void netProcess(string msg)
   }//If- REDY
   else
   {
-    cerr << "Unknown command received" << endl;
+    cerr << "Unknown command received:" << msg << endl;
   }
 
 }
@@ -386,7 +387,7 @@ int main ( int argc, char* argv[] )
 	  //XXX: [Engine] Send MOVE/CAPT command to server
 
 	  //selected->setPos(x,y);
-	  //selected->setClip(CLIP_DEFAULT);
+	  selected->setClip(selected->getClip()-6);
 
 	  stringstream ss;
 	  //ss.str("");
