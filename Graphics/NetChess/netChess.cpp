@@ -124,11 +124,23 @@ void set_clips()
   clips[CLIP_ROOK].w = SPRITE_SIZE;
   clips[CLIP_ROOK].h = SPRITE_SIZE;
 
+  clips[CLIP_ROOK_SELECT].x = SPRITE_SIZE;
+  clips[CLIP_ROOK_SELECT].y = SPRITE_SIZE;
+  clips[CLIP_ROOK_SELECT].w = SPRITE_SIZE;
+  clips[CLIP_ROOK_SELECT].h = SPRITE_SIZE;
+  
   //clip range for the bishop
   clips[CLIP_BISHOP].x = SPRITE_SIZE*2;
   clips[CLIP_BISHOP].y = 0;
   clips[CLIP_BISHOP].w = SPRITE_SIZE;
   clips[CLIP_BISHOP].h = SPRITE_SIZE;
+  
+  clips[CLIP_BISHOP_SELECT].x = SPRITE_SIZE*2;
+  clips[CLIP_BISHOP_SELECT].y = SPRITE_SIZE;
+  clips[CLIP_BISHOP_SELECT].w = SPRITE_SIZE;
+  clips[CLIP_BISHOP_SELECT].h = SPRITE_SIZE;
+  
+
 
   //clip range for the knight
   clips[CLIP_KNIGHT].x = SPRITE_SIZE*3;
@@ -136,18 +148,30 @@ void set_clips()
   clips[CLIP_KNIGHT].w = SPRITE_SIZE;
   clips[CLIP_KNIGHT].h = SPRITE_SIZE;
 
+  clips[CLIP_KNIGHT_SELECT].x = SPRITE_SIZE*3;
+  clips[CLIP_KNIGHT_SELECT].y = SPRITE_SIZE;
+  clips[CLIP_KNIGHT_SELECT].w = SPRITE_SIZE;
+  clips[CLIP_KNIGHT_SELECT].h = SPRITE_SIZE;
   //clip range for the queen
   clips[CLIP_QUEEN].x = SPRITE_SIZE*4;
   clips[CLIP_QUEEN].y = 0;
   clips[CLIP_QUEEN].w = SPRITE_SIZE;
   clips[CLIP_QUEEN].h = SPRITE_SIZE;
 
+  clips[CLIP_QUEEN_SELECT].x = SPRITE_SIZE*4;
+  clips[CLIP_QUEEN_SELECT].y = SPRITE_SIZE;
+  clips[CLIP_QUEEN_SELECT].w = SPRITE_SIZE;
+  clips[CLIP_QUEEN_SELECT].h = SPRITE_SIZE;
   //clip range for the king
   clips[CLIP_KING].x = SPRITE_SIZE*5;
   clips[CLIP_KING].y = 0;
   clips[CLIP_KING].w = SPRITE_SIZE;
   clips[CLIP_KING].h = SPRITE_SIZE;
 
+  clips[CLIP_KING_SELECT].x = SPRITE_SIZE*5;
+  clips[CLIP_KING_SELECT].y = SPRITE_SIZE;
+  clips[CLIP_KING_SELECT].w = SPRITE_SIZE;
+  clips[CLIP_KING_SELECT].h = SPRITE_SIZE;
 }
 
 SDL_Surface *load_image( std::string filename )
