@@ -8,12 +8,12 @@
 using namespace std;
 
 
-const int SCREEN_WIDTH = 512;
-const int SCREEN_HEIGHT = 512;
+const int SCREEN_WIDTH = 894;
+const int SCREEN_HEIGHT = 894;
 const int SCREEN_BPP = 32;
 
-int SPRITE_SIZE = 32;
-int BORDER_SIZE = 128;
+int SPRITE_SIZE = 64;
+int BORDER_SIZE = 0;
 
 //Slices for our sprite sheet
 int CLIP_PAWN = 0;
@@ -23,6 +23,13 @@ int CLIP_KNIGHT = 3;
 int CLIP_QUEEN = 4;
 int CLIP_KING = 5;
 
+int CLIP_PAWN_SELECT = 6;
+int CLIP_ROOK_SELECT = 7;
+int CLIP_BISHOP_SELECT = 8;
+int CLIP_KNIGHT_SELECT = 9;
+int CLIP_QUEEN_SELECT = 10;
+int CLIP_KING_SELECT = 11;
+
 //Our connection to the server
 Socket s_socket;
 SocketSet socketSet;
@@ -31,14 +38,14 @@ SocketSet socketSet;
 SDL_Surface *board = NULL;
 SDL_Surface *pieceSheet1 = NULL; //Player1s sprite sheet
 SDL_Surface *pieceSheet2 = NULL; //Player 2
-//SDL_Surface *pieceSheet3 = NULL; //Player 3
-//SDL_Surface *pieceSheet4 = NULL; //Player 4
+SDL_Surface *pieceSheet3 = NULL; //Player 3
+SDL_Surface *pieceSheet4 = NULL; //Player 4
 SDL_Surface *screen = NULL;
 
 //The event structure
 SDL_Event event;
 
-SDL_Rect clips[6];
+SDL_Rect clips[12];
 
 //Our "held" piece
 Piece* selected = NULL;
@@ -105,6 +112,11 @@ void set_clips()
   clips[CLIP_PAWN].y = 0;
   clips[CLIP_PAWN].w = SPRITE_SIZE;
   clips[CLIP_PAWN].h = SPRITE_SIZE;
+
+  clips[CLIP_PAWN_SELECT].x = 0;
+  clips[CLIP_PAWN_SELECT].y = SPRITE_SIZE;
+  clips[CLIP_PAWN_SELECT].w = SPRITE_SIZE;
+  clips[CLIP_PAWN_SELECT].h = SPRITE_SIZE;
 
   //clip range for the rook
   clips[CLIP_ROOK].x = SPRITE_SIZE;
@@ -183,9 +195,9 @@ bool init()
 bool load_files()
 {
   //Load the image
-  board = load_image("twoPlayerBoard.png");
-  pieceSheet1 = load_image("basicPieces.png");
-  pieceSheet2 = load_image("basicPieces2.png");
+  board = load_image("fourPlayerBoard64.png");
+  pieceSheet1 = load_image("basicPieces64.png");
+  pieceSheet2 = load_image("basicPieces642.png");
 
   if(board == NULL)
   {
@@ -211,9 +223,10 @@ void clean_up()
 void generatePieces()
 {
   int it = 0;
-  for(int j=0;j<2;j++){
+   //Player 1 gen 
+   for(int j=0;j<2;j++){
     for(int i=0;i<8;i++){
-      Piece newPiece = Piece(i*SPRITE_SIZE+BORDER_SIZE, j*SPRITE_SIZE+BORDER_SIZE, it); 
+      Piece newPiece = Piece(i*SPRITE_SIZE+BORDER_SIZE+SPRITE_SIZE*3, j*SPRITE_SIZE+BORDER_SIZE, it); 
       it++;
       newPiece.setTeam(0);
       if(j == 1)
@@ -234,9 +247,10 @@ void generatePieces()
       pieces.push_back(newPiece);
     }
   }
+  //Player 2 gen
   for(int j=2;j>0;j--){
     for(int i=0;i<8;i++){
-      Piece newPiece = Piece(i*SPRITE_SIZE+BORDER_SIZE, j*SPRITE_SIZE+(SPRITE_SIZE*5 + BORDER_SIZE), it); 
+      Piece newPiece = Piece(i*SPRITE_SIZE+BORDER_SIZE+SPRITE_SIZE*3, j*SPRITE_SIZE+(SPRITE_SIZE*11 + BORDER_SIZE), it); 
       it++;
       newPiece.setTeam(1);
       if(j == 1)

@@ -10,8 +10,8 @@ Piece::Piece(int x, int y, int it)
 
   box.x = x;
   box.y = y;
-  box.w = 32;
-  box.h = 32;
+  box.w = 64;
+  box.h = 64;
 
   num = it;
 }
