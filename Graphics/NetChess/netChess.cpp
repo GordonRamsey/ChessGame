@@ -319,7 +319,7 @@ int main ( int argc, char* argv[] )
   int x,y;
 
   // Error check
-  if (argc < 2 || argc >= 3)
+  if (argc < 3 || argc >= 4)
   {
     cout << "Please retry and enter the ip address"
       << " and a port number." << endl
