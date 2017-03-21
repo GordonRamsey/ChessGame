@@ -58,16 +58,13 @@ vector<coords> Pawn::isValid()
 	} 
 }
 
-void Pawn::Move(const string position)
+void Pawn::Move(const coord position)
 {
-	//After it has been moved, it's not the pawn's first move
-	//This may mess up though if the move isn't valid, because
-	//this function will be called and set m_first to be true
-	//even though it didn't actually move.
+    //Will only be called if the piece is moved
     if(m_first == false)    
     {
         m_first == true;
     }
-    setPosition(position);
+    m_position = position;
 }
 

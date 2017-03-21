@@ -74,8 +74,8 @@ vector<coords> Queen::isValid()
 	}
 
 }
-void Queen::Move(const string posiiton)
+void Queen::Move(const coord posiiton)
 {
   //Check if valid move, then: 
-  setPosition(position);
+  m_position = position;
 }

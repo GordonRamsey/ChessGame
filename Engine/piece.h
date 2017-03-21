@@ -23,7 +23,6 @@ class Piece {
 	SDL_Surface* sheet;
 	int owner;
 
-
     public:
         
         Piece(int x, int y, int num); //Constructor
@@ -51,5 +50,6 @@ class Piece {
 	
 	void setTeam(int x);
 	int  getTeam();
+
 };
 #endif
