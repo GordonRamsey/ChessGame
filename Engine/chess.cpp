@@ -95,6 +95,7 @@ void SetUp()
     game_board[7][7]->setPosition(7,7);
 }
 
+/* UNDER CONSTRUCTION */
 void Move(int cur_x, int cur_y, int new_x, int new_y)
 {
     if(cur_x < 0 || cur_x > 7 || cur_y < 0 || cur_y > 7 || new_x < 0 || new_x > 7 || new_y < 0 || new_y > 7)
@@ -109,6 +110,7 @@ void Move(int cur_x, int cur_y, int new_x, int new_y)
 
 }
 
+/* UNDER CONSTRUCTION */
 vector<coord> ValidMoves(const int x, const int y)
 {
     vector<coord> allpos;
@@ -122,9 +124,17 @@ vector<coord> ValidMoves(const int x, const int y)
         Piece* temp_piece = board[allpos[i].y][allpos[i].x]
         if(temp_piece != NULL)
         {
-            if(temp_piece->getColor() != cur_piece->getColor())
+            if(temp_piece->getColor() == cur_piece->getColor())
             {
-                //enemy piece, so valid move
+                //ally piece , so invalid move, determine other invalid moves
+                coord invalid = temp_piece->getPosition();
+                
+                //white pieces increase in value in y direction
+                if(temp_piece->getColor() == 'w')
+                {
+                    
+
+
                 
 
 
