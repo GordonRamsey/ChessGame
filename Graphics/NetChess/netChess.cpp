@@ -3,7 +3,6 @@
 #include <vector>
 #include <sstream>
 #include "bridge.h"
-#include "../../Engine/piece.h"
 
 using namespace std;
 
@@ -75,7 +74,8 @@ void Piece::setClip(int x)
 void Piece::handle_events()
 {
   int x = 0, y = 0;
-
+  
+  //If were clicked on
   if(event.type == SDL_MOUSEBUTTONDOWN)
   {
     if(event.button.button == SDL_BUTTON_LEFT)
@@ -85,11 +85,13 @@ void Piece::handle_events()
 
       if ((x > box.x) && (x < box.x + box.w) && (y > box.y) && (y < box.y + box.h))
       {
-	if(selected == NULL){
-	  this->setClip(this->getClip()+6);
-	  selected = this;
-	}
-      }
+	//Make sure its our piece
+	if(player_num == owner)
+	  if(selected == NULL){
+	    this->setClip(this->getClip()+6);
+	    selected = this;
+	  }
+      }//if its really us
     }
   }
 }
@@ -101,14 +103,22 @@ void Piece::show()
 
 void Piece::setTeam(int x)
 {
-  if(x == 0)
+  if(x == 0){
     sheet = pieceSheet1;
-  else if(x == 1)
+    owner = 1;
+  }
+  else if(x == 1){  
     sheet = pieceSheet2;
-  else if(x == 2)
+    owner = 2;
+  }
+  else if(x == 2){  
     sheet = pieceSheet3;
-  else if(x == 3)
+    owner = 3;
+  }
+  else if(x == 3){  
     sheet = pieceSheet4;
+    owner = 4;
+  }
 }
 
 void set_clips()
@@ -254,6 +264,7 @@ void clean_up()
   SDL_Quit();
 }
 
+//Generate starting board
 void generatePieces()
 {
   int it = 0;
@@ -323,7 +334,8 @@ void generatePieces()
 	if(i==3)
 	  newPiece.setClip(CLIP_QUEEN);
       }
-      newPiece.getSpot();
+      coord asdf = newPiece.getSpot();
+      cerr << asdf.x << " " << asdf.y << endl;
       pieces.push_back(newPiece);
     }
   }
@@ -354,6 +366,7 @@ void generatePieces()
   }
 }
 
+//Connect to the server Whoaaaa!
 int connectServer(int argc, char* argv[])
 {
   s_socket.open(argv[1], argv[2]);
@@ -365,6 +378,22 @@ int connectServer(int argc, char* argv[])
   return -1;
 }
 
+//Helper function for netProcess
+string snip(string msg, int &cursor)
+{
+  //MOVE 1 100 200
+  //     ^-Cursor
+  int last = cursor;
+  cursor = msg.find(" ",cursor);
+  string ret;
+  if(cursor != string::npos)
+    ret = msg.substr(last, cursor-last);
+  else
+    ret = msg.substr(last,msg.length()-last);
+  cursor++;
+  return ret;
+}
+
 void netProcess(string msg)
 {
   int index, last;
@@ -372,19 +401,11 @@ void netProcess(string msg)
   string cmd = msg.substr(0,index);
   index++;
   
-  if(cmd == "MOVE")
+  if(cmd == "MOVE")//MOVE <id> <x> <y>
   {
-    last = index;
-    index = msg.find(" ",index);
-    string num = msg.substr(last,index-last);
-    index++;
-    
-    last = index;
-    index = msg.find(" ",index);
-    string s_x= msg.substr(last,index-last);
-    
-    index++;
-    string s_y = msg.substr(index,msg.length()-index);
+    string num = snip(msg,index);
+    string s_x = snip(msg,index);
+    string s_y = snip(msg,index);
     int i_num = atoi(num.c_str());
 
     for(unsigned int i=0;i<pieces.size();i++){
@@ -394,6 +415,54 @@ void netProcess(string msg)
       }
     }
   }//If- MOVE
+  else if(cmd == "PLAC")//PLAC <piece> <piece id> <x> <y> <owner>
+  {
+
+  }//If- PLAC
+  else if(cmd == "REMV")//REMV <x> <y>
+  {
+    int x, y;
+    
+    string s_x = snip(msg,index);
+    string s_y = snip(msg,index);
+    x = atoi(s_x.c_str());
+    y = atoi(s_y.c_str());
+
+    //Find and remove piece
+    for(unsigned int i=0;i<pieces.size();i++){
+      int px, py;
+      Piece dummy = pieces[i];
+      px = dummy.getSpot().x;
+      py = dummy.getSpot().y;
+      if(x == px && y == py){
+	pieces[i] = pieces[pieces.size()-1];
+	pieces.pop_back();
+	break;
+      }
+    }
+  }//If- REMV
+  else if(cmd == "CAPT")//CAPT <piece id> <piece id> 
+  {
+    string attack = snip(msg,index);
+    string defend = snip(msg,index);
+    int a_index, d_index;
+    
+    for(unsigned int i=0;i<pieces.size();i++){
+      if(pieces[i].getNum() == atoi(attack.c_str()))
+	a_index = i;
+      if(pieces[i].getNum() == atoi(defend.c_str()))
+	d_index = i;
+    }
+    //Remove piece 2*
+    coord loc = pieces[d_index].getPos();
+
+    pieces[d_index] = pieces[pieces.size()-1];
+    pieces.pop_back();
+
+    //Move piece 1
+    pieces[a_index].setPos(loc.x, loc.y);
+
+  }//If- CAPT
   else if(cmd == "REDY")   
   {
     last = index;
@@ -417,7 +486,7 @@ int main ( int argc, char* argv[] )
   // Error check
   if (argc < 3 || argc >= 4)
   {
-    cout << "Please retry and enter the ip address"
+    cerr << "Please retry and enter the ip address"
       << " and a port number." << endl
       << "Example: Frodo 8000" << endl
       << "Shutting Down." << endl;
@@ -467,14 +536,26 @@ int main ( int argc, char* argv[] )
 
 	  //XXX: [Engine] Send MOVE/CAPT command to server
 
-	  //selected->setPos(x,y);
+	  //Set sprite back to normal
 	  selected->setClip(selected->getClip()-6);
-
+	  
+	  //Send command
 	  stringstream ss;
-	  //ss.str("");
-	  //ss << selected->getNum() << " " << x << " " << y;
 	  ss.str("");
-	  ss << "MOVE " << selected->getNum() << " " << x << " " << y;
+
+	  //Check if space is already occupied
+	  bool capture = false;
+	  for(unsigned int i=0;i<pieces.size();i++){
+	    if(pieces[i].getPos().x == x && pieces[i].getPos().y == y){
+	      //It is! lets kill it!
+	      ss << "CAPT " << selected->getNum() << " " << pieces[i].getNum();
+	      capture = true;
+	      break;
+	    }
+	  }
+	  //Send move command
+	  if(!capture)
+	    ss << "MOVE " << selected->getNum() << " " << x << " " << y;
 
 	  s_socket.writeString(ss.str());
 

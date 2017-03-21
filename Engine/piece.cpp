@@ -77,8 +77,8 @@ int Piece::getNum()
 coord Piece::getSpot()
 {
   coord newcord;
-  newcord.x = (box.y-128) / 32;//row
-  newcord.y = (box.x-128) / 32;
+  newcord.y = (box.y) / 64;//row
+  newcord.x = (box.x) / 64;
   return newcord;
 }
 
@@ -86,3 +86,8 @@ int Piece::getClip()
 {
   return clip_num;
 }
+
+//Movement - Should pass a "board" parameter so the piece can know where everything is
+//Movement should return a list of spots the piece can move to
+
+//Attacking should be separate from moving?
