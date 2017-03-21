@@ -1,20 +1,59 @@
 #include "knight.h"
 using namespace std;
 
-bool Knight::isValid()
+vector<coords> Knight::isValid()
 {
-  //Used to be for the param, have to change this.
-  string current = getPosition();
-  //Checking color first.
-  if (getColor=='w')
-  {
-	
-  }
+    coords temp; 
+    vector<coords> set; 
 
-  else if (getColor =='b')
-  {
-	
-  }
+    //up 2, right 1(w) AND  down 2, left 1(b)
+    for(int i = 0; i < 8; ++i){
+        temp.y = m_position.y + 2; 
+        temp.x = m_position.x + 1; 
+        set.push_back(temp); 
+    }
+    //up 1, right 2 AND down 1, left 2(b)
+    for(int i = 0; i < 8; ++i){
+        temp.y = m_position.y + 1; 
+        temp.x = m_position.x + 2; 
+        set.push_back(temp); 
+    }
+    //down 2, right 1 AND up 2, left 1(b)
+    for(int i = 0; i < 8; ++i){
+        temp.y = m_position.y - 2; 
+        temp.x = m_position.x + 1; 
+        set.push_back(temp); 
+    }
+    //down 1, right 2 AND up 1, left 2(b)
+    for(int i = 0; i < 8; ++i){
+        temp.y = m_position.y - 1; 
+        temp.x = m_position.x + 2; 
+        set.push_back(temp); 
+    }
+    //up 2, left 1 AND down 1, right 2(b)
+    for(int i = 0; i < 8; ++i){
+        temp.y = m_position.y + 2; 
+        temp.x = m_position.x - 1; 
+        set.push_back(temp); 
+    }
+    //up 1, left 2 AND down 1, right 2(b)
+    for(int i = 0; i < 8; ++i){
+        temp.y = m_position.y + 1; 
+        temp.x = m_position.x - 2; 
+        set.push_back(temp); 
+    }
+    //down 2, left 1 AND up 2, right 1(b)
+    for(int i = 0; i < 8; ++i){
+        temp.y = m_position.y - 2; 
+        temp.x = m_position.x - 1; 
+        set.push_back(temp); 
+    }
+    //down 1, left 2 AND up 1, right 2(b)
+    for(int i = 0; i < 8; ++i){
+        temp.y = m_position.y - 1; 
+        temp.x = m_position.x - 2; ; 
+        set.push_back(temp); 
+    }
 }
 
 void Knight::Move(const string posiiton)

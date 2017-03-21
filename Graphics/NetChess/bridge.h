@@ -2,7 +2,7 @@
 #include <SDL/SDL_image.h>
 #include "Net_Assets/Socket.h"
 #include "Net_Assets/SocketSet.h"
-//#include "../../Engine/piece.h"
+#include "../../Engine/piece.h"
 
 //This is meant to be a flexible header file
 //Change it according to where you will be locally running the program

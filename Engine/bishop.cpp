@@ -1,18 +1,35 @@
 #include "bishop.h"
 using namespace std;
 
-bool Bishop::isValid()
+vectors<coords> Bishop::isValid()
 {
-  string current = getPosition();
-  if (getColor=='w')
-  {
-	
-  }
+    coords temp; 
+    vector<coords> set; 
 
-  else if (getColor == 'b')
-  {
-
-  }
+    //Move Diagonal up, right(w) AND down, left(b)  
+    for(int i = 0; i < 8; ++i){
+        temp.y = m_position.y + 1; 
+        temp.x = m_position.x + 1; 
+        set.push_back(temp); 
+    }
+    //Move Diagonal down, right(w) AND up, left(b)
+    for(int i = 0; i < 8; ++i){
+        temp.y = m_position.y + 1; 
+        temp.x = m_position.x - 1; 
+        set.push_back(temp); 
+    }
+    //Move Diagonal up, left(w) AND down, right(b)
+    for(int i = 0; i < 8; ++i){
+        temp.y = m_position.y + 1; 
+        temp.x = m_position.x - 1; 
+        set.push_back(temp); 
+    }
+    //Move Diagonal down, left(w) AND up, right(b)
+    for(int i = 0; i < 8; ++i){
+        temp.y = m_position.y - 1; 
+        temp.x = m_position.x - 1; 
+        set.push_back(temp); 
+    }
 }
 
 void Bishop::Move(const string posiiton)
