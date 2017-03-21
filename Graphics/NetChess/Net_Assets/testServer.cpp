@@ -9,10 +9,12 @@ stringstream ss;
 
 int main(int argc, char* argv[])
 {
+  int player_num = 1;
   SocketSet socketSet;
   listener.listen(argv[1]);
   listener.joinGroup(&socketSet);
   string msg = "";
+  cerr << "Server started, your IP information is:" << endl << listener.toString() << endl;
 
   while(!listener.isClosed()){
     //XXX Dont know why this is here
@@ -24,6 +26,10 @@ int main(int argc, char* argv[])
       sock.joinGroup(&socketSet);
       cout << sock.toString() << " has joined\n";
       sockets.push_back(sock);
+      ss.str("");
+      ss << "REDY " << player_num;
+      sock.writeString(ss.str());
+      player_num++;
     }
     else //Messages from client
     {
@@ -34,16 +40,20 @@ int main(int argc, char* argv[])
 	  {
 	    cerr << msg << "\n";
 
-	    if(strncmp(msg.c_str(),"STRT",4) == 0)
+	    if(strncmp(msg.c_str(),"MOVE",4) == 0)
 	    {
-	      //Shit
-	    }//STRT Comparison
-	    else //Anything that isnt a command
-	    {
-	      cerr << "Sending message to clients:" << msg << endl;
+	      cerr << "MOVE command recognized" << endl;
 	      for(int j=0;j<sockets.size(); ++j){
 		Socket sock = sockets[j];
-		cerr << "To socket:" << sock.toString() << " Sending message:" << msg << endl;
+		sock.writeString(msg);
+	      }
+	    }// MOVE Comparison
+	    else //Anything that isnt a command
+	    {
+	      cerr << "Sending unknown message to clients:" << msg << endl;
+	      for(int j=0;j<sockets.size(); ++j){
+		Socket sock = sockets[j];
+		//cerr << "To socket:" << sock.toString() << " Sending message:" << msg << endl;
 		sock.writeString(msg);
 	      }
 	    }

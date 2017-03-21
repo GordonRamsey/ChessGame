@@ -1,4 +1,4 @@
-#include "bridge.h"
+#include <SDL/SDL.h>
 
 #ifndef PIECE_H
 #define PIECE_H
@@ -18,9 +18,10 @@ class Piece {
 	//SDL Necessary variables
 	SDL_Rect box; //Bounding box of sprite
 	SDL_Rect* clip; //Sprite of... sprite
+	int clip_num; //Number on clips sheet
 	int num; //Piece number, for network purposes
 	SDL_Surface* sheet;
-
+	int owner;
 
     public:
         
@@ -41,8 +42,14 @@ class Piece {
 	void handle_events();
 	void show();
 	int  getNum();
+	
 	void setClip(int x);
+	int  getClip();
+	
 	coord getSpot();
+	
 	void setTeam(int x);
+	int  getTeam();
+
 };
 #endif

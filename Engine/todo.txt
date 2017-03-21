@@ -1,17 +1,9 @@
 Classes:
-        b. Start Knight
-        c. Start Rook
-        d. Start Bishop
-        e. Start Queen
-        f. Start King
-        g. Constructors and Deconstructors??? SetUp function??
+    a. Finish isValid functions
 Chess.cpp:
-        a. Implement Board
         b. Configure Mapping?
         c. Other Datastructures if Needed *list of captured pieces*
-        d. Start constructing SetUp functions
         e. Move
-        f. Attack
         g. IsBounds?
         h. PlayerCheck
         j. AvailableMoves

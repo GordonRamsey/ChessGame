@@ -3,15 +3,18 @@
 #include <vector>
 #include <sstream>
 #include "bridge.h"
-#include "../../Engine/piece.h"
 
 using namespace std;
 
 
-const int SCREEN_WIDTH = 512;
-const int SCREEN_HEIGHT = 512;
+const int SCREEN_WIDTH = 894;
+const int SCREEN_HEIGHT = 894;
 const int SCREEN_BPP = 32;
 
+int SPRITE_SIZE = 64;
+int BORDER_SIZE = 0;
+
+//Slices for our sprite sheet
 int CLIP_PAWN = 0;
 int CLIP_ROOK = 1;
 int CLIP_BISHOP = 2;
@@ -19,6 +22,12 @@ int CLIP_KNIGHT = 3;
 int CLIP_QUEEN = 4;
 int CLIP_KING = 5;
 
+int CLIP_PAWN_SELECT = 6;
+int CLIP_ROOK_SELECT = 7;
+int CLIP_BISHOP_SELECT = 8;
+int CLIP_KNIGHT_SELECT = 9;
+int CLIP_QUEEN_SELECT = 10;
+int CLIP_KING_SELECT = 11;
 
 //Our connection to the server
 Socket s_socket;
@@ -26,18 +35,22 @@ SocketSet socketSet;
 
 //The surfaces
 SDL_Surface *board = NULL;
-SDL_Surface *pieceSheet1 = NULL;
-SDL_Surface *pieceSheet2 = NULL;
+SDL_Surface *pieceSheet1 = NULL; //Player1s sprite sheet
+SDL_Surface *pieceSheet2 = NULL; //Player 2
+SDL_Surface *pieceSheet3 = NULL; //Player 3
+SDL_Surface *pieceSheet4 = NULL; //Player 4
 SDL_Surface *screen = NULL;
 
 //The event structure
 SDL_Event event;
 
-SDL_Rect clips[6];
+SDL_Rect clips[12];
 
 //Our "held" piece
 Piece* selected = NULL;
-std::vector<Piece> pieces;
+vector<Piece> pieces;
+int player_num; //Our player num relevent to the current game
+
 
 void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL)
 {
@@ -52,10 +65,17 @@ void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination,
   SDL_BlitSurface( source, clip, destination, &offset );
 }
 
+void Piece::setClip(int x)
+{
+  clip = &clips[x];
+  clip_num = x;
+}
+
 void Piece::handle_events()
 {
   int x = 0, y = 0;
-
+  
+  //If were clicked on
   if(event.type == SDL_MOUSEBUTTONDOWN)
   {
     if(event.button.button == SDL_BUTTON_LEFT)
@@ -65,11 +85,13 @@ void Piece::handle_events()
 
       if ((x > box.x) && (x < box.x + box.w) && (y > box.y) && (y < box.y + box.h))
       {
-	if(selected == NULL){
-	  //clip = &clips[CLIP_SELECTED];
-	  selected = this;
-	}
-      }
+	//Make sure its our piece
+	if(player_num == owner)
+	  if(selected == NULL){
+	    this->setClip(this->getClip()+6);
+	    selected = this;
+	  }
+      }//if its really us
     }
   }
 }
@@ -79,55 +101,92 @@ void Piece::show()
   apply_surface(box.x, box.y, sheet, screen, clip);
 }
 
-void Piece::setClip(int x)
-{
-  clip = &clips[x];
-}
-
 void Piece::setTeam(int x)
 {
-  if(x == 0)
+  if(x == 0){
     sheet = pieceSheet1;
-  else
+    owner = 1;
+  }
+  else if(x == 1){  
     sheet = pieceSheet2;
+    owner = 2;
+  }
+  else if(x == 2){  
+    sheet = pieceSheet3;
+    owner = 3;
+  }
+  else if(x == 3){  
+    sheet = pieceSheet4;
+    owner = 4;
+  }
 }
 
 void set_clips()
 {
   clips[CLIP_PAWN].x = 0;
   clips[CLIP_PAWN].y = 0;
-  clips[CLIP_PAWN].w = 32;
-  clips[CLIP_PAWN].h = 32;
+  clips[CLIP_PAWN].w = SPRITE_SIZE;
+  clips[CLIP_PAWN].h = SPRITE_SIZE;
+
+  clips[CLIP_PAWN_SELECT].x = 0;
+  clips[CLIP_PAWN_SELECT].y = SPRITE_SIZE;
+  clips[CLIP_PAWN_SELECT].w = SPRITE_SIZE;
+  clips[CLIP_PAWN_SELECT].h = SPRITE_SIZE;
 
   //clip range for the rook
-  clips[CLIP_ROOK].x = 32;
+  clips[CLIP_ROOK].x = SPRITE_SIZE;
   clips[CLIP_ROOK].y = 0;
-  clips[CLIP_ROOK].w = 32;
-  clips[CLIP_ROOK].h = 32;
+  clips[CLIP_ROOK].w = SPRITE_SIZE;
+  clips[CLIP_ROOK].h = SPRITE_SIZE;
 
+  clips[CLIP_ROOK_SELECT].x = SPRITE_SIZE;
+  clips[CLIP_ROOK_SELECT].y = SPRITE_SIZE;
+  clips[CLIP_ROOK_SELECT].w = SPRITE_SIZE;
+  clips[CLIP_ROOK_SELECT].h = SPRITE_SIZE;
+  
   //clip range for the bishop
-  clips[CLIP_BISHOP].x = 64;
+  clips[CLIP_BISHOP].x = SPRITE_SIZE*2;
   clips[CLIP_BISHOP].y = 0;
-  clips[CLIP_BISHOP].w = 32;
-  clips[CLIP_BISHOP].h = 32;
+  clips[CLIP_BISHOP].w = SPRITE_SIZE;
+  clips[CLIP_BISHOP].h = SPRITE_SIZE;
 
+  clips[CLIP_BISHOP_SELECT].x = SPRITE_SIZE*2;
+  clips[CLIP_BISHOP_SELECT].y = SPRITE_SIZE;
+  clips[CLIP_BISHOP_SELECT].w = SPRITE_SIZE;
+  clips[CLIP_BISHOP_SELECT].h = SPRITE_SIZE;
+  
   //clip range for the knight
-  clips[CLIP_KNIGHT].x = 96;
+  clips[CLIP_KNIGHT].x = SPRITE_SIZE*3;
   clips[CLIP_KNIGHT].y = 0;
-  clips[CLIP_KNIGHT].w = 32;
-  clips[CLIP_KNIGHT].h = 32;
+  clips[CLIP_KNIGHT].w = SPRITE_SIZE;
+  clips[CLIP_KNIGHT].h = SPRITE_SIZE;
+
+  clips[CLIP_KNIGHT_SELECT].x = SPRITE_SIZE*3;
+  clips[CLIP_KNIGHT_SELECT].y = SPRITE_SIZE;
+  clips[CLIP_KNIGHT_SELECT].w = SPRITE_SIZE;
+  clips[CLIP_KNIGHT_SELECT].h = SPRITE_SIZE;
 
   //clip range for the queen
-  clips[CLIP_QUEEN].x = 128;
+  clips[CLIP_QUEEN].x = SPRITE_SIZE*4;
   clips[CLIP_QUEEN].y = 0;
-  clips[CLIP_QUEEN].w = 32;
-  clips[CLIP_QUEEN].h = 32;
+  clips[CLIP_QUEEN].w = SPRITE_SIZE;
+  clips[CLIP_QUEEN].h = SPRITE_SIZE;
 
+  clips[CLIP_QUEEN_SELECT].x = SPRITE_SIZE*4;
+  clips[CLIP_QUEEN_SELECT].y = SPRITE_SIZE;
+  clips[CLIP_QUEEN_SELECT].w = SPRITE_SIZE;
+  clips[CLIP_QUEEN_SELECT].h = SPRITE_SIZE;
+  
   //clip range for the king
-  clips[CLIP_KING].x = 160;
+  clips[CLIP_KING].x = SPRITE_SIZE*5;
   clips[CLIP_KING].y = 0;
-  clips[CLIP_KING].w = 32;
-  clips[CLIP_KING].h = 32;
+  clips[CLIP_KING].w = SPRITE_SIZE;
+  clips[CLIP_KING].h = SPRITE_SIZE;
+  
+  clips[CLIP_KING_SELECT].x = SPRITE_SIZE*5;
+  clips[CLIP_KING_SELECT].y = SPRITE_SIZE;
+  clips[CLIP_KING_SELECT].w = SPRITE_SIZE;
+  clips[CLIP_KING_SELECT].h = SPRITE_SIZE;
 
 }
 
@@ -168,7 +227,7 @@ bool init()
     return false;
   }
 
-  SDL_WM_SetCaption("Game Test", NULL);
+  SDL_WM_SetCaption("NetChess", NULL);
 
   return true;
 }
@@ -176,15 +235,17 @@ bool init()
 bool load_files()
 {
   //Load the image
-  board = load_image("twoPlayerBoard.png");
-  pieceSheet1 = load_image("basicPieces.png");
-  pieceSheet2 = load_image("basicPieces2.png");
+  board = load_image("fourPlayerBoard64.png");
+  pieceSheet1 = load_image("basicPieces64.png");
+  pieceSheet2 = load_image("basicPieces642.png");
+  pieceSheet3 = load_image("basicPieces643.png");
+  pieceSheet4 = load_image("basicPieces644.png");
 
   if(board == NULL)
   {
     return false;
   }
-  else if (pieceSheet1 == NULL || pieceSheet2 == NULL)
+  else if (pieceSheet1 == NULL || pieceSheet2 == NULL || pieceSheet3 == NULL || pieceSheet4 == NULL)
   {
     return false;
   }
@@ -197,18 +258,94 @@ void clean_up()
   SDL_FreeSurface(board);
   SDL_FreeSurface(pieceSheet1);
   SDL_FreeSurface(pieceSheet2);
+  SDL_FreeSurface(pieceSheet3);
+  SDL_FreeSurface(pieceSheet4);
 
   SDL_Quit();
 }
 
+//Generate starting board
 void generatePieces()
 {
   int it = 0;
-  for(int j=0;j<2;j++){
+   //Player 1 gen 
+   for(int j=0;j<2;j++){
     for(int i=0;i<8;i++){
-      Piece newPiece = Piece(i*32+128, j*32+128, it); 
+      Piece newPiece = Piece(i*SPRITE_SIZE+BORDER_SIZE+SPRITE_SIZE*3, j*SPRITE_SIZE+BORDER_SIZE, it); 
       it++;
       newPiece.setTeam(0);
+      if(j == 1)
+	newPiece.setClip(CLIP_PAWN);
+      else{
+	if(i==0 || i ==7)
+	  newPiece.setClip(CLIP_ROOK);
+	if(i==1 || i ==6)
+	  newPiece.setClip(CLIP_KNIGHT);
+	if(i==2 || i ==5)
+	  newPiece.setClip(CLIP_BISHOP);
+	if(i==4)
+	  newPiece.setClip(CLIP_KING);
+	if(i==3)
+	  newPiece.setClip(CLIP_QUEEN);
+      }
+      pieces.push_back(newPiece);
+    }
+  }
+  //Player 2 gen
+  for(int j=2;j>0;j--){
+    for(int i=0;i<8;i++){
+      Piece newPiece = Piece(i*SPRITE_SIZE+BORDER_SIZE+SPRITE_SIZE*3, j*SPRITE_SIZE+(SPRITE_SIZE*11 + BORDER_SIZE), it); 
+      it++;
+      newPiece.setTeam(1);
+      if(j == 1)
+	newPiece.setClip(CLIP_PAWN);
+      else{
+	if(i==0 || i ==7)
+	  newPiece.setClip(CLIP_ROOK);
+	if(i==1 || i ==6)
+	  newPiece.setClip(CLIP_KNIGHT);
+	if(i==2 || i ==5)
+	  newPiece.setClip(CLIP_BISHOP);
+	if(i==4)
+	  newPiece.setClip(CLIP_KING);
+	if(i==3)
+	  newPiece.setClip(CLIP_QUEEN);
+      }
+      pieces.push_back(newPiece);
+    }
+  } 
+  //Player 3 gen
+  for(int j=0;j<2;j++){
+    for(int i=0;i<8;i++){
+      Piece newPiece = Piece(j*SPRITE_SIZE+BORDER_SIZE, i*SPRITE_SIZE+(SPRITE_SIZE*3 + BORDER_SIZE), it); 
+      it++;
+      newPiece.setTeam(2);
+      if(j == 1)
+	newPiece.setClip(CLIP_PAWN);
+      else{
+	if(i==0 || i ==7)
+	  newPiece.setClip(CLIP_ROOK);
+	if(i==1 || i ==6)
+	  newPiece.setClip(CLIP_KNIGHT);
+	if(i==2 || i ==5)
+	  newPiece.setClip(CLIP_BISHOP);
+	if(i==4)
+	  newPiece.setClip(CLIP_KING);
+	if(i==3)
+	  newPiece.setClip(CLIP_QUEEN);
+      }
+      coord asdf = newPiece.getSpot();
+      cerr << asdf.x << " " << asdf.y << endl;
+      pieces.push_back(newPiece);
+    }
+  }
+
+  //Player 4 gen
+  for(int j=2;j>0;j--){
+    for(int i=0;i<8;i++){
+      Piece newPiece = Piece(j*SPRITE_SIZE+BORDER_SIZE+(SPRITE_SIZE*11), i*SPRITE_SIZE+(SPRITE_SIZE*3 + BORDER_SIZE), it); 
+      it++;
+      newPiece.setTeam(3);
       if(j == 1)
 	newPiece.setClip(CLIP_PAWN);
       else{
@@ -227,30 +364,9 @@ void generatePieces()
       pieces.push_back(newPiece);
     }
   }
-  for(int j=2;j>0;j--){
-    for(int i=0;i<8;i++){
-      Piece newPiece = Piece(i*32+128, j*32+288, it); 
-      it++;
-      newPiece.setTeam(2);
-      if(j == 1)
-	newPiece.setClip(CLIP_PAWN);
-      else{
-	if(i==0 || i ==7)
-	  newPiece.setClip(CLIP_ROOK);
-	if(i==1 || i ==6)
-	  newPiece.setClip(CLIP_KNIGHT);
-	if(i==2 || i ==5)
-	  newPiece.setClip(CLIP_BISHOP);
-	if(i==4)
-	  newPiece.setClip(CLIP_KING);
-	if(i==3)
-	  newPiece.setClip(CLIP_QUEEN);
-      }
-      pieces.push_back(newPiece);
-    }
-  } 
 }
 
+//Connect to the server Whoaaaa!
 int connectServer(int argc, char* argv[])
 {
   s_socket.open(argv[1], argv[2]);
@@ -262,46 +378,185 @@ int connectServer(int argc, char* argv[])
   return -1;
 }
 
+//Helper function for netProcess
+string snip(string msg, int &cursor)
+{
+  //MOVE 1 100 200
+  //     ^-Cursor
+  int last = cursor;
+  cursor = msg.find(" ",cursor);
+  string ret;
+  if(cursor != string::npos)
+    ret = msg.substr(last, cursor-last);
+  else
+    ret = msg.substr(last,msg.length()-last);
+  cursor++;
+  return ret;
+}
+
+void netProcess(string msg)
+{
+  int index, last;
+  index = msg.find(" ");
+  string cmd = msg.substr(0,index);
+  index++;
+  
+  if(cmd == "MOVE")//MOVE <id> <x> <y>
+  {
+    string num = snip(msg,index);
+    string s_x = snip(msg,index);
+    string s_y = snip(msg,index);
+    int i_num = atoi(num.c_str());
+
+    for(unsigned int i=0;i<pieces.size();i++){
+      if(pieces[i].getNum() == i_num){
+	pieces[i].setPos(atoi(s_x.c_str()), atoi(s_y.c_str()));
+	break;
+      }
+    }
+  }//If- MOVE
+  else if(cmd == "PLAC")//PLAC <piece> <piece id> <x> <y> <owner>
+  {
+
+  }//If- PLAC
+  else if(cmd == "REMV")//REMV <x> <y>
+  {
+    int x, y;
+    
+    string s_x = snip(msg,index);
+    string s_y = snip(msg,index);
+    x = atoi(s_x.c_str());
+    y = atoi(s_y.c_str());
+
+    //Find and remove piece
+    for(unsigned int i=0;i<pieces.size();i++){
+      int px, py;
+      Piece dummy = pieces[i];
+      px = dummy.getSpot().x;
+      py = dummy.getSpot().y;
+      if(x == px && y == py){
+	pieces[i] = pieces[pieces.size()-1];
+	pieces.pop_back();
+	break;
+      }
+    }
+  }//If- REMV
+  else if(cmd == "CAPT")//CAPT <piece id> <piece id> 
+  {
+    string attack = snip(msg,index);
+    string defend = snip(msg,index);
+    int a_index, d_index;
+    
+    for(unsigned int i=0;i<pieces.size();i++){
+      if(pieces[i].getNum() == atoi(attack.c_str()))
+	a_index = i;
+      if(pieces[i].getNum() == atoi(defend.c_str()))
+	d_index = i;
+    }
+    //Remove piece 2*
+    coord loc = pieces[d_index].getPos();
+
+    pieces[d_index] = pieces[pieces.size()-1];
+    pieces.pop_back();
+
+    //Move piece 1
+    pieces[a_index].setPos(loc.x, loc.y);
+
+  }//If- CAPT
+  else if(cmd == "REDY")   
+  {
+    last = index;
+    index = msg.find(" ",index);
+    string num = msg.substr(last,index-last);
+    player_num = atoi(num.c_str());
+
+  }//If- REDY
+  else
+  {
+    cerr << "Unknown command received:" << msg << endl;
+  }
+
+}
+
 int main ( int argc, char* argv[] )
 {
-  if(connectServer(argc, argv) == -1)
-    return 1;
-  //We should have "socket" as our connection now
-
   bool quit = false;
   int x,y;
 
+  // Error check
+  if (argc < 3 || argc >= 4)
+  {
+    cerr << "Please retry and enter the ip address"
+      << " and a port number." << endl
+      << "Example: Frodo 8000" << endl
+      << "Shutting Down." << endl;
+    return 1;
+  }
+
+  //Attempt connection to server. s_socket will be connection socket.
+  if(connectServer(argc, argv) == -1)
+    return 1;
+
   //run initialiation and asset loading
-  if(init() == false){
+  if(init() == false)
     return 1;
-  }
-  if(load_files() == false){
+  if(load_files() == false)
     return 1;
-  }
   set_clips();
   generatePieces();
 
+//// --------------
+//// MAIN GAME LOOP
+//// --------------
   //While the user hasn't quit
   while(quit == false)
   {
+
+//// ----------
+//// SDL EVENTS
+//// ----------
     //While theres an event to handle
     while(SDL_PollEvent(&event))
     {
       if(event.type == SDL_MOUSEBUTTONDOWN)
       {
-	if(selected != NULL){
+	if(selected != NULL){//If we are trying to move a piece
 	  x = event.button.x;
 	  y = event.button.y;
 
-	  x = x - x%32;
-	  y = y - y%32;
+	  //Snap location to grid
+	  x = x - x%SPRITE_SIZE;
+	  y = y - y%SPRITE_SIZE;
 
-	  selected->setPos(x,y);
-	  //selected->setClip(CLIP_DEFAULT);
+	  //XXX: [Engine] Translate to grid coords
 
+	  //XXX: [Engine] Perform check 
+	  //If valid continue
+	  //If invalid ignore the command
+
+	  //XXX: [Engine] Send MOVE/CAPT command to server
+
+	  //Set sprite back to normal
+	  selected->setClip(selected->getClip()-6);
+	  
+	  //Send command
 	  stringstream ss;
 	  ss.str("");
-	  ss << selected->getNum() << " " << x << " " << y;
+
+	  //Check if space is already occupied
+	  bool capture = false;
+	  for(unsigned int i=0;i<pieces.size();i++){
+	    if(pieces[i].getPos().x == x && pieces[i].getPos().y == y){
+	      //It is! lets kill it!
+	      ss << "CAPT " << selected->getNum() << " " << pieces[i].getNum();
+	      capture = true;
+	      break;
+	    }
+	  }
+	  //Send move command
+	  if(!capture)
+	    ss << "MOVE " << selected->getNum() << " " << x << " " << y;
+
 	  s_socket.writeString(ss.str());
 
 	  selected = NULL;
@@ -319,7 +574,9 @@ int main ( int argc, char* argv[] )
 
     }//While- SDL_PollEvent
 
-    //Connection
+//// ------------------
+//// NETWORK CONNECTION
+//// ------------------
     if(s_socket.isClosed()){
       printf("Lost connection with server\n");
       return 1;
@@ -330,34 +587,19 @@ int main ( int argc, char* argv[] )
       //Do appropriate things with server message
       //Message: <num> <x> <y>
       string msg = "DEFAULT";
-      int bytes = s_socket.readString(msg,24);
+      int bytes = s_socket.readString(msg,64);
       cerr << "Message Received:" << msg << " | " << bytes << endl;
 
-      int index, last;
-      index = msg.find(" ");
-      string num = msg.substr(0,index);
-      index++;
-      last = index;
-      index = msg.find(" ",index);
-      string s_x = msg.substr(last,index-last);
-      index++;
-      string s_y = msg.substr(index,msg.length()-index);
-      int i_num = atoi(num.c_str());
-
-
-      for(unsigned int i=0;i<pieces.size();i++){
-	if(pieces[i].getNum() == i_num){
-	  pieces[i].setPos(atoi(s_x.c_str()), atoi(s_y.c_str()));
-	  break;
-	}
-      }
+      netProcess(msg);
     }//if- socket has event
 
-    //Drawing
-    //Make window white instead of black
+//// -------
+//// DRAWING
+//// -------
+    //Make window white instead of black - obselete
     SDL_FillRect(screen, &screen->clip_rect, SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF));
 
-    //Apply te surface to the screen
+    //Apply the board to the screen
     apply_surface(0, 0, board, screen, NULL);
 
     //Show() pieces

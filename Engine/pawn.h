@@ -8,7 +8,7 @@ class Pawn : public Piece {
     public:
         //Look up inheritance constructor and deconstructor
         bool isValid();
-        void Move(const string position); //Use piece m_position and compare
+        void Move(const coord position); //Use piece m_position and compare
         void Exchange();
 };
 #endif
