@@ -52,5 +52,7 @@ class Piece {
 	void setTeam(int x);
 	int  getTeam();
 
+	void setAlpha(int x);
+
 };
 #endif
