@@ -7,7 +7,8 @@ class Rook : public Piece
 
   public:
     //Look up inheritance constructor and deconstructor
-    bool isValid();
+    ???? isValid();
+	vector<coord> AllPos();
     void Move(const string position); //Use piece m_position and compare
 };
 #endif
