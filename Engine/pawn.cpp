@@ -4,8 +4,11 @@ using namespace std;
 vector<coords> Pawn::AllPos()
 {
 	coord temp;
-	vector<coord> set;
-        
+    vector<coord> set;
+    bool allDone = false;
+
+
+    if(allDone == false){
 		if(m_first == true)
 		{
             //should we check out of bounds?
@@ -29,6 +32,15 @@ vector<coords> Pawn::AllPos()
 		temp.x = m_position.x + 1;
 		if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0)
             set.push_back(temp);
+        
+        allDone = true; 
+    }
+
+    while(allDone == true){
+        //WLocs 
+
+
+    }
 }
 
 

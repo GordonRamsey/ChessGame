@@ -8,10 +8,17 @@ Piece* game_board[8][8];
 
 void SetUp()
 {
+    vector<coord> WLocs; 
+    vector<coord> BLocs; 
+    coord temp; 
+
     game_board[0][0] = new Rook();
     game_board[0][0]->setColor('w');
     game_board[0][0]->setPosition(0,0);
-    
+    temp.y = 0; 
+    temp.x = 0; 
+    WLocs.push_back(temp); 
+
     game_board[0][1] = new Knight();
     game_board[0][1]->setColor('w');
     game_board[0][1]->setPosition(1,0);
