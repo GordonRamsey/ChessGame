@@ -4,8 +4,8 @@ using namespace std;
 Piece::Piece(int x, int y, int it)
 {
   m_color = '\0';
-  m_position.x = 0;
-  m_position.y = 0;
+  m_position.x = x / 64; //Divides the coordinates
+  m_position.y = y / 64; //Gives a (x,y) for the grid
   m_captured = false;
 
   box.x = x;

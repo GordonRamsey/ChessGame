@@ -50,7 +50,7 @@ SDL_Rect clips[12];
 Piece* selected = NULL;
 vector<Piece> pieces;
 int player_num; //Our player num relevent to the current game
-
+bool game_start = false;
 
 void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL)
 {
@@ -394,12 +394,23 @@ string snip(string msg, int &cursor)
   return ret;
 }
 
+//Processes messages from the server
 void netProcess(string msg)
 {
+  stringstream ss;
   int index, last;
   index = msg.find(" ");
   string cmd = msg.substr(0,index);
   index++;
+  
+  if(cmd == "STRT")//STRT - Game start
+  {
+    game_start = true;
+    ss.str("");
+    ss << "NetChess - " << player_num << " - Started";
+    SDL_WM_SetCaption(ss.str().c_str(), NULL);
+    return;
+  }
   
   if(cmd == "MOVE")//MOVE <id> <x> <y>
   {
@@ -469,6 +480,9 @@ void netProcess(string msg)
     index = msg.find(" ",index);
     string num = msg.substr(last,index-last);
     player_num = atoi(num.c_str());
+    ss.str("");
+    ss << "NetChess - " << player_num << " - Waiting for players...";
+    SDL_WM_SetCaption(ss.str().c_str(), NULL);
 
   }//If- REDY
   else
@@ -518,54 +532,74 @@ int main ( int argc, char* argv[] )
     //While theres an event to handle
     while(SDL_PollEvent(&event))
     {
-      if(event.type == SDL_MOUSEBUTTONDOWN)
-      {
-	if(selected != NULL){//If we are trying to move a piece
-	  x = event.button.x;
-	  y = event.button.y;
+      //This wont let us do anything until the game starts
+      if(game_start){ 
+	if(event.type == SDL_MOUSEBUTTONDOWN)
+	{
+	  if(selected != NULL){//If we are trying to move a piece
+	    bool failure = false; //set to true if the move is invalid
+	    
+	    x = event.button.x;
+	    y = event.button.y;
 
-	  //Snap location to grid
-	  x = x - x%SPRITE_SIZE;
-	  y = y - y%SPRITE_SIZE;
+	    //Snap location to grid
+	    x = x - x%SPRITE_SIZE;
+	    y = y - y%SPRITE_SIZE;
 
-	  //XXX: [Engine] Translate to grid coords
+	    //XXX: [Engine] Translate to grid coords
 
-	  //XXX: [Engine] Perform check 
-	  //If valid continue
-	  //If invalid ignore the command
+	    //XXX: [Engine] Perform check 
+	    //If valid continue
+	    //If invalid ignore the command
 
-	  //XXX: [Engine] Send MOVE/CAPT command to server
+	    //XXX: [Engine] Send MOVE/CAPT command to server
 
-	  //Set sprite back to normal
-	  selected->setClip(selected->getClip()-6);
-	  
-	  //Send command
-	  stringstream ss;
-	  ss.str("");
+	    //Set sprite back to normal
+	    selected->setClip(selected->getClip()-6);
 
-	  //Check if space is already occupied
-	  bool capture = false;
-	  for(unsigned int i=0;i<pieces.size();i++){
-	    if(pieces[i].getPos().x == x && pieces[i].getPos().y == y){
-	      //It is! lets kill it!
-	      ss << "CAPT " << selected->getNum() << " " << pieces[i].getNum();
-	      capture = true;
-	      break;
+	    //Send command
+	    stringstream ss;
+	    ss.str("");
+
+	    //CAPT Check
+	    //Check if space is already occupied
+	    bool capture = false;
+	    for(unsigned int i=0;i<pieces.size();i++){
+	      if(pieces[i].getPos().x == x && pieces[i].getPos().y == y){
+		//It is! lets kill it!
+		ss << "CAPT " << selected->getNum() << " " << pieces[i].getNum();
+	      
+		//If we move our selected piece to the same spot, just let it go
+		if(pieces[i].getSpot().x == selected->getSpot().x && 
+		    pieces[i].getSpot().y == selected->getSpot().y){
+		  failure = true;
+		  break;
+		}
+		capture = true;
+		break;
+	      }
 	    }
-	  }
-	  //Send move command
-	  if(!capture)
-	    ss << "MOVE " << selected->getNum() << " " << x << " " << y;
+	    //MOVE check
+	    //Send move command
+	    if(!capture)
+	      ss << "MOVE " << selected->getNum() << " " << x << " " << y;
 
-	  s_socket.writeString(ss.str());
+	    selected = NULL;
+	    
+	    //If the move was not valid, dont send anything
+	    if(failure)
+	      continue;
 
-	  selected = NULL;
-	  continue;
-	}
-      }
-
-      for(unsigned int i=0;i<pieces.size();i++)
-	pieces[i].handle_events();
+	    s_socket.writeString(ss.str());
+	    continue;
+	  }//If- Selected != null
+	}//If- event type = mouseleft
+	
+	//Perform local piece event handling
+	for(unsigned int i=0;i<pieces.size();i++)
+	  pieces[i].handle_events();
+      
+      }//If- game start
 
       if(event.type == SDL_QUIT)
       {
