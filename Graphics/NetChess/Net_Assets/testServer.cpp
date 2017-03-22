@@ -112,7 +112,28 @@ int main(int argc, char* argv[])
 	      }
 	      if(!success)
 		cerr << "Command received from invalid player" << endl;
-	    }
+	    }//CAPT comparison
+	    //XXX: HOLD method test
+	    else if(strncmp(msg.c_str(), "HOLD",4) == 0)
+	    {
+	      if (msg.size() <= 20){
+		bool success = false;
+		cerr << "HOLD command recognized" << endl;
+		for(int j=0;j<players.size(); ++j){
+		  if(players[j].sock == sockets[i])
+		    if(players[j].number == current_player){
+		      for(int j=0;j<sockets.size(); ++j)
+			sockets[j].writeString(msg);
+		      success = true;
+		      break;
+		    }
+		}
+		if(!success)
+		  cerr << "Command received from invalid player" << endl;	    
+	      }
+	      else
+		continue;
+	    }//HOLD comparison
 	    else //Anything that isnt a command
 	    {
 	      cerr << "Sending unknown message to clients:" << msg << endl;

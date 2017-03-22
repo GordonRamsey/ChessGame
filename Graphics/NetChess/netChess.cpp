@@ -39,6 +39,7 @@ SDL_Surface *pieceSheet1 = NULL; //Player1s sprite sheet
 SDL_Surface *pieceSheet2 = NULL; //Player 2
 SDL_Surface *pieceSheet3 = NULL; //Player 3
 SDL_Surface *pieceSheet4 = NULL; //Player 4
+SDL_Surface *ghostSheet = NULL;
 SDL_Surface *screen = NULL;
 
 //The event structure
@@ -51,6 +52,10 @@ Piece* selected = NULL;
 vector<Piece> pieces;
 int player_num; //Our player num relevent to the current game
 bool game_start = false;
+
+//variables used in HOLD call
+Piece ghostPiece = Piece(-1,-64,-64);
+int orig_x, orig_y;
 
 void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL)
 {
@@ -90,6 +95,8 @@ void Piece::handle_events()
 	  if(selected == NULL){
 	    this->setClip(this->getClip()+6);
 	    selected = this;
+	    orig_x = selected->getPos().x;
+	    orig_y = selected->getPos().y;
 	  }
       }//if its really us
     }
@@ -103,7 +110,11 @@ void Piece::show()
 
 void Piece::setTeam(int x)
 {
-  if(x == 0){
+  if(x == -1)
+  {
+    sheet = ghostSheet;
+  }
+  else if(x == 0){
     sheet = pieceSheet1;
     owner = 1;
   }
@@ -240,6 +251,7 @@ bool load_files()
   pieceSheet2 = load_image("basicPieces642.png");
   pieceSheet3 = load_image("basicPieces643.png");
   pieceSheet4 = load_image("basicPieces644.png");
+  ghostSheet = load_image("ghostPieces64.png");
 
   if(board == NULL)
   {
@@ -249,6 +261,8 @@ bool load_files()
   {
     return false;
   }
+  else if(ghostSheet == NULL)
+    return false;
 
   return true;
 }
@@ -260,14 +274,20 @@ void clean_up()
   SDL_FreeSurface(pieceSheet2);
   SDL_FreeSurface(pieceSheet3);
   SDL_FreeSurface(pieceSheet4);
+  SDL_FreeSurface(ghostSheet);
 
   SDL_Quit();
 }
 
 //Generate starting board
 void generatePieces()
-{
-  int it = 0;
+{ 
+   int it = 0;
+
+   //HOLD stuff
+   ghostPiece.setTeam(-1);
+   ghostPiece.setClip(0);
+
    //Player 1 gen 
    for(int j=0;j<2;j++){
     for(int i=0;i<8;i++){
@@ -425,6 +445,9 @@ void netProcess(string msg)
 	break;
       }
     }
+    //Remove Ghost image
+    ghostPiece.setPos(-64,-64);
+
   }//If- MOVE
   else if(cmd == "PLAC")//PLAC <piece> <piece id> <x> <y> <owner>
   {
@@ -473,8 +496,11 @@ void netProcess(string msg)
     //Move piece 1
     pieces[a_index].setPos(loc.x, loc.y);
 
+    //Remove ghost image
+    ghostPiece.setPos(-64,-64);
+
   }//If- CAPT
-  else if(cmd == "REDY")   
+  else if(cmd == "REDY")//REDY <playernum>   
   {
     last = index;
     index = msg.find(" ",index);
@@ -485,6 +511,18 @@ void netProcess(string msg)
     SDL_WM_SetCaption(ss.str().c_str(), NULL);
 
   }//If- REDY
+  else if(cmd == "HOLD")//HOLD <clip> <x> <y>
+  {
+    string s_clip = snip(msg,index);
+    string s_x = snip(msg,index);
+    string s_y = snip(msg,index);
+    int i_clip = atoi(s_clip.c_str());
+    int i_x = atoi(s_x.c_str());
+    int i_y = atoi(s_y.c_str());
+
+    ghostPiece.setClip(i_clip-6);
+    ghostPiece.setPos(i_x,i_y);
+  }//If- HOLD
   else
   {
     cerr << "Unknown command received:" << msg << endl;
@@ -496,7 +534,7 @@ int main ( int argc, char* argv[] )
 {
   bool quit = false;
   int x,y;
-
+  
   // Error check
   if (argc < 3 || argc >= 4)
   {
@@ -568,8 +606,8 @@ int main ( int argc, char* argv[] )
 	      if(pieces[i].getPos().x == x && pieces[i].getPos().y == y){
 		//It is! lets kill it!
 		ss << "CAPT " << selected->getNum() << " " << pieces[i].getNum();
-	      
-		//If we move our selected piece to the same spot, just let it go
+	     
+	        //If we find our own selected piece, ignore it	
 		if(pieces[i].getSpot().x == selected->getSpot().x && 
 		    pieces[i].getSpot().y == selected->getSpot().y){
 		  failure = true;
@@ -582,23 +620,38 @@ int main ( int argc, char* argv[] )
 	    //MOVE check
 	    //Send move command
 	    if(!capture)
+	    {  
 	      ss << "MOVE " << selected->getNum() << " " << x << " " << y;
+	    }
 
 	    selected = NULL;
 	    
 	    //If the move was not valid, dont send anything
+	    
+	    //Hide ghost image after moving
+	    ghostPiece.setPos(-64,-64);
 	    if(failure)
 	      continue;
 
 	    s_socket.writeString(ss.str());
+
 	    continue;
 	  }//If- Selected != null
 	}//If- event type = mouseleft
+	else if(event.type == SDL_MOUSEMOTION && selected != NULL)
+	{
+	  stringstream ss;
+	  ss.str("");
+	  ss << "HOLD " << selected->getClip() << " " << event.motion.x-32 << " " << event.motion.y-32;
+	  socketSet.wait(0);
+	  s_socket.writeString(ss.str());
+	  
+	}
 	
 	//Perform local piece event handling
 	for(unsigned int i=0;i<pieces.size();i++)
 	  pieces[i].handle_events();
-      
+
       }//If- game start
 
       if(event.type == SDL_QUIT)
@@ -619,7 +672,6 @@ int main ( int argc, char* argv[] )
     if(s_socket.hasEvent())
     {
       //Do appropriate things with server message
-      //Message: <num> <x> <y>
       string msg = "DEFAULT";
       int bytes = s_socket.readString(msg,64);
       cerr << "Message Received:" << msg << " | " << bytes << endl;
@@ -639,6 +691,8 @@ int main ( int argc, char* argv[] )
     //Show() pieces
     for(unsigned int i=0;i<pieces.size();i++)
       pieces[i].show();
+
+    ghostPiece.show();
 
     //Update screen
     if(SDL_Flip( screen ) == -1){

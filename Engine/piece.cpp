@@ -87,6 +87,11 @@ int Piece::getClip()
   return clip_num;
 }
 
+void Piece::setAlpha(int x)
+{
+  SDL_SetAlpha(sheet, SDL_SRCALPHA, x); 
+}
+
 //Movement - Should pass a "board" parameter so the piece can know where everything is
 //Movement should return a list of spots the piece can move to
 
