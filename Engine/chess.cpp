@@ -93,7 +93,7 @@ void SetUp()
         game_board[6][i]->setPosition(6,i);
 		temp.x = 6;
 		temp.y = i;
-		BLocks.push_back(temp);
+		WLocks.push_back(temp);
 		
     }
 

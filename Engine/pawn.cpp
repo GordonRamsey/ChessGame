@@ -1,7 +1,7 @@
 #include "pawn.h"
 using namespace std;
 
-vector<coords> Pawn::AllPos()
+vector<coord> Pawn::AllPos()
 {
 	coord temp;
     vector<coord> set;

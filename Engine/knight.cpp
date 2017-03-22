@@ -1,10 +1,10 @@
 #include "knight.h"
 using namespace std;
 
-vector<coords> Knight::AllPos()
+vector<coord> Knight::AllPos()
 {
-    coords temp; 
-    vector<coords> set; 
+    coord temp; 
+    vector<coord> set; 
 
     //up 2, right 1(w) AND  down 2, left 1(b)
     temp.y = m_position.y + 2; 

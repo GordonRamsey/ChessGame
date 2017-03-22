@@ -1,10 +1,10 @@
 #include "rook.h"
 using namespace std;
 
-vector<coords> Rook::AllPos()
+vector<coord> Rook::AllPos()
 {
-    coords temp; 
-    vector<coords> set; 
+    coord temp; 
+    vector<coord> set; 
 
     //move up(w) down(b)
     for(int i = 0; i < 8; ++i){

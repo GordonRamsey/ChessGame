@@ -1,10 +1,10 @@
 #include "bishop.h"
 using namespace std;
 
-vectors<coords> Bishop::AllPos()
+vectors<coord> Bishop::AllPos()
 {
-    coords temp; 
-    vector<coords> set; 
+    coord temp; 
+    vector<coord> set; 
 
     //Move Diagonal up, right(w) AND down, left(b)  
     for(int i = 0; i < 8; ++i){

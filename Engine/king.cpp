@@ -1,10 +1,10 @@
 #include "king.h"
 using namespace std;
 
-vector<coords> King::AllPos()
+vector<coord> King::AllPos()
 {
-    coords temp; 
-    vector<coords> set; 
+    coord temp; 
+    vector<coord> set; 
     //move forward (w) back (b)  
     temp.y = m_position.y + 1; 
     temp.x = m_position.x + 0; 

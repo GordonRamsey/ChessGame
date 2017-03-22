@@ -1,10 +1,10 @@
 #include "queen.h"
 using namespace std;
 
-vector<coords> Queen::AllPos()
+vector<coord> Queen::AllPos()
 {
-	coords temp;
-	vector<coords> set;
+	coord temp;
+	vector<coord> set;
 
 	//Think we don't need to check color.
 	//Queen can move the same no matter what color.
