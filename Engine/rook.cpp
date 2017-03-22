@@ -1,7 +1,7 @@
 #include "rook.h"
 using namespace std;
 
-vector<coords> Rook::isValid()
+vector<coords> Rook::AllPos()
 {
     coords temp; 
     vector<coords> set; 
@@ -39,4 +39,9 @@ void Rook::Move(const string posiiton)
 {
   //Check if valid, then:  
   setPosition(position);
+}
+
+void Rook::IsValid(coord Position, &vector<coord> allpos)
+{
+	
 }
