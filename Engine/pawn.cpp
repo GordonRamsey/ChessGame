@@ -7,7 +7,7 @@ vector<coords> Pawn::isValid()
 	vector<coord> set;
 
 	//Checking what color first.
-    if (m_color == 'w')
+    if (m_color == 'b')
     {
 		if(m_first == true)
 		{
@@ -32,7 +32,7 @@ vector<coords> Pawn::isValid()
 		
 	}
 
-	else if (m_color == 'b')
+	else if (m_color == 'w')
 	{
 		if (m_first == true)
 		{
