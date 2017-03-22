@@ -17,41 +17,65 @@ void SetUp()
     game_board[0][0]->setPosition(0,0);
     temp.y = 0; 
     temp.x = 0; 
-    WLocs.push_back(temp); 
+    BLocs.push_back(temp); 
 
     game_board[0][1] = new Knight();
     game_board[0][1]->setColor('b');
     game_board[0][1]->setPosition(1,0);
+    temp.y = 0; 
+    temp.x = 1; 
+    BLocs.push_back(temp);
 
     game_board[0][2] = new Bishop();
     game_board[0][2]->setColor('b');
     game_board[0][2]->setPosition(2,0);
+    temp.y = 0; 
+    temp.x = 2; 
+    BLocs.push_back(temp);
 
     game_board[0][3] = new Queen();
     game_board[0][3]->setColor('b');
     game_board[0][3]->setPosition(3,0);
+    temp.y = 0; 
+    temp.x = 3; 
+    BLocs.push_back(temp);
 
     game_board[0][4] = new King();
     game_board[0][4]->setColor('b');
     game_board[0][4]->setPosition(4,0);
+    temp.y = 0; 
+    temp.x = 0; 
+    BLocs.push_back(temp);
 
     game_board[0][5] = new Bishop();
     game_board[0][5]->setColor('b');
     game_board[0][5]->setPosition(5,0);
+    temp.y = 0; 
+    temp.x = 5; 
+    BLocs.push_back(temp);
 
     game_board[0][6] = new Knight();
     game_board[0][6]->setColor('b');
     game_board[0][6]->setPosition(6,0);
+    temp.y = 0; 
+    temp.x = 6; 
+    BLocs.push_back(temp);
 
     game_board[0][7] = new Rook();
     game_board[0][7]->setColor('b');
     game_board[0][7]->setPosition(7,0);
+    temp.y = 0; 
+    temp.x = 7; 
+    BLocs.push_back(temp);
 
     for(int i = 0; i < 8; ++i)
     {
         game_board[1][i] = new Pawn();
         game_board[1][i]->setColor('b');
         game_board[1][i]->setPosition(1,i);
+        temp.y = i; 
+        temp.x = 1; 
+        BLocs.push_back(temp); 
     }
 
     for(int i = 2; 2 < 6; ++i)
