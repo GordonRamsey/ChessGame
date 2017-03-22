@@ -1,7 +1,7 @@
 #include "knight.h"
 using namespace std;
 
-vector<coords> Knight::isValid()
+vector<coords> Knight::AllPos()
 {
     coords temp; 
     vector<coords> set; 
@@ -46,7 +46,7 @@ vector<coords> Knight::isValid()
 
     //down 1, left 2 AND up 1, right 2(b)
     temp.y = m_position.y - 1; 
-    temp.x = m_position.x - 2; ; 
+    temp.x = m_position.x - 2;  
     if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0)    
         set.push_back(temp); 
 }

@@ -1,7 +1,7 @@
 #include "bishop.h"
 using namespace std;
 
-vectors<coords> Bishop::isValid()
+vectors<coords> Bishop::AllPos()
 {
     coords temp; 
     vector<coords> set; 

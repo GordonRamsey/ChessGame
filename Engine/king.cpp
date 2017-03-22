@@ -1,7 +1,7 @@
 #include "king.h"
 using namespace std;
 
-vector<coords> King::isValid()
+vector<coords> King::AllPos()
 {
     coords temp; 
     vector<coords> set; 
