@@ -115,6 +115,7 @@ vector<coord> ValidMoves(const int x, const int y)
 {
     vector<coord> allpos;
     Piece* cur_piece = board[y][x];
+    char color = cur_piece->getColor();
     
     allpos = cur_piece->isValid();
 
