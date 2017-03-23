@@ -12,6 +12,8 @@ class Rook : public Piece
     vector<coord> PotentialMoves(int x, int y, chess* c); 
     void Move(const string position); //Use piece m_position and compare
     string getName() const; 
-    void setName(const string name); 
+    void setName(const string name);
+   Rook();//Constructor
+   ~Rook();//Destructor 
 };
 #endif
