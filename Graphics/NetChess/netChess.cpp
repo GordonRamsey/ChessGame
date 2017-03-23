@@ -7,8 +7,8 @@
 using namespace std;
 
 
-const int SCREEN_WIDTH = 894;
-const int SCREEN_HEIGHT = 894;
+const int SCREEN_WIDTH = 1216;
+const int SCREEN_HEIGHT = 896;
 const int SCREEN_BPP = 32;
 
 int SPRITE_SIZE = 64;
@@ -29,6 +29,20 @@ int CLIP_KNIGHT_SELECT = 9;
 int CLIP_QUEEN_SELECT = 10;
 int CLIP_KING_SELECT = 11;
 
+int CLIP_PAWN_UPGRADE = 12;
+int CLIP_ROOK_UPGRAD = 13;
+int CLIP_BISHOP_UPGRAD = 14;
+int CLIP_KNIGHT_UPGRAD = 15;
+int CLIP_QUEEN_UPGRAD = 16;
+int CLIP_KING_UPGRAD = 17;
+
+int CLIP_PAWN_UPGRADE_SELECT = 18;
+int CLIP_ROOK_UPGRADE_SELECT = 19;
+int CLIP_BISHOP_UPGRADE_SELECT = 20;
+int CLIP_KNIGHT_UPGRADE_SELECT = 21;
+int CLIP_QUEEN_UPGRADE_SELECT = 22;
+int CLIP_KING_UPGRADE_SELECT = 23;
+
 //Our connection to the server
 Socket s_socket;
 SocketSet socketSet;
@@ -42,20 +56,31 @@ SDL_Surface *pieceSheet4 = NULL; //Player 4
 SDL_Surface *ghostSheet = NULL;
 SDL_Surface *screen = NULL;
 
+//Text input
+SDL_Surface *text = NULL;
+//side bar chat
+SDL_Surface *sideBar = NULL;
+
 //The event structure
 SDL_Event event;
 
-SDL_Rect clips[12];
+SDL_Rect clips[24];
 
 //Our "held" piece
 Piece* selected = NULL;
 vector<Piece> pieces;
+
 int player_num; //Our player num relevent to the current game
 bool game_start = false;
 
+//Chat Variables
+StringInput chat;
+TTF_Font *font = NULL;
+SDL_Color textColor = {0, 0, 0};
+vector<string> history;
+
 //variables used in HOLD call
 Piece ghostPiece = Piece(-1,-64,-64);
-int orig_x, orig_y;
 
 void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL)
 {
@@ -68,6 +93,14 @@ void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination,
 
   //blit the surface
   SDL_BlitSurface( source, clip, destination, &offset );
+}
+
+void StringInput::show_centered()
+{
+  if(text != NULL)
+  {
+    apply_surface(896, SCREEN_HEIGHT - text->h, text, screen);
+  }
 }
 
 void Piece::setClip(int x)
@@ -95,8 +128,6 @@ void Piece::handle_events()
 	  if(selected == NULL){
 	    this->setClip(this->getClip()+6);
 	    selected = this;
-	    orig_x = selected->getPos().x;
-	    orig_y = selected->getPos().y;
 	  }
       }//if its really us
     }
@@ -134,6 +165,7 @@ void Piece::setTeam(int x)
 
 void set_clips()
 {
+  //Clip range for pawn
   clips[CLIP_PAWN].x = 0;
   clips[CLIP_PAWN].y = 0;
   clips[CLIP_PAWN].w = SPRITE_SIZE;
@@ -143,6 +175,55 @@ void set_clips()
   clips[CLIP_PAWN_SELECT].y = SPRITE_SIZE;
   clips[CLIP_PAWN_SELECT].w = SPRITE_SIZE;
   clips[CLIP_PAWN_SELECT].h = SPRITE_SIZE;
+
+  clips[CLIP_PAWN_UPGRADE].x = 0;
+  clips[CLIP_PAWN_UPGRADE].y = SPRITE_SIZE*2;
+  clips[CLIP_PAWN_UPGRADE].w = SPRITE_SIZE;
+  clips[CLIP_PAWN_UPGRADE].h = SPRITE_SIZE;
+  
+  clips[CLIP_PAWN_UPGRADE_SELECT].x = 0;
+  clips[CLIP_PAWN_UPGRADE_SELECT].y = SPRITE_SIZE*3;
+  clips[CLIP_PAWN_UPGRADE_SELECT].w = SPRITE_SIZE;
+  clips[CLIP_PAWN_UPGRADE_SELECT].h = SPRITE_SIZE;
+
+  //clip range for the rook
+  clips[CLIP_ROOK].x = SPRITE_SIZE;
+  clips[CLIP_ROOK].y = 0;
+  clips[CLIP_ROOK].w = SPRITE_SIZE;
+  clips[CLIP_ROOK].h = SPRITE_SIZE;
+
+  clips[CLIP_ROOK_SELECT].x = SPRITE_SIZE;
+  clips[CLIP_ROOK_SELECT].y = SPRITE_SIZE;
+  clips[CLIP_ROOK_SELECT].w = SPRITE_SIZE;
+  clips[CLIP_ROOK_SELECT].h = SPRITE_SIZE;
+  
+  //clip range for the bishop
+  clips[CLIP_BISHOP].x = SPRITE_SIZE*2;
+  clips[CLIP_BISHOP].y = 0;
+  clips[CLIP_BISHOP].w = SPRITE_SIZE;
+  clips[CLIP_BISHOP].h = SPRITE_SIZE;
+
+  clips[CLIP_BISHOP_SELECT].x = SPRITE_SIZE*2;
+  clips[CLIP_BISHOP_SELECT].y = SPRITE_SIZE;
+  clips[CLIP_BISHOP_SELECT].w = SPRITE_SIZE;
+  clips[CLIP_BISHOP_SELECT].h = SPRITE_SIZE;
+  
+  //clip range for the knight
+  clips[CLIP_KNIGHT].x = SPRITE_SIZE*3;
+  clips[CLIP_KNIGHT].y = 0;
+  clips[CLIP_KNIGHT].w = SPRITE_SIZE;
+  clips[CLIP_KNIGHT].h = SPRITE_SIZE;
+
+  clips[CLIP_KNIGHT_SELECT].x = SPRITE_SIZE*3;
+  clips[CLIP_KNIGHT_SELECT].y = SPRITE_SIZE;
+  clips[CLIP_KNIGHT_SELECT].w = SPRITE_SIZE;
+  clips[CLIP_KNIGHT_SELECT].h = SPRITE_SIZE;
+
+  //clip range for the queen
+  clips[CLIP_QUEEN].x = SPRITE_SIZE*4;
+  clips[CLIP_QUEEN].y = 0;
+  clips[CLIP_QUEEN].w = SPRITE_SIZE;
+  clips[CLIP_QUEEN].h = SPRITE_SIZE;
 
   //clip range for the rook
   clips[CLIP_ROOK].x = SPRITE_SIZE;
@@ -237,6 +318,10 @@ bool init()
   {
     return false;
   }
+  if(TTF_Init() == -1)
+  {
+    return false;
+  }
 
   SDL_WM_SetCaption("NetChess", NULL);
 
@@ -252,6 +337,13 @@ bool load_files()
   pieceSheet3 = load_image("basicPieces643.png");
   pieceSheet4 = load_image("basicPieces644.png");
   ghostSheet = load_image("ghostPieces64.png");
+
+  font = TTF_OpenFont("edosz.ttf",28);
+  if(font == NULL)
+  {  
+    cerr << "Fuck me no font" << endl;
+    return false;
+  }
 
   if(board == NULL)
   {
@@ -386,6 +478,30 @@ void generatePieces()
   }
 }
 
+void printChat()
+{
+  for(unsigned int i=0;i<history.size();i++){
+    //Get line from history
+    string line = history[i];
+    //apply like to surface
+    sideBar = TTF_RenderText_Solid(font, line.c_str(), textColor);
+    //render surface
+    int bar = SCREEN_HEIGHT/30;
+    apply_surface(896,bar*i, sideBar, screen);
+  }
+
+}
+
+//Add a message to the chat history
+void addChat(string msg)
+{
+  history.insert(history.begin(),msg);
+  if(history.size() > 28)
+  {
+    history.pop_back();
+  }
+}
+
 //Connect to the server Whoaaaa!
 int connectServer(int argc, char* argv[])
 {
@@ -398,6 +514,17 @@ int connectServer(int argc, char* argv[])
   return -1;
 }
 
+string snip_to_end(string msg, int &cursor)
+{
+  int last = cursor;
+  cursor = msg.find(" ",cursor);
+  string ret;
+  ret = msg.substr(last,msg.length()-last);
+  cursor++;
+  return ret;
+
+}
+
 //Helper function for netProcess
 string snip(string msg, int &cursor)
 {
@@ -406,7 +533,7 @@ string snip(string msg, int &cursor)
   int last = cursor;
   cursor = msg.find(" ",cursor);
   string ret;
-  if(cursor != string::npos)
+  if((unsigned)cursor != string::npos)
     ret = msg.substr(last, cursor-last);
   else
     ret = msg.substr(last,msg.length()-last);
@@ -523,6 +650,14 @@ void netProcess(string msg)
     ghostPiece.setClip(i_clip-6);
     ghostPiece.setPos(i_x,i_y);
   }//If- HOLD
+  else if(cmd == "GMSG")//GMSG <player> <msg>
+  {
+    string s_player = snip(msg,index);
+    string player_message = snip_to_end(msg,index);
+    ss.str("");
+    ss << s_player << " @ " << player_message;
+    addChat(ss.str());
+  }
   else
   {
     cerr << "Unknown command received:" << msg << endl;
@@ -533,6 +668,7 @@ void netProcess(string msg)
 int main ( int argc, char* argv[] )
 {
   bool quit = false;
+  bool chat_mode = false;
   int x,y;
   
   // Error check
@@ -570,6 +706,7 @@ int main ( int argc, char* argv[] )
     //While theres an event to handle
     while(SDL_PollEvent(&event))
     {
+      Uint8 *keystates = SDL_GetKeyState(NULL);
       //This wont let us do anything until the game starts
       if(game_start){ 
 	if(event.type == SDL_MOUSEBUTTONDOWN)
@@ -638,6 +775,28 @@ int main ( int argc, char* argv[] )
 	    continue;
 	  }//If- Selected != null
 	}//If- event type = mouseleft
+	//If enter key is pressed, enter chat mode
+	else if(keystates[SDLK_RETURN])
+	{
+	  cerr << "Enter registered- current chat:" << chat.getText() << endl;
+	  if(!chat_mode)
+	  {  
+	    chat_mode = true;
+	    chat.addChar('_');
+	  }
+	  else
+	  {  
+	    chat_mode = false;
+	    if(chat.getText() != "" && chat.getText() != "_"){
+	      stringstream ss;
+	      ss.str("");
+	      ss << "GMSG " << player_num << " " << chat.getText();
+	      socketSet.wait(0);
+	      s_socket.writeString(ss.str());
+	    }
+	    chat.reset();
+	  }
+	}
 	else if(event.type == SDL_MOUSEMOTION && selected != NULL)
 	{
 	  stringstream ss;
@@ -648,9 +807,14 @@ int main ( int argc, char* argv[] )
 	  
 	}
 	
-	//Perform local piece event handling
+	//Perform local piece event handling (get clicked on)
 	for(unsigned int i=0;i<pieces.size();i++)
 	  pieces[i].handle_events();
+
+	//If chatmode is on, do chat things (get chatted in)
+	if(chat_mode){
+	  chat.handle_input(event,font,textColor);
+	}
 
       }//If- game start
 
@@ -693,6 +857,13 @@ int main ( int argc, char* argv[] )
       pieces[i].show();
 
     ghostPiece.show();
+
+    //Show the chat input
+    chat.setSurface(TTF_RenderText_Solid(font, chat.getText().c_str(), textColor));
+    chat.show_centered();
+   
+    //print side chat bar
+    printChat();
 
     //Update screen
     if(SDL_Flip( screen ) == -1){

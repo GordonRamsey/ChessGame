@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS= -c -Wall
-LDFLAGS= -lSDL -lSDL_image
-COMMON_SOURCES=./Net_Assets/Socket.cpp ./Net_Assets/SocketSet.cpp ../../Engine/piece.cpp
+LDFLAGS= -lSDL -lSDL_image -lSDL_ttf
+COMMON_SOURCES=./Net_Assets/Socket.cpp ./Net_Assets/SocketSet.cpp ../../Engine/piece.cpp ./Text_Assets/StringInput.cpp
 CLIENT_SOURCES=netChess.cpp
 #CLIENT_SOURCES=twoPlayerNetChess.cpp
 COMMON_OBJECTS=$(COMMON_SOURCES:.cpp=.o)
