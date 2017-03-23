@@ -1,82 +1,59 @@
 #include "pawn.h"
 using namespace std;
 
-vector<coord> Pawn::AllPos()
+Pawn::Pawn()
+{
+    m_name = "Pawn";
+}
+
+Pawn::~Pawn()
+{}
+
+vector<coords> Pawn::AllPos()
 {
 	coord temp;
     vector<coord> set;
-    bool allDone = false;
 
-
-    if(allDone == false){
 	vector<coord> set;
 
-	//Checking what color first.
-    if (m_color == 'b')
-    {
         
-		if(m_first == true)
-		{
-            //should we check out of bounds?
-			temp.y = m_position.y + 2;
-			temp.x = m_position.x + 0;
-			set.push_back(temp);
-		}
-		//Directly "in front of" the pawn
-		temp.y = m_position.y + 1;
-		temp.x = m_position.x + 0;
-		if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0)
-            set.push_back(temp);
-		//Diagonal left:
-		temp.y = m_position.y + 1;
-		temp.x = m_position.x - 1;
-		if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0)
-            set.push_back(temp);
-
-		//Diagonal right:
-		temp.y = m_position.y + 1;
-		temp.x = m_position.x + 1;
-		set.push_back(temp);
-		
-	}
-
-	else if (m_color == 'w')
+	if(m_first == true)
 	{
-		if (m_first == true)
-		{
-			temp.y = m_position.y - 2;
-			temp.x = m_position.x + 0;
-			set.push_back(temp);
-		}
-		//Directly "in front of" the pawn:
-		temp.y = m_position.y - 1;
+        //should we check out of bounds?
+		temp.y = m_position.y + 2;
 		temp.x = m_position.x + 0;
-		set.push_back(temp);
+        set.push_back(temp);
+	}
+	//Directly "in front of" the pawn
+	temp.y = m_position.y - 1;
+	temp.x = m_position.x + 0;
+	if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0)
+        set.push_back(temp);
+	/*
+    //Diagonal left:
+	temp.y = m_position.y + 1;
+	temp.x = m_position.x - 1;
+	if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0)
+        set.push_back(temp);
 
-		//Diagonal left:
-		temp.y = m_position.y - 1;
-		temp.x = m_position.x - 1;
-		set.push_back(temp);
-
-		//Diagonal right:
-		temp.y = m_position.y - 1;
-		temp.x = m_position.x + 1;
-		set.push_back(temp);
-
-	} 
-		if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0)
-            set.push_back(temp);
-        
-        allDone = true; 
-    }
-
-    while(allDone == true){
-        //WLocs 
-
-
-    }
+	//Diagonal right:
+	temp.y = m_position.y + 1;
+	temp.x = m_position.x + 1;
+	set.push_back(temp);
+    */
 }
 
+
+
+string Pawn::getName()const
+{
+    return m_name;
+}
+
+void Pawn::setName(const string name)
+{
+    m_name = name;
+}
 
 void Pawn::Move(const coord position)
 {

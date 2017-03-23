@@ -1,15 +1,27 @@
 #include "bishop.h"
 using namespace std;
 
+<<<<<<< HEAD
 vectors<coord> Bishop::AllPos()
+=======
+Bishop::Bishop()
+{
+    m_name = "Bishop";
+}
+
+Bishop::~Bishop()
+{}
+
+vectors<coords> Bishop::AllPos()
+>>>>>>> dab7249307950317a36610e536ffc2f19342a128
 {
     coord temp; 
     vector<coord> set; 
 
     //Move Diagonal up, right(w) AND down, left(b)  
     for(int i = 0; i < 8; ++i){
-        temp.y = m_position.y + 1; 
-        temp.x = m_position.x + 1; 
+        temp.y = m_position.y - 1; 
+        temp.x = m_position.x - 1; 
 
         if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0)
             set.push_back(temp); 
@@ -28,8 +40,8 @@ vectors<coord> Bishop::AllPos()
     }
     //Move Diagonal up, left(w) AND down, right(b)
     for(int i = 0; i < 8; ++i){
-        temp.y = m_position.y + 1; 
-        temp.x = m_position.x - 1; 
+        temp.y = m_position.y - 1; 
+        temp.x = m_position.x + 1; 
         
         if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0)
             set.push_back(temp); 
@@ -38,14 +50,24 @@ vectors<coord> Bishop::AllPos()
     }
     //Move Diagonal down, left(w) AND up, right(b)
     for(int i = 0; i < 8; ++i){
-        temp.y = m_position.y - 1; 
-        temp.x = m_position.x - 1; 
+        temp.y = m_position.y + 1; 
+        temp.x = m_position.x + 1; 
         
         if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0)
             set.push_back(temp); 
         else 
             continue;
     }
+}
+
+string Bishop::getName() const
+{
+    return m_name;
+}
+
+void Bishop::setName(const string name)
+{
+    m_name = name;
 }
 
 void Bishop::Move(const string posiiton)
