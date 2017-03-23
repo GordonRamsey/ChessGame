@@ -5,12 +5,10 @@
 #include "chess.h"
 
 Piece* game_board[8][8];
+vector<coord> WLocs, Blocs, validPos;
 
 void SetUp()
 {
-     
-    vector<coord> WLocs; 
-    vector<coord> BLocs; 
     coord temp; 
     
     game_board[0][0] = new Rook();
