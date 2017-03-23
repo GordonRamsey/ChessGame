@@ -8,3 +8,12 @@ To Run:
 
 Notes:
   Bridge file is for local dependencies, edit accordingly
+
+
+THE_REAL_GOODS:
+  To compile:
+    make... but you are goign to want to go into he make file and make sure you are compilwing the right one.
+      you might have to change the object and excutable to the two player chess. it will be defaulted to net chess.
+
+    To run:
+      same old same old

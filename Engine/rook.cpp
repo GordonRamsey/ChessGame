@@ -1,8 +1,15 @@
 #include "rook.h"
 using namespace std;
 
-vector<coords> Rook::AllPos()
+Rook::Rook()
 {
+    m_name = "Rook"; 
+}
+
+
+vector<coord> Rook::AllPos()
+{
+    int count = 0; 
     coords temp; 
     vector<coords> set; 
 
@@ -11,14 +18,16 @@ vector<coords> Rook::AllPos()
         temp.y = m_position.y + 1; 
         temp.x = m_position.x + 0; 
         
-        if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0)
+        if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0){
             set.push_back(temp); 
+            ++count; 
+        }
         else
             continue; 
     }
     //move down(w) up(b)
     for(int i = 0; i < 8; ++i){
-        temp.y = m_position.y - 1; 
+        temp.y = m_position.y + 1; 
         temp.x = m_position.x + 0; 
         if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0)
             set.push_back(temp); 
@@ -42,10 +51,15 @@ vector<coords> Rook::AllPos()
         temp.x = m_position.x - 1; 
         if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0)
             set.push_back(temp); 
+            ++count; 
         else
             continue;
-    }
 
+    findCount(count); 
+}
+
+void Rook::findCount(int count){
+    return count; 
 }
 
 void Rook::Move(const string posiiton)
@@ -57,4 +71,14 @@ void Rook::Move(const string posiiton)
 void Rook::IsValid(coord Position, &vector<coord> allpos)
 {
 	
+}
+
+string Rook::getName() const
+{
+    return m_name; 
+}
+
+string Rook::setName(const string name)
+{
+    m_name = name; 
 }

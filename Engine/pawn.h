@@ -10,5 +10,7 @@ class Pawn : public Piece {
         bool isValid();
         void Move(const coord position); //Use piece m_position and compare
         void Exchange();
+	Pawn();//Contructor
+	~Pawn();//Destructor
 };
 #endif
