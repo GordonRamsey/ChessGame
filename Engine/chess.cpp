@@ -225,22 +225,22 @@ void OpponentExists(char color, int validPos_y, int validPos_x, int curr_y, int 
 vector<coord> ValidMoves(const int x, const int y) 
 {
     Piece* cur_piece = board[y][x];
-    char color = cur_piece->getColor();
+    char color = cur_piece->getColor(); 
     string type = cur_piece->getName(); 
     vector<coord> validPos(cur_piece->AllPos()); 
-   //CHECK FOR COLLISION OF PIECES IN THE WAY, IF 
     if(color == 'w')
     {
         for(int i = 0; i < validPos.size(); ++i)
         {
             for(int j = 0; j < WLocs.size(); ++j)
             {
-                if(validPos.at(i) == WLocs.at(j))
+                if(validPos.at(i) == WLocs.at(j)) //Did you find an Ally location thats still considered validPos? 
                 {
-                    int tmp_x = validPos.at(i).x;
+                    int tmp_x = validPos.at(i).x; 
                     int tmp_y = validPos.at(i).y; 
-                    if(type == "Pawn")
+                    if(type == "Pawn")              
                     {                        
+                        checkPawn(color, tmp_y, tmp_x); 
                     }
                     if(type == "Rook")
                     {
@@ -248,18 +248,18 @@ vector<coord> ValidMoves(const int x, const int y)
                     }
                     if(type == "Knight")
                     {
+                        checkKnight(color, tmp_y, tmp_x); 
                     }
                     if(type == "Bishop")
                     {
+                        checkBishop(color, tmp_y, tmp_x); 
                     }
-                    if(type == "Queen")
+                    if(type == "King" || type == "Queen")
                     {
-                    }
-                    if(type == "King")
-                    {
+                        checkKing(color, tmp_y, tmp_x); 
                     }
                     
-                    SeekandRemove(tmp_y, tmp_x); 
+                    SeekandRemove(color, tmp_y, tmp_x); 
                 }
         }
             for(k = 0; k < validPos.size(); ++k)
@@ -296,7 +296,7 @@ void checkRook(char color, int y, int x)
 {
     int tmp_y, tmp_x; 
         //move up
-        for(int i = y-1; i <= 0; --i)
+        for(int i=(y-1); i >= 0; --i)
         {
             tmp_y = i; 
             tmp_x = x;
@@ -306,7 +306,7 @@ void checkRook(char color, int y, int x)
                 continue; 
         }
         //move down
-        for(int i = y+1; i <= 8; ++i)
+        for(int i=(y+1); i < 8; ++i)
         { 
             tmp_y = i; 
             tmp_x = x;
@@ -315,18 +315,18 @@ void checkRook(char color, int y, int x)
             else
                 continue;
         }
-        //down left
-        for(int i = x-1; i <= 0; --i)
+        //down right
+        for(int i = (x-1); i > 0; --i)
         {
             tmp_y = y; 
-            tmp_x= i; 
+            tmp_x = i; 
             if(isAlly(color, tmp_y, tmp_x))
                 SeekandRemove(color, tmp_y, tmp_x);
             else
                 continue;
         }
-        //move right
-        for(int i = x+1; i <= 0; ++i)
+        //move left
+        for(int i=(x+1); i < 8; ++i)
         {
             tmp_y = y; 
             tmp_x = i; 
@@ -340,17 +340,305 @@ void checkRook(char color, int y, int x)
 
 coord checkBishop(char color, int y, int x)
 {
+    int tmp_y = 1;
+    int tmp_x = 1;  
+    int checkY, checkX; 
+    //diagonal up right 
+    while((y-tmp_y) >= 0 && (x-tmp_x) >= 0)
+    {
+        checkY = y-tmp_y; 
+        checkX = x-tmp_x; 
+        if(isAlly(color, checkY, checkX))
+            SeekandRemove(color, checkY, checkX); 
+
+        ++tmp_y; 
+        ++tmp_x; 
+    }
+    
+    //diagonal up left
+    while((y-tmp_y) >= 0 && (x+tmp_x) < 8)
+    {
+        checkY = y-tmp_y; 
+        checkX = x+tmp_x; 
+        if(isAlly(color, checkY, checkX))
+            SeekandRemove(color, checkY, checkX); 
+
+        ++tmp_y; 
+        ++tmp_x; 
+    }
+    
+    //diagonal down right
+    while((y+tmp_y) < 8 && (x-tmp_x) >= 0)
+    {
+        checkY = y+tmp_y; 
+        checkX = x-tmp_x; 
+        if(isAlly(color, checkY, checkX))
+            SeekandRemove(color, checkY, checkX); 
+
+        ++tmp_y; 
+        ++tmp_x; 
+    }
+
+    //diagonal down left
+    while((y+tmp_y) >= 0 && (x+tmp_x) >= 0)
+    {
+        checkY = y-tmp_y; 
+        checkX = x+tmp_x; 
+        if(isAlly(color, checkY, checkX))
+            SeekandRemove(color, checkY, checkX); 
+
+        ++tmp_y; 
+        ++tmp_x; 
+    }
 }
+
 coord checkKing(char color, int y, int x)
 {
+    bool halfDone = false; 
+    int tmp_y, tmp_x; 
+    while(halfDone == false)
+    {
+        for(int i=(y-1); i >= 0; --i)
+        {
+            tmp_y = i; 
+            tmp_x = x;
+            if(isAlly(color, tmp_y, tmp_x))
+                SeekandRemove(color, tmp_y, tmp_x);
+            else
+                continue; 
+        }
+        //move down
+        for(int i=(y+1); i < 8; ++i)
+        { 
+            tmp_y = i; 
+            tmp_x = x;
+            if(isAlly(color, tmp_y, tmp_x))
+                SeekandRemove(color, tmp_y, tmp_x);
+            else
+                continue;
+        }
+        //down left
+        for(int i=(x+1); i < 8; ++i)
+        {
+            tmp_y = y; 
+            tmp_x = i; 
+            if(isAlly(color, tmp_y, tmp_x))
+                SeekandRemove(color, tmp_y, tmp_x);
+            else
+                continue;
+        }
+        //move right
+        for(int i =(x-1); i >= 0; --i)
+        {
+            tmp_y = y; 
+            tmp_x = i; 
+            if(isAlly(color, tmp_y, tmp_x))
+                SeekandRemove(color, tmp_y, tmp_x);
+            else
+                continue;
+        }
+
+        halfDone == true; 
+    }
+
+
+    tmp_y, tmp_x = 1;
+    int checkY, checkX; 
+    //diagonal up right 
+    while((y-tmp_y) >= 0 && (x-tmp_x) >= 0)
+    {
+        checkY = y-tmp_y; 
+        checkX = x-tmp_x; 
+        if(isAlly(color, checkY, checkX))
+            SeekandRemove(color, checkY, checkX); 
+
+        ++tmp_y; 
+        ++tmp_x; 
+    }
+    
+    //diagonal up left
+    while((y-tmp_y) >= 0 && (x+tmp_x) < 8)
+    {
+        checkY = y-tmp_y; 
+        checkX = x+tmp_x; 
+        if(isAlly(color, checkY, checkX))
+            SeekandRemove(color, checkY, checkX); 
+
+        ++tmp_y; 
+        ++tmp_x; 
+    }
+    
+    //diagonal down right
+    while((y+tmp_y) < 8 && (x-tmp_x) >= 0)
+    {
+        checkY = y+tmp_y; 
+        checkX = x-tmp_x; 
+        if(isAlly(color, checkY, checkX))
+            SeekandRemove(color, checkY, checkX); 
+
+        ++tmp_y; 
+        ++tmp_x; 
+    }
+
+    //diagonal down left
+    while((y+tmp_y) < 8 && (x+tmp_x) < 8)
+    {
+        checkY = y-tmp_y; 
+        checkX = x+tmp_x; 
+        if(isAlly(color, checkY, checkX))
+            SeekandRemove(color, checkY, checkX); 
+
+        ++tmp_y; 
+        ++tmp_x; 
+    }
+
 }
+
+
 coord checkKnight(char color, int y, int x)
 {
+    int y2, x2 = 2; 
+    int y1, x1 = 1; 
+    int checkX, checkY; 
+    //up 2, right 1
+    while((y-y2) >= 0 && (x-x1) >= 0)
+    {
+        checkY = y-y2; 
+        checkX = x-x1; 
+
+        if(isAlly(color, checkY, checkX))
+            SeekandRemove(color, checkY, checkX); 
+
+        y2 = y2+2; 
+        x1 = x1+1; 
+    }
+    //up 1, right 2
+    while((y-y1) >= 0 && (x-x2) >= 0)
+    {
+        checkY = y-y1; 
+        checkX = x-x2; 
+
+        if(isAlly(color, checkY, checkX))
+            SeekandRemove(color, checkY, checkX); 
+
+        y1 = y1+1; 
+        x2 = x2+2; 
+    }
+
+    //up 2, left 1
+    while((y-y2) >= 0 && (x+x1) < 8)
+    {
+        checkY = y-y2; 
+        checkX = x+x1; 
+
+        if(isAlly(color, checkY, checkX))
+            SeekandRemove(color, checkY, checkX); 
+
+        y2 = y2+2; 
+        x1 = x1+1; 
+    }
+    //up 1, left 2
+    while((y-y1) >= 0 && (x+x2) < 8)
+    {
+        checkY = y-y1; 
+        checkX = x+x2; 
+
+        if(isAlly(color, checkY, checkX))
+            SeekandRemove(color, checkY, checkX); 
+
+        y1 = y1-1; 
+        x2 = x2+2; 
+    }
+    //down 2, left 1
+    while((y+y2) < 8 && (x+x1) < 8)
+    {
+        checkY = y+y2; 
+        checkX = x+x1; 
+
+        if(isAlly(color, checkY, checkX))
+            SeekandRemove(color, checkY, checkX); 
+
+        y2 = y2+2; 
+        x1 = x1+1; 
+    }
+
+    //down 1, left 2
+    while((y+y1) < 8 && (x+x2) < 8)
+    {
+        checkY = y+y1;
+        checkX = x+x2; 
+
+        if(isAlly(color, checkY, checkX))
+            SeekandRemove(color, checkY, checkX); 
+
+        y1 = y1+1; 
+        x2 = x2+2; 
+    }
+
+    //down 2, right 1
+    while((y+y2) < 8 && (x-x1) >= 0)
+    {
+        checkY = y+y2; 
+        checkX = x-x1; 
+
+        if(isAlly(color, checkY, checkX))
+            SeekandRemove(color, checkY, checkX); 
+
+        y2 = y2+2; 
+        x1 = x1-1; 
+    }
+
+    //down 1, right 2
+    while((y+y1) < 8 && (x-x2) >= 0)
+    {
+        checkY = y-y1; 
+        checkX = x-x2; 
+
+        if(isAlly(color, checkY, checkX))
+            SeekandRemove(color, checkY, checkX); 
+
+        y1 = y1+1; 
+        x2 = x2+2; 
+    }
+
 }
+
+
+
+
+
+/*
 coord checkQueen(char color, int y, int x)
 {
 }
+*/ //Same Code as King? 
 coord checkPawn(char color, int y, int x)
 {
+    //only moving up
+    if(color == 'w')
+    {
+        for(int i=(y-1); i >= 0; --i)
+        {
+            tmp_y = i; 
+            tmp_x = x;
+            if(isAlly(color, tmp_y, tmp_x))
+                SeekandRemove(color, tmp_y, tmp_x);
+            else
+                continue; 
+        }
+    }
+    else
+    {
+        for(int i = (y+1); i < 8; ++i)
+        {
+            tmp_y = i; 
+            tmp_x = x;
+            if(isAlly(color, tmp_y, tmp_x))
+                SeekandRemove(color, tmp_y, tmp_x);
+            else
+                continue; 
+        }
+        
+    }
 }
 

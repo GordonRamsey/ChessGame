@@ -20,7 +20,7 @@ vector<coords> Queen::AllPos()
 	//Moving vertically towards "top" of board:
 	for (int i = 0; i < 8; ++i)
 	{
-		temp.y = m_position.y + 1;
+		temp.y = m_position.y - 1;
 		temp.x = m_position.x + 0;
         if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0) 
 		    set.push_back(temp); 
@@ -31,7 +31,7 @@ vector<coords> Queen::AllPos()
 	//Moving vertically towards "bottom" of board:
 	for (int i = 0; i < 8; ++i)
 	{
-		temp.y = m_position.y - 1;
+		temp.y = m_position.y + 1;
 		temp.x = m_position.x + 0;
         if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0) 
 		    set.push_back(temp);
@@ -43,7 +43,7 @@ vector<coords> Queen::AllPos()
 	for (int i = 0; i < 8; ++i)
 	{
 		temp.y = m_position.y + 0;
-		temp.x = m_position.x + 1;
+		temp.x = m_position.x - 1;
         if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0) 
 		    set.push_back(temp);
         else
@@ -54,7 +54,7 @@ vector<coords> Queen::AllPos()
 	for (int i = 0; i < 8; ++i)
 	{
 		temp.y = m_position.y + 0;
-		temp.x = m_position.x - 1;
+		temp.x = m_position.x + 1;
         if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0) 
 		    set.push_back(temp);
         else
@@ -64,18 +64,7 @@ vector<coords> Queen::AllPos()
 	//Moving diagonally towards "top right" of board:
 	for (int i = 0; i < 8; ++i)
 	{
-		temp.y = m_position.y + 1;
-		temp.x = m_position.x + 0;
-        if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0) 
-		    set.push_back(temp);
-        else
-            continue;
-	}
-
-	//Moving diagonally towards "top left" of board:
-	for (int i = 0; i < 8; ++i)
-	{
-		temp.y = m_position.y + 1;
+		temp.y = m_position.y - 1;
 		temp.x = m_position.x - 1;
         if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0) 
 		    set.push_back(temp);
@@ -83,7 +72,7 @@ vector<coords> Queen::AllPos()
             continue;
 	}
 
-	//Moving diagonally towards "bottom right" of board:
+	//Moving diagonally towards "top left" of board:
 	for (int i = 0; i < 8; ++i)
 	{
 		temp.y = m_position.y - 1;
@@ -94,11 +83,22 @@ vector<coords> Queen::AllPos()
             continue;
 	}
 
+	//Moving diagonally towards "bottom right" of board:
+	for (int i = 0; i < 8; ++i)
+	{
+		temp.y = m_position.y + 1;
+		temp.x = m_position.x - 1;
+        if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0) 
+		    set.push_back(temp);
+        else
+            continue;
+	}
+
 	//Moving diagonally towards "bottom left" of board:
 	for (int i = 0; i < 8; ++i)
 	{
-		temp.y = m_position.y - 1;
-		temp.x = m_position.x - 1;
+		temp.y = m_position.y + 1;
+		temp.x = m_position.x + 1;
         if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0) 
 		    set.push_back(temp);
         else
