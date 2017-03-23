@@ -27,7 +27,7 @@ vector<coord> Rook::AllPos()
     }
     //move down(w) up(b)
     for(int i = 0; i < 8; ++i){
-        temp.y = m_position.y - 1; 
+        temp.y = m_position.y + 1; 
         temp.x = m_position.x + 0; 
         if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0)
             set.push_back(temp); 
