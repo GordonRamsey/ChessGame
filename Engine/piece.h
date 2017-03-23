@@ -37,7 +37,6 @@ class Piece {
         
         bool getCaptured() const;
         void setCaptured(const bool captured);
-        virtual bool isValid();
 
 	//SDL Functions
 	void handle_events();
