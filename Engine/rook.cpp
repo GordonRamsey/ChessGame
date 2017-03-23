@@ -6,6 +6,9 @@ Rook::Rook()
     m_name = "Rook"; 
 }
 
+Rook::~Rook()
+{}
+
 
 vector<coord> Rook::AllPos()
 {

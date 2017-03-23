@@ -174,6 +174,17 @@ void Move(int cur_x, int cur_y, int new_x, int new_y)
 
 }
 
+void SeekandRemove(char color, int y, int x) //Don't need color yet
+{
+    for(int i = 0; i < validPos.size(); +=i)
+    {
+        if((validPos[i].y == y) && (validPos[i].x == x))
+            validPos.erase(validPos.begin()+i);
+    }
+}
+
+
+
 /*
 //Consider if the piece of KING
 void OpponentExists(char color, int validPos_y, int validPos_x, int curr_y, int curr_x){
@@ -200,9 +211,18 @@ void OpponentExists(char color, int validPos_y, int validPos_x, int curr_y, int 
 }
 */
 
+void OpponentExists(char color, int validPos_y, int validPos_x, int curr_y, int curr_x)
+{
+    if(cur_y - 1 != validPos_y)
+    
+    else
+    {
+        //can be Captured()
+        
+    
 
 /* UNDER CONSTRUCTION */
-vector<coord> ValidMoves(const int x, const int y)
+vector<coord> ValidMoves(const int x, const int y) 
 {
     Piece* cur_piece = board[y][x];
     char color = cur_piece->getColor();

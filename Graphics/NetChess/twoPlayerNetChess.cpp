@@ -449,11 +449,13 @@ void netProcess(string msg)
     //Remove Ghost image
     ghostPiece.setPos(-64,-64);
 
-  }//If- MOVE
+  }
+  //If- MOVE
   else if(cmd == "PLAC")//PLAC <piece> <piece id> <x> <y> <owner>
   {
-
-  }//If- PLAC
+    //EMPTY
+  }
+  //If- PLAC
   else if(cmd == "REMV")//REMV <x> <y>
   {
     int x, y;

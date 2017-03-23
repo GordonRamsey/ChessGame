@@ -1,6 +1,14 @@
 #include "bishop.h"
 using namespace std;
 
+Bishop::Bishop()
+{
+    m_name = "Bishop";
+}
+
+Bishop::~Bishop()
+{}
+
 vectors<coords> Bishop::AllPos()
 {
     coords temp; 
@@ -46,6 +54,16 @@ vectors<coords> Bishop::AllPos()
         else 
             continue;
     }
+}
+
+string Bishop::getName() const
+{
+    return m_name;
+}
+
+void Bishop::setName(const string name)
+{
+    m_name = name;
 }
 
 void Bishop::Move(const string posiiton)

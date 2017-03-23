@@ -1,6 +1,14 @@
 #include "king.h"
 using namespace std;
 
+King::King()
+{
+    m_name = name;
+}
+
+King::~King()
+{}
+
 vector<coords> King::AllPos()
 {
     coords temp; 
