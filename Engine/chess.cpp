@@ -92,8 +92,7 @@ void SetUp()
         game_board[6][i]->setPosition(6,i);
 		temp.x = i;
 		temp.y = 6;
-		WLocks.push_back(temp);
-		
+		WLocks.push_back(temp);	
     }
 
     game_board[7][0] = new Rook();
