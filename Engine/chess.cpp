@@ -73,8 +73,8 @@ void SetUp()
         game_board[1][i] = new Pawn();
         game_board[1][i]->setColor('b');
         game_board[1][i]->setPosition(1,i);
-        temp.y = i; 
-        temp.x = 1; 
+        temp.y = 1; 
+        temp.x = i; 
         BLocs.push_back(temp); 
     }
 
@@ -91,9 +91,9 @@ void SetUp()
         game_board[6][i] = new Pawn();
         game_board[6][i]->setColor('w');
         game_board[6][i]->setPosition(6,i);
-		temp.x = 6;
-		temp.y = i;
-		BLocks.push_back(temp);
+		temp.x = i;
+		temp.y = 6;
+		WLocks.push_back(temp);
 		
     }
 
@@ -175,36 +175,163 @@ void Move(int cur_x, int cur_y, int new_x, int new_y)
 
 }
 
+/*
+//Consider if the piece of KING
+void OpponentExists(char color, int validPos_y, int validPos_x, int curr_y, int curr_x){
+    
+    //difference is is 1
+    //ELSE for each if will need to call capture -- 
+    if((cur_y-1) != validPos_y)
+    
+    else{
+        //can be captured()
+        for(int i = 0; i < validPos.size(); ++i)
+        {
+            if((validPos_y-(i+1)) == validPos.at(i).y)
+                SeekandRemove((cury_y-i), validPos.at(i).x)
+        }
+    }
+        //SeekandRemove(validPos_y, validPos__x); 
+    if((cur_y+1) != validPos_y)
+        SeekandRemove(validPos_y, validPos_x); 
+    if((cur_x-1) != validPos_x)
+        SeekandRemove(cur_y, cur_x); 
+    if((cur_x+1) != validPos_x)
+        SeekandRemove(validPos_y, validPos_x); 
+}
+*/
+
+
 /* UNDER CONSTRUCTION */
 vector<coord> ValidMoves(const int x, const int y)
 {
-    vector<coord> allpos;
     Piece* cur_piece = board[y][x];
     char color = cur_piece->getColor();
-    
-    allpos = cur_piece->isValid();
-
+    string type = cur_piece->getName(); 
+    vector<coord> validPos(cur_piece->AllPos()); 
    //CHECK FOR COLLISION OF PIECES IN THE WAY, IF 
-    for(int i = 0; i < allpos.size(); ++i)
+    if(color == 'w')
     {
-        Piece* temp_piece = board[allpos[i].y][allpos[i].x]
-        if(temp_piece != NULL)
+        for(int i = 0; i < validPos.size(); ++i)
         {
-            if(temp_piece->getColor() == cur_piece->getColor())
+            for(int j = 0; j < WLocs.size(); ++j)
             {
-                //ally piece , so invalid move, determine other invalid moves
-                coord invalid = temp_piece->getPosition();
-                
-                //white pieces increase in value in y direction
-                if(temp_piece->getColor() == 'w')
+                if(validPos.at(i) == WLocs.at(j))
                 {
+                    int tmp_x = validPos.at(i).x;
+                    int tmp_y = validPos.at(i).y; 
+                    if(type == "Pawn")
+                    {                        
+                    }
+                    if(type == "Rook")
+                    {
+                        checkRook(color, tmp_y, tmp_x); 
+                    }
+                    if(type == "Knight")
+                    {
+                    }
+                    if(type == "Bishop")
+                    {
+                    }
+                    if(type == "Queen")
+                    {
+                    }
+                    if(type == "King")
+                    {
+                    }
                     
+                    SeekandRemove(tmp_y, tmp_x); 
+                }
+        }
+            for(k = 0; k < validPos.size(); ++k)
+            {
+                for(int g = 0; g < BLocs.size(); ++g)
+                {
+                    if(validPos.at(k) == BLocs.at(g))
+                    {
+                        int tmp_y = validPos.at(k).y; 
+                        int tmp_x = validPos.at(k).x; 
+                        OpponentExists(color, tmp_y, tmp_x, x, y);  
+                    }
+                    else
+                        continue; 
+                }    
+            }
+    }
+}                                
 
-
+bool isAlly(char color, int y, int x)
+{
+    Piece* tempPiece = board[y][x]; 
+    if(tempPiece == NULL)
+        return true; 
+    string tempColor = tempPiece->GetColor(); 
+    
+    if(tempColor != color)
+        return false; 
+    else
+        return true; 
+}
                 
+void checkRook(char color, int y, int x)
+{
+    int tmp_y, tmp_x; 
+        //move up
+        for(int i = y-1; i <= 0; --i)
+        {
+            tmp_y = i; 
+            tmp_x = x;
+            if(isAlly(color, tmp_y, tmp_x))
+                SeekandRemove(color, tmp_y, tmp_x);
+            else
+                continue; 
+        }
+        //move down
+        for(int i = y+1; i <= 8; ++i)
+        { 
+            tmp_y = i; 
+            tmp_x = x;
+            if(isAlly(color, tmp_y, tmp_x))
+                SeekandRemove(color, tmp_y, tmp_x);
+            else
+                continue;
+        }
+        //down left
+        for(int i = x-1; i <= 0; --i)
+        {
+            tmp_y = y; 
+            tmp_x= i; 
+            if(isAlly(color, tmp_y, tmp_x))
+                SeekandRemove(color, tmp_y, tmp_x);
+            else
+                continue;
+        }
+        //move right
+        for(int i = x+1; i <= 0; ++i)
+        {
+            tmp_y = y; 
+            tmp_x = i; 
+            if(isAlly(color, tmp_y, tmp_x))
+                SeekandRemove(color, tmp_y, tmp_x);
+            else
+                continue;
+        }
 
+}
 
-
-
-
+coord checkBishop(char color, int y, int x)
+{
+}
+coord checkKing(char color, int y, int x)
+{
+}
+coord checkKnight(char color, int y, int x)
+{
+}
+coord checkQueen(char color, int y, int x)
+{
+}
+coord checkPawn(char color, int y, int x)
+{
+}
 
