@@ -1,7 +1,7 @@
 #include "queen.h"
 using namespace std;
 
-vector<coords> Queen::isValid()
+vector<coords> Queen::AllPos()
 {
 	coords temp;
 	vector<coords> set;
@@ -14,7 +14,10 @@ vector<coords> Queen::isValid()
 	{
 		temp.y = m_position.y + 1;
 		temp.x = m_position.x + 0;
-		set.push_back(temp)
+        if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0) 
+		    set.push_back(temp); 
+        else
+            continue; 
 	}
 
 	//Moving vertically towards "bottom" of board:
@@ -22,7 +25,10 @@ vector<coords> Queen::isValid()
 	{
 		temp.y = m_position.y - 1;
 		temp.x = m_position.x + 0;
-		set.push_back(temp)
+        if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0) 
+		    set.push_back(temp);
+        else
+            continue;
 	}
 
 	//Moving horizontally towards "right" of board:
@@ -30,7 +36,10 @@ vector<coords> Queen::isValid()
 	{
 		temp.y = m_position.y + 0;
 		temp.x = m_position.x + 1;
-		set.push_back(temp)
+        if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0) 
+		    set.push_back(temp);
+        else
+            continue;
 	}
 
 	//Moving horizontally towards "left" of board:
@@ -38,7 +47,10 @@ vector<coords> Queen::isValid()
 	{
 		temp.y = m_position.y + 0;
 		temp.x = m_position.x - 1;
-		set.push_back(temp)
+        if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0) 
+		    set.push_back(temp);
+        else
+            continue;
 	}
 
 	//Moving diagonally towards "top right" of board:
@@ -46,7 +58,10 @@ vector<coords> Queen::isValid()
 	{
 		temp.y = m_position.y + 1;
 		temp.x = m_position.x + 0;
-		set.push_back(temp)
+        if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0) 
+		    set.push_back(temp);
+        else
+            continue;
 	}
 
 	//Moving diagonally towards "top left" of board:
@@ -54,7 +69,10 @@ vector<coords> Queen::isValid()
 	{
 		temp.y = m_position.y + 1;
 		temp.x = m_position.x - 1;
-		set.push_back(temp)
+        if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0) 
+		    set.push_back(temp);
+        else
+            continue;
 	}
 
 	//Moving diagonally towards "bottom right" of board:
@@ -62,7 +80,10 @@ vector<coords> Queen::isValid()
 	{
 		temp.y = m_position.y - 1;
 		temp.x = m_position.x + 1;
-		set.push_back(temp)
+        if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0) 
+		    set.push_back(temp);
+        else
+            continue;
 	}
 
 	//Moving diagonally towards "bottom left" of board:
@@ -70,7 +91,10 @@ vector<coords> Queen::isValid()
 	{
 		temp.y = m_position.y - 1;
 		temp.x = m_position.x - 1;
-		set.push_back(temp)
+        if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0) 
+		    set.push_back(temp);
+        else
+            continue;
 	}
 
 }
