@@ -15,13 +15,11 @@ vector<coord> Rook::AllPos()
 
     //move up(w) down(b)
     for(int i = 0; i < 8; ++i){
-        temp.y = m_position.y + 1; 
+        temp.y = m_position.y - 1; 
         temp.x = m_position.x + 0; 
         
-        if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0){
+        if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0)
             set.push_back(temp); 
-            ++count; 
-        }
         else
             continue; 
     }
@@ -38,7 +36,7 @@ vector<coord> Rook::AllPos()
     //move right(w) left(b)
     for(int i = 0; i < 8; ++i){
         temp.y = m_position.y + 0; 
-        temp.x = m_position.x + 1; 
+        temp.x = m_position.x - 1; 
         if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0)
             set.push_back(temp); 
         else
@@ -48,14 +46,13 @@ vector<coord> Rook::AllPos()
     //move left(w) right(w)
     for(int i = 0; i < 8; ++i){
         temp.y = m_position.y + 0; 
-        temp.x = m_position.x - 1; 
+        temp.x = m_position.x + 1; 
         if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0)
             set.push_back(temp); 
             ++count; 
         else
             continue;
 
-    findCount(count); 
 }
 
 void Rook::findCount(int count){

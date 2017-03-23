@@ -8,8 +8,8 @@ vectors<coords> Bishop::AllPos()
 
     //Move Diagonal up, right(w) AND down, left(b)  
     for(int i = 0; i < 8; ++i){
-        temp.y = m_position.y + 1; 
-        temp.x = m_position.x + 1; 
+        temp.y = m_position.y - 1; 
+        temp.x = m_position.x - 1; 
 
         if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0)
             set.push_back(temp); 
@@ -28,8 +28,8 @@ vectors<coords> Bishop::AllPos()
     }
     //Move Diagonal up, left(w) AND down, right(b)
     for(int i = 0; i < 8; ++i){
-        temp.y = m_position.y + 1; 
-        temp.x = m_position.x - 1; 
+        temp.y = m_position.y - 1; 
+        temp.x = m_position.x + 1; 
         
         if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0)
             set.push_back(temp); 
@@ -38,8 +38,8 @@ vectors<coords> Bishop::AllPos()
     }
     //Move Diagonal down, left(w) AND up, right(b)
     for(int i = 0; i < 8; ++i){
-        temp.y = m_position.y - 1; 
-        temp.x = m_position.x - 1; 
+        temp.y = m_position.y + 1; 
+        temp.x = m_position.x + 1; 
         
         if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0)
             set.push_back(temp); 
