@@ -1,9 +1,6 @@
 #include "bishop.h"
 using namespace std;
 
-<<<<<<< HEAD
-vectors<coord> Bishop::AllPos()
-=======
 Bishop::Bishop()
 {
     m_name = "Bishop";
@@ -13,7 +10,6 @@ Bishop::~Bishop()
 {}
 
 vectors<coords> Bishop::AllPos()
->>>>>>> dab7249307950317a36610e536ffc2f19342a128
 {
     coord temp; 
     vector<coord> set; 
