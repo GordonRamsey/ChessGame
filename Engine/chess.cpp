@@ -8,6 +8,7 @@ Piece* game_board[8][8];
 
 void SetUp()
 {
+     
     game_board[0][0] = new Rook();
     game_board[0][0]->setColor('w');
     game_board[0][0]->setPosition(0,0);
