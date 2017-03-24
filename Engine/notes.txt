@@ -1,0 +1,17 @@
+
+Object -> chess.cpp (the board) 
+    Holds WLocs() & BLocs() 
+        **This will be responsible for talking to all inherited pieces when factoring in validPos of the current board game**
+
+
+W/ in each inherited piece:
+    -> Enemy Pieces
+        If there is one -> +1
+    -> Allied Pieces
+    -> Empty space
+
+
+
+
+    
+    
