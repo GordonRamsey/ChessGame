@@ -58,6 +58,7 @@ vector<coord> Rook::AllPos()
 
 }
 
+
 void Rook::findCount(int count){
     return count; 
 }
