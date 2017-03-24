@@ -60,7 +60,7 @@ SDL_Surface *screen = NULL;
 SDL_Surface *text = NULL;
 //side bar chat
 SDL_Surface *sideBar = NULL;
-
+SDL_Surface *textBack = NULL;
 //The event structure
 SDL_Event event;
 
@@ -340,6 +340,8 @@ bool load_files()
   pieceSheet3 = load_image("basicPieces643.png");
   pieceSheet4 = load_image("basicPieces644.png");
   ghostSheet = load_image("ghostPieces64.png");
+  textBack = load_image("textBackground.png");
+
 
   font = TTF_OpenFont("edosz.ttf",28);
   if(font == NULL)
@@ -1003,6 +1005,7 @@ int main ( int argc, char* argv[] )
 
     ghostPiece.show();
 
+    apply_surface(896, 0, textBack, screen, NULL);
     //Show the chat input
     chat.setSurface(TTF_RenderText_Solid(font, chat.getText().c_str(), textColor));
     chat.show_centered();
