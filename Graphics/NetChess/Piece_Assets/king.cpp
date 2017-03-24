@@ -30,10 +30,10 @@ vector<coord> King::validSpots(Chess* c)
 
   //North/East
   seek = getSpot();
-  if(c->isValid(seek.x-1,seek.y-1))
+  if(c->isValid(seek.x+1,seek.y-1))
   {
     seek.y--;
-    seek.x--;
+    seek.x++;
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam())
 	spots.push_back(seek);
@@ -58,9 +58,10 @@ vector<coord> King::validSpots(Chess* c)
 
   //South/East
   seek = getSpot();
-  if(c->isValid(seek.x+1,seek.y))
+  if(c->isValid(seek.x+1,seek.y+1))
   {
     seek.x++;
+    seek.y++;
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam())
 	spots.push_back(seek);
