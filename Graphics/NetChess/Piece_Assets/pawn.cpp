@@ -20,7 +20,7 @@ vector<coord> Pawn::validSpots(Chess* c)
 
   //North - cant cap
   coord seek = getSpot();
-  if(dir != 'D')
+  if(dir != 'S')
     if(c->isValid(seek.x,seek.y-1))
     {
       seek.y--;
@@ -29,6 +29,7 @@ vector<coord> Pawn::validSpots(Chess* c)
     }
   //NW - can cap
   seek = getSpot();
+  if(dir != 'S' && dir != 'E')
   if(c->isValid(seek.x-1,seek.y-1))
   {
     seek.y--;
@@ -43,6 +44,7 @@ vector<coord> Pawn::validSpots(Chess* c)
   }
   //NE - can cap
   seek = getSpot();
+  if(dir != 'S' && dir != 'W')
   if(c->isValid(seek.x+1,seek.y-1))
   {
     seek.y--;
@@ -65,6 +67,7 @@ vector<coord> Pawn::validSpots(Chess* c)
     }
   //SE - can cap
   seek = getSpot();
+  if(dir != 'N' && dir != 'W')
   if(c->isValid(seek.x+1,seek.y+1))
   {
     seek.y++;
@@ -78,6 +81,7 @@ vector<coord> Pawn::validSpots(Chess* c)
   }
   //SW - can cap
   seek = getSpot();
+  if(dir != 'N' && dir != 'E')
   if(c->isValid(seek.x-1,seek.y+1))
   {
     seek.y++;

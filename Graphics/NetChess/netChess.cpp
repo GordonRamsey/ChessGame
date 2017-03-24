@@ -418,7 +418,7 @@ void generatePieces()
       int num = it;
       if(j == 1)
       {
-	newPiece = new Pawn(x,y,num,'D');
+	newPiece = new Pawn(x,y,num,'S');
 	newPiece->setClip(CLIP_PAWN);
       }
       else{
@@ -459,7 +459,7 @@ void generatePieces()
        int num = it;
        if(j == 0)
        {
-	 newPiece = new Pawn(x,y,num,'U');
+	 newPiece = new Pawn(x,y,num,'N');
 	 newPiece->setClip(CLIP_PAWN);
        }
        else{
@@ -500,7 +500,7 @@ void generatePieces()
        int num = it;
        if(j == 1)
        {
-	 newPiece = new Pawn(x,y,num,'R');
+	 newPiece = new Pawn(x,y,num,'E');
 	 newPiece->setClip(CLIP_PAWN);
        }
        else{
@@ -541,7 +541,7 @@ void generatePieces()
        int num = it;
        if(j == 0)
        {
-	 newPiece = new Pawn(x,y,num,'L');
+	 newPiece = new Pawn(x,y,num,'W');
 	 newPiece->setClip(CLIP_PAWN);
        }
        else{
