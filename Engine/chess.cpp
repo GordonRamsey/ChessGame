@@ -2,67 +2,65 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "chess.h"
+#include "info.h"
 
-Piece* game_board[8][8];
-vector<coord> WLocs, Blocs, validPos;
-
+Info update;
 void SetUp()
-{
+{//put update infront of things 
     coord temp; 
     
     game_board[0][0] = new Rook();
     game_board[0][0]->setColor('b');
-    game_board[0][0]->setPosition(0,0);
+    game_board[0][0]->setPos(0,0);
     temp.y = 0; 
     temp.x = 0; 
-    BLocs.push_back(temp); 
+    update.BLocs.push_back(temp); 
 
     game_board[0][1] = new Knight();
     game_board[0][1]->setColor('b');
-    game_board[0][1]->setPosition(1,0);
+    game_board[0][1]->setPos(1,0);
     temp.y = 0; 
     temp.x = 1; 
     BLocs.push_back(temp);
 
     game_board[0][2] = new Bishop();
     game_board[0][2]->setColor('b');
-    game_board[0][2]->setPosition(2,0);
+    game_board[0][2]->setPos(2,0);
     temp.y = 0; 
     temp.x = 2; 
     BLocs.push_back(temp);
 
     game_board[0][3] = new Queen();
     game_board[0][3]->setColor('b');
-    game_board[0][3]->setPosition(3,0);
+    game_board[0][3]->setPos(3,0);
     temp.y = 0; 
     temp.x = 3; 
     BLocs.push_back(temp);
 
     game_board[0][4] = new King();
     game_board[0][4]->setColor('b');
-    game_board[0][4]->setPosition(4,0);
+    game_board[0][4]->setPos(4,0);
     temp.y = 0; 
     temp.x = 0; 
     BLocs.push_back(temp);
 
     game_board[0][5] = new Bishop();
     game_board[0][5]->setColor('b');
-    game_board[0][5]->setPosition(5,0);
+    game_board[0][5]->setPos(5,0);
     temp.y = 0; 
     temp.x = 5; 
     BLocs.push_back(temp);
 
     game_board[0][6] = new Knight();
     game_board[0][6]->setColor('b');
-    game_board[0][6]->setPosition(6,0);
+    game_board[0][6]->setPos(6,0);
     temp.y = 0; 
     temp.x = 6; 
     BLocs.push_back(temp);
 
     game_board[0][7] = new Rook();
     game_board[0][7]->setColor('b');
-    game_board[0][7]->setPosition(7,0);
+    game_board[0][7]->setPos(7,0);
     temp.y = 0; 
     temp.x = 7; 
     BLocs.push_back(temp);
@@ -71,7 +69,7 @@ void SetUp()
     {
         game_board[1][i] = new Pawn();
         game_board[1][i]->setColor('b');
-        game_board[1][i]->setPosition(1,i);
+        game_board[1][i]->setPos(1,i);
         temp.y = 1; 
         temp.x = i; 
         BLocs.push_back(temp); 
@@ -89,50 +87,50 @@ void SetUp()
     {
         game_board[6][i] = new Pawn();
         game_board[6][i]->setColor('w');
+        game_board[6][i]->setPos(6,i);
         game_board[6][i]->setPosition(6,i);
 		temp.x = 6;
 		temp.y = i;
 		temp.x = i;
 		temp.y = 6;
-		WLocks.push_back(temp);
-		
+		WLocks.push_back(temp);	
     }
 
     game_board[7][0] = new Rook();
     game_board[7][0]->setColor('w');
-    game_board[7][0]->setPosition(0,7);
+    game_board[7][0]->setPos(0,7);
 	temp.x = 0;
 	temp.y = 7;
-	WLocks.push_back(temp);
+	WLocs.push_back(temp);
 
     game_board[7][1] = new Knight();
     game_board[7][1]->setColor('w');
     game_board[7][1]->setPosition(1,7);
 	temp.x = 1;
 	temp.y = 7;
-	WLocks.push_back(temp);
+	WLocs.push_back(temp);
 
     game_board[7][2] = new Bishop();
     game_board[7][2]->setColor('w');
     game_board[7][2]->setPosition(2,7);
 	temp.x = 2;
 	temp.y = 7;
-	WLocks.push_back(temp);
+	WLocs.push_back(temp);
 
     game_board[7][3] = new Queen();
     game_board[7][3]->setColor('w');
-    game_board[7][3]->setPosition(3,7);
+    game_board[7][3]->setPos(3,7);
 	temp.x = 3;
 	temp.y = 7;
-	WLocks.push_back(temp);
+	WLocs.push_back(temp);
 
 
     game_board[7][4] = new King();
     game_board[7][4]->setColor('w');
-    game_board[7][4]->setPosition(4,7);
+    game_board[7][4]->setPos(4,7);
 	temp.x = 4;
 	temp.y = 7;
-	WLocks.push_back(temp);
+	WLocs.push_back(temp);
 
 
     game_board[7][5] = new Bishop();
@@ -140,7 +138,7 @@ void SetUp()
     game_board[7][5]->setPosition(5,7);
 	temp.x = 5;
 	temp.y = 7;
-	WLocks.push_back(temp);
+	WLocs.push_back(temp);
 
 
     game_board[7][6] = new Knight();
@@ -148,7 +146,7 @@ void SetUp()
     game_board[7][6]->setPosition(6,7);
 	temp.x = 6;
 	temp.y = 7;
-	WLocks.push_back(temp);
+	WLocs.push_back(temp);
 
 
     game_board[7][7] = new Rook();
@@ -156,7 +154,7 @@ void SetUp()
     game_board[7][7]->setPosition(7,7);
 	temp.x = 7;
 	temp.y = 7;
-	WLocks.push_back(temp);
+	WLocs.push_back(temp);
 
 
 }
@@ -184,52 +182,18 @@ void SeekandRemove(char color, int y, int x) //Don't need color yet
             validPos.erase(validPos.begin()+i);
     }
 }
-
-
-
-/*
-//Consider if the piece of KING
-void OpponentExists(char color, int validPos_y, int validPos_x, int curr_y, int curr_x){
-    
-    //difference is is 1
-    //ELSE for each if will need to call capture -- 
-    if((cur_y-1) != validPos_y)
-    
-    else{
-        //can be captured()
-        for(int i = 0; i < validPos.size(); ++i)
-        {
-            if((validPos_y-(i+1)) == validPos.at(i).y)
-                SeekandRemove((cury_y-i), validPos.at(i).x)
-        }
-    }
-        //SeekandRemove(validPos_y, validPos__x); 
-    if((cur_y+1) != validPos_y)
-        SeekandRemove(validPos_y, validPos_x); 
-    if((cur_x-1) != validPos_x)
-        SeekandRemove(cur_y, cur_x); 
-    if((cur_x+1) != validPos_x)
-        SeekandRemove(validPos_y, validPos_x); 
-}
-*/
-
-void OpponentExists(char color, int validPos_y, int validPos_x, int curr_y, int curr_x)
-{
-    if(cur_y - 1 != validPos_y)
-    
-    else
-    {
-        //can be Captured()
-        
-    
-
 /* UNDER CONSTRUCTION */
 vector<coord> ValidMoves(const int x, const int y) 
 {
     Piece* cur_piece = board[y][x];
+    int cp.y = cur_piece.y; 
+    int cp.x = cur_piece.x; 
+    info.cp.x, info.cp.y; 
+   
     char color = cur_piece->getColor(); 
-    string type = cur_piece->getName(); 
+    info.color; 
     vector<coord> validPos(cur_piece->AllPos()); 
+    /*
     if(color == 'w')
     {
         for(int i = 0; i < validPos.size(); ++i)
@@ -239,7 +203,8 @@ vector<coord> ValidMoves(const int x, const int y)
                 if(validPos.at(i) == WLocs.at(j)) //Did you find an Ally location thats still considered validPos? 
                 {
                     int tmp_x = validPos.at(i).x; 
-                    int tmp_y = validPos.at(i).y; 
+                    int tmp_y = validPos.at(i).y; //fix this 
+                    Piece* tmp_Type = board[y][x];  
                     if(type == "Pawn")              
                     {                        
                         checkPawn(color, tmp_y, tmp_x); 
@@ -284,18 +249,21 @@ vector<coord> ValidMoves(const int x, const int y)
 bool isAlly(char color, int y, int x)
 {
     Piece* tempPiece = board[y][x]; 
+    
     if(tempPiece == NULL)
         return true; 
+    if(
     string tempColor = tempPiece->GetColor(); 
     
     if(tempColor != color)
-        return false; 
+        return false;// 
     else
-        return true; 
+        return true; //check curr
 }
                 
 void checkRook(char color, int y, int x)
 {
+    
     int tmp_y, tmp_x; 
         //move up
         for(int i=(y-1); i >= 0; --i)
@@ -335,8 +303,9 @@ void checkRook(char color, int y, int x)
             if(isAlly(color, tmp_y, tmp_x))
                 SeekandRemove(color, tmp_y, tmp_x);
             else
-                continue;
+                enemyExists(tmp_y, tmp_x); 
         }
+    }//end of isAlly
 
 }
 
@@ -607,13 +576,9 @@ coord checkKnight(char color, int y, int x)
 
 
 
-
-
-/*
 coord checkQueen(char color, int y, int x)
 {
 }
-*/ //Same Code as King? 
 coord checkPawn(char color, int y, int x)
 {
     //only moving up
@@ -643,4 +608,4 @@ coord checkPawn(char color, int y, int x)
         
     }
 }
-
+*/
