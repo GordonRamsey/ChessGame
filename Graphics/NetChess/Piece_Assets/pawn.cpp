@@ -7,6 +7,11 @@ Pawn::Pawn(int x, int y, int it) : Piece(x, y, it)
   // :)
 }
 
+Pawn::~Pawn()
+{
+
+}
+
 vector<coord> Pawn::validSpots(Chess c)
 {
   //c.board

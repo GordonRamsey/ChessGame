@@ -25,7 +25,8 @@ class Chess
     vector<Piece>* pieces;
 
     Chess();
-
+    ~Chess();
+    
     //Set position of piece on board
     void setPiecePos(int num, int x, int y);
     //remove piece from board

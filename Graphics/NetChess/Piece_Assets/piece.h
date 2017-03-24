@@ -6,6 +6,8 @@
 #ifndef PIECE_H
 #define PIECE_H
 
+class Chess;
+
 using namespace std;
 
 struct coord {
@@ -60,6 +62,10 @@ class Piece {
 	string toString();
 
 	void setAlpha(int x);
+
+	//Used with children
+        virtual vector<coord> validSpots(Chess c) { };
+	//vector<coord> validSpots(Chess c){ return 0; }
 
 };
 #endif

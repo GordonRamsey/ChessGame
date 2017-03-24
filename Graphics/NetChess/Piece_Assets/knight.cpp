@@ -5,6 +5,11 @@ Knight::Knight(int x, int y, int it) : Piece(x, y, it)
   // :)
 }
 
+Knight::~Knight()
+{
+
+}
+
 vector<coord> Knight::validSpots(Chess c)
 {
   //c.board

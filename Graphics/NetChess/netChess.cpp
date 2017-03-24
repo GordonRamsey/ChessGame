@@ -54,6 +54,7 @@ SDL_Surface *pieceSheet2 = NULL; //Player 2
 SDL_Surface *pieceSheet3 = NULL; //Player 3
 SDL_Surface *pieceSheet4 = NULL; //Player 4
 SDL_Surface *ghostSheet = NULL;
+SDL_Surface *highlight = NULL;
 SDL_Surface *screen = NULL;
 
 //Text input
@@ -80,7 +81,10 @@ SDL_Color textColor = {0, 0, 0};
 vector<string> history;
 
 //Our chess overhead object
-Chess c;
+Chess c = Chess();
+
+//Holds all places our valid moves can go
+vector<coord> spots;
 
 //variables used in HOLD call
 Piece ghostPiece = Piece(-1,-64,-64);
@@ -131,6 +135,7 @@ void Piece::handle_events()
 	  if(selected == NULL){
 	    this->setClip(this->getClip()+6);
 	    selected = this;
+	    spots = validSpots(c);
 	  }
       }//if its really us
     }
@@ -340,6 +345,7 @@ bool load_files()
   pieceSheet3 = load_image("basicPieces643.png");
   pieceSheet4 = load_image("basicPieces644.png");
   ghostSheet = load_image("ghostPieces64.png");
+  highlight = load_image("highlight.png");
 
   font = TTF_OpenFont("edosz.ttf",28);
   if(font == NULL)
@@ -437,12 +443,14 @@ void generatePieces()
       }
       newPiece->setTeam(0);
       pieces.push_back(*newPiece);
+      c.board[newPiece->getSpot().x][newPiece->getSpot().y] = newPiece;
+      
       cerr << "Piece spot:" << newPiece->getPos().x << "," << newPiece->getPos().y << endl;
       cerr << "Piece team:" << newPiece->getTeam() << endl;
       cerr << "Piece sheet:" << newPiece->getSheet() << endl;
     }
   }
-  for(int i=0;i<pieces.size();i++)
+  for(unsigned int i=0;i<pieces.size();i++)
   {
     cerr << pieces[i].toString() << endl;
   }
@@ -766,12 +774,23 @@ int main ( int argc, char* argv[] )
 	    //Snap location to grid
 	    x = x - x%SPRITE_SIZE;
 	    y = y - y%SPRITE_SIZE;
-
+	    
 	    //XXX: [Engine] Translate to grid coords
+	    int spot_x = x / 64;
+	    int spot_y = y / 64;
 
 	    //XXX: [Engine] Perform check 
+	    
+	    spots = selected->validSpots(c);
+	    bool valid = false;
+	    for(unsigned int i=0;i<spots.size();i++){
+	      if(spots[i].x == spot_x && spots[i].y == spot_y)
+		valid = true;
+	    }
 	    //If valid continue
 	    //If invalid ignore the command
+	    if(!valid)
+	      continue;
 
 	    //XXX: [Engine] Send MOVE/CAPT command to server
 
@@ -808,7 +827,7 @@ int main ( int argc, char* argv[] )
 	    }
 
 	    selected = NULL;
-	    
+	    spots.clear(); 
 	    //If the move was not valid, dont send anything
 	    
 	    //Hide ghost image after moving
@@ -910,6 +929,11 @@ int main ( int argc, char* argv[] )
    
     //print side chat bar
     printChat();
+
+    //Show the highlights
+    for(unsigned int i=0;i<spots.size();i++){
+      apply_surface(spots[i].x, spots[i].y, highlight, screen);
+    }
 
     //Update screen
     if(SDL_Flip( screen ) == -1){

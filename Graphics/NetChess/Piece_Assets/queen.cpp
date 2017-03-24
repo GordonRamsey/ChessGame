@@ -5,6 +5,12 @@ Queen::Queen(int x, int y, int it) : Piece(x, y, it)
   // :)
 }
 
+Queen::~Queen()
+{
+
+}
+
+
 vector<coord> Queen::validSpots(Chess c)
 {
   //c.board

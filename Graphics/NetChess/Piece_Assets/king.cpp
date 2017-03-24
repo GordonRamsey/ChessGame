@@ -5,6 +5,11 @@ King::King(int x, int y, int it) : Piece(x, y, it)
   // :)
 }
 
+King::~King()
+{
+
+}
+
 vector<coord> King::validSpots(Chess c)
 {
   //c.board

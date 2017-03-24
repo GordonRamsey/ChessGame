@@ -5,6 +5,11 @@ Rook::Rook(int x, int y, int it) : Piece(x, y, it)
   // :)
 }
 
+Rook::~Rook()
+{
+
+}
+
 vector<coord> Rook::validSpots(Chess c)
 {
   //c.board

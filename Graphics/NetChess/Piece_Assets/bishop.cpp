@@ -5,10 +5,14 @@ Bishop::Bishop(int x, int y, int it) : Piece(x, y, it)
   // :)
 }
 
+Bishop::~Bishop()
+{
+
+}
+
 vector<coord> Bishop::validSpots(Chess c)
 {
   //c.board
-  int it = 0;
   coord seek;
   vector<coord> spots;
 
@@ -91,4 +95,5 @@ vector<coord> Bishop::validSpots(Chess c)
     }
     spots.push_back(seek);
   }
+  return spots;
 }

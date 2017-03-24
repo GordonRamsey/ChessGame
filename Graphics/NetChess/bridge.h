@@ -10,7 +10,7 @@
 #include "Piece_Assets/bishop.h"
 #include "Piece_Assets/king.h"
 #include "Piece_Assets/queen.h"
-
+#include "Piece_Assets/chess.h"
 
 
 

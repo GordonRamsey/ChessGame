@@ -111,7 +111,10 @@ void Piece::setAlpha(int x)
   SDL_SetAlpha(sheet, SDL_SRCALPHA, x); 
 }
 
-//Movement - Should pass a "board" parameter so the piece can know where everything is
-//Movement should return a list of spots the piece can move to
-
-//Attacking should be separate from moving?
+/*
+vector<coord> validSpots(Chess c)
+{
+  vector<coord> asdf;
+  return asdf;
+}
+*/
