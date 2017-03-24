@@ -5,6 +5,11 @@ Chess::Chess()
 
 }
 
+Chess::~Chess()
+{
+
+}
+
 bool Chess::isValid(int x, int y)
 {
   if(y < 0 || y > 13)

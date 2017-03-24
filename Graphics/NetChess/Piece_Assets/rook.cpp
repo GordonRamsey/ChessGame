@@ -5,9 +5,14 @@ Rook::Rook(int x, int y, int it) : Piece(x, y, it)
   // :)
 }
 
-vector<coord> Rook::validSpots(Chess c)
+Rook::~Rook()
 {
-  //c.board
+
+}
+
+vector<coord> Rook::validSpots(Chess* c)
+{
+  //c->board
   coord seek;
   vector<coord> spots;
   //Check north
@@ -16,11 +21,11 @@ vector<coord> Rook::validSpots(Chess c)
     seek.y--;
     if(seek.y < 0)//If out of bounds
       break;
-    if(c.validspots[seek.x][seek.y] == 0)//If not valid spot
+    if(c->validspots[seek.x][seek.y] == 0)//If not valid spot
       break;
-    if(c.board[seek.x][seek.y] != NULL)//If spot occupied
+    if(c->board[seek.x][seek.y] != NULL)//If spot occupied
     { 
-      if(c.board[seek.x][seek.y]->getTeam() != getTeam())//Check if enemy 
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam())//Check if enemy 
       {
 	spots.push_back(seek);
 	break;
@@ -37,11 +42,11 @@ vector<coord> Rook::validSpots(Chess c)
     seek.y++;
     if(seek.y > 13)//If out of bounds
       break;
-    if(c.validspots[seek.x][seek.y] == 0)//If not valid spot
+    if(c->validspots[seek.x][seek.y] == 0)//If not valid spot
       break;
-    if(c.board[seek.x][seek.y] != NULL)//If spot occupied
+    if(c->board[seek.x][seek.y] != NULL)//If spot occupied
     {  
-      if(c.board[seek.x][seek.y]->getTeam() != getTeam())//Check if enemy 
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam())//Check if enemy 
       {
 	spots.push_back(seek);
 	break;
@@ -58,11 +63,11 @@ vector<coord> Rook::validSpots(Chess c)
     seek.x++;
     if(seek.x > 13)//If out of bounds
       break;
-    if(c.validspots[seek.x][seek.y] == 0)//If not valid spot
+    if(c->validspots[seek.x][seek.y] == 0)//If not valid spot
       break;
-    if(c.board[seek.x][seek.y] != NULL)//If spot occupied
+    if(c->board[seek.x][seek.y] != NULL)//If spot occupied
     {  
-      if(c.board[seek.x][seek.y]->getTeam() != getTeam())//Check if enemy 
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam())//Check if enemy 
       {
 	spots.push_back(seek);
 	break;
@@ -79,11 +84,11 @@ vector<coord> Rook::validSpots(Chess c)
     seek.x--;
     if(seek.x < 0)//If out of bounds
       break;
-    if(c.validspots[seek.x][seek.y] == 0)//If not valid spot
+    if(c->validspots[seek.x][seek.y] == 0)//If not valid spot
       break;
-    if(c.board[seek.x][seek.y] != NULL)//If spot occupied
+    if(c->board[seek.x][seek.y] != NULL)//If spot occupied
     {  
-      if(c.board[seek.x][seek.y]->getTeam() != getTeam())//Check if enemy 
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam())//Check if enemy 
       {
 	spots.push_back(seek);
 	break;

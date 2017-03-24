@@ -8,7 +8,8 @@ class Rook : public Piece
 
   public:
     Rook(int x, int y, int it);
-    vector<coord> validSpots(Chess c);
+    ~Rook();
+    vector<coord> validSpots(Chess* c);
 
 };
 #endif

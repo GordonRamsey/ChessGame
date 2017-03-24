@@ -113,11 +113,11 @@ int main(int argc, char* argv[])
 	      if(!success)
 		cerr << "Command received from invalid player" << endl;
 	    }//CAPT comparison
-	    //XXX: HOLD method test
+	    //HOLD method test
 	    else if(strncmp(msg.c_str(), "HOLD",4) == 0)
 	    {
+              bool success = false;
 	      if (msg.size() <= 20){
-		bool success = false;
 		cerr << "HOLD command recognized" << endl;
 		for(int j=0;j<players.size(); ++j){
 		  if(players[j].sock == sockets[i])
