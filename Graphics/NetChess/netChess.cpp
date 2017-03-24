@@ -69,7 +69,10 @@ SDL_Rect clips[24];
 
 //Our "held" piece
 Piece* selected = NULL;
-vector<Piece> pieces;
+
+//All of the game board pieces
+vector<Piece*> pieces;
+
 
 int player_num; //Our player num relevent to the current game
 bool game_start = false;
@@ -81,7 +84,7 @@ SDL_Color textColor = {0, 0, 0};
 vector<string> history;
 
 //Our chess overhead object
-Chess c = Chess();
+Chess* c = new Chess();
 
 //Holds all places our valid moves can go
 vector<coord> spots;
@@ -136,6 +139,11 @@ void Piece::handle_events()
 	    this->setClip(this->getClip()+6);
 	    selected = this;
 	    spots = validSpots(c);
+	    cerr << "[DEBUG] Piece clicekd on, valid spots:" << endl;
+	    for(unsigned int i=0;i<spots.size();i++)
+	    {
+	      cerr << "(" << spots[i].x << "," << spots[i].y << ")" << endl;
+	    }
 	  }
       }//if its really us
     }
@@ -389,10 +397,10 @@ void clean_up()
 //Generate starting board
 void generatePieces()
 { 
+   cerr << "[DEBUG] Beginning board generation" << endl;
    int it = 0;
    int x = -1;
    int y = -1;
-   int num = -1;
 
    //HOLD stuff
    ghostPiece.setTeam(-1);
@@ -401,234 +409,171 @@ void generatePieces()
    //Player 1 gen 
    for(int j=0;j<2;j++){
     for(int i=0;i<8;i++){
-      Piece* newPiece = new Piece(i*SPRITE_SIZE+BORDER_SIZE+SPRITE_SIZE*3, j*SPRITE_SIZE+BORDER_SIZE, it); 
+      cerr << "[NEW PIECE GEN]" << endl;
+      Piece* newPiece = NULL;;
       it++;
-      x = newPiece->getPos().x;
-      y = newPiece->getPos().y;
-      num = newPiece->getNum();
+      x = i*SPRITE_SIZE+BORDER_SIZE+SPRITE_SIZE*3;
+      y = j*SPRITE_SIZE+BORDER_SIZE;
+      cerr << "Spot X:" << x << " Spot Y:" << y << endl;
+      int num = it;
       if(j == 1)
       {
-	Pawn newClass = Pawn(x,y,num);
-	newPiece = &newClass;
+	newPiece = new Pawn(x,y,num,'D');
 	newPiece->setClip(CLIP_PAWN);
       }
       else{
-	if(i==0 || i ==7)
-	{  
-	  Rook newClass = Rook(x,y,num);
-	  newPiece = &newClass;
+	if(i==0 || i ==7){  
+	  newPiece = new Rook(x,y,num);
 	  newPiece->setClip(CLIP_ROOK);
 	}
-	if(i==1 || i ==6)
-	{ 
-	  Knight newClass = Knight(x,y,num);
-	  newPiece = &newClass;
+	else if(i==1 || i ==6){ 
+	  newPiece = new Knight(x,y,num);
 	  newPiece->setClip(CLIP_KNIGHT);
 	}
-	if(i==2 || i ==5)
-	{  
-	  Bishop newClass = Bishop(x,y,num);
-	  newPiece = &newClass;
+	else if(i==2 || i ==5){  
+	  newPiece = new Bishop(x,y,num);
 	  newPiece->setClip(CLIP_BISHOP);
 	}
-	if(i==4)
-	{  
-	  King newClass = King(x,y,num);
-	  newPiece = &newClass;
+	else if(i==4){  
+	  newPiece = new King(x,y,num);
 	  newPiece->setClip(CLIP_KING);
 	}
-	if(i==3)
-	{ 
-	  Queen newClass = Queen(x,y,num);
-	  newPiece = &newClass;
+	else if(i==3){ 
+	  newPiece = new Queen(x,y,num);
 	  newPiece->setClip(CLIP_QUEEN);
 	}
       }
       newPiece->setTeam(0);
-      pieces.push_back(*newPiece);
-      c.board[newPiece->getSpot().x][newPiece->getSpot().y] = newPiece;
-      
-      cerr << "Piece spot:" << newPiece->getPos().x << "," << newPiece->getPos().y << endl;
-      cerr << "Piece team:" << newPiece->getTeam() << endl;
-      cerr << "Piece sheet:" << newPiece->getSheet() << endl;
+      c->board[newPiece->getSpot().x][newPiece->getSpot().y] = newPiece;
+      cerr << newPiece->toString() << endl;
+      pieces.push_back(newPiece);
     }
-  }
-  for(unsigned int i=0;i<pieces.size();i++)
-  {
-    cerr << pieces[i].toString() << endl;
-  }
-  //Player 2 gen
-  for(int j=2;j>0;j--){
-    for(int i=0;i<8;i++){
-      Piece* newPiece = new Piece(i*SPRITE_SIZE+BORDER_SIZE+SPRITE_SIZE*3, j*SPRITE_SIZE+(SPRITE_SIZE*11 + BORDER_SIZE), it); 
-      it++;
-      x = newPiece->getPos().x;
-      y = newPiece->getPos().y;
-      num = newPiece->getNum();
-      if(j == 1)
-      {
-	Pawn newClass = Pawn(x,y,num);
-	newPiece = &newClass;
-	newPiece->setClip(CLIP_PAWN);
-      }
-      else{
-	if(i==0 || i ==7)
-	{  
-	  Rook newClass = Rook(x,y,num);
-	  newPiece = &newClass;
-	  newPiece->setClip(CLIP_ROOK);
-	}
-	if(i==1 || i ==6)
-	{ 
-	  Knight newClass = Knight(x,y,num);
-	  newPiece = &newClass;
-	  newPiece->setClip(CLIP_KNIGHT);
-	}
-	if(i==2 || i ==5)
-	{  
-	  Bishop newClass = Bishop(x,y,num);
-	  newPiece = &newClass;
-	  newPiece->setClip(CLIP_BISHOP);
-	}
-	if(i==4)
-	{  
-	  King newClass = King(x,y,num);
-	  newPiece = &newClass;
-	  newPiece->setClip(CLIP_KING);
-	}
-	if(i==3)
-	{ 
-	  Queen newClass = Queen(x,y,num);
-	  newPiece = &newClass;
-	  newPiece->setClip(CLIP_QUEEN);
-	}
-      }
-      newPiece->setTeam(0);
-      pieces.push_back(*newPiece);
-      cerr << "Piece spot:" << newPiece->getPos().x << "," << newPiece->getPos().y << endl;
-      cerr << "Piece team:" << newPiece->getTeam() << endl;
-      cerr << "Piece sheet:" << newPiece->getSheet() << endl;
-    }
-  }
-  for(int i=0;i<pieces.size();i++)
-  {
-    cerr << pieces[i].toString() << endl;
-  }
-  //Player 3 gen
-  for(int j=0;j<2;j++){
-    for(int i=0;i<8;i++){
-      Piece* newPiece = new Piece(j*SPRITE_SIZE+BORDER_SIZE, i*SPRITE_SIZE+(SPRITE_SIZE*3 + BORDER_SIZE), it); 
-      it++;
-      x = newPiece->getPos().x;
-      y = newPiece->getPos().y;
-      num = newPiece->getNum();
-      if(j == 1)
-      {
-	Pawn newClass = Pawn(x,y,num);
-	newPiece = &newClass;
-	newPiece->setClip(CLIP_PAWN);
-      }
-      else{
-	if(i==0 || i ==7)
-	{  
-	  Rook newClass = Rook(x,y,num);
-	  newPiece = &newClass;
-	  newPiece->setClip(CLIP_ROOK);
-	}
-	if(i==1 || i ==6)
-	{ 
-	  Knight newClass = Knight(x,y,num);
-	  newPiece = &newClass;
-	  newPiece->setClip(CLIP_KNIGHT);
-	}
-	if(i==2 || i ==5)
-	{  
-	  Bishop newClass = Bishop(x,y,num);
-	  newPiece = &newClass;
-	  newPiece->setClip(CLIP_BISHOP);
-	}
-	if(i==4)
-	{  
-	  King newClass = King(x,y,num);
-	  newPiece = &newClass;
-	  newPiece->setClip(CLIP_KING);
-	}
-	if(i==3)
-	{ 
-	  Queen newClass = Queen(x,y,num);
-	  newPiece = &newClass;
-	  newPiece->setClip(CLIP_QUEEN);
-	}
-      }
-      newPiece->setTeam(0);
-      pieces.push_back(*newPiece);
-      cerr << "Piece spot:" << newPiece->getPos().x << "," << newPiece->getPos().y << endl;
-      cerr << "Piece team:" << newPiece->getTeam() << endl;
-      cerr << "Piece sheet:" << newPiece->getSheet() << endl;
-    }
-  }
-  for(int i=0;i<pieces.size();i++)
-  {
-    cerr << pieces[i].toString() << endl;
-  }
-  //Player 4 gen
-  for(int j=2;j>0;j--){
-    for(int i=0;i<8;i++){
-      Piece* newPiece = new Piece(j*SPRITE_SIZE+BORDER_SIZE+(SPRITE_SIZE*11), i*SPRITE_SIZE+(SPRITE_SIZE*3 + BORDER_SIZE), it); 
-      it++;
-      x = newPiece->getPos().x;
-      y = newPiece->getPos().y;
-      num = newPiece->getNum();
-      if(j == 1)
-      {
-	Pawn newClass = Pawn(x,y,num);
-	newPiece = &newClass;
-	newPiece->setClip(CLIP_PAWN);
-      }
-      else{
-	if(i==0 || i ==7)
-	{  
-	  Rook newClass = Rook(x,y,num);
-	  newPiece = &newClass;
-	  newPiece->setClip(CLIP_ROOK);
-	}
-	if(i==1 || i ==6)
-	{ 
-	  Knight newClass = Knight(x,y,num);
-	  newPiece = &newClass;
-	  newPiece->setClip(CLIP_KNIGHT);
-	}
-	if(i==2 || i ==5)
-	{  
-	  Bishop newClass = Bishop(x,y,num);
-	  newPiece = &newClass;
-	  newPiece->setClip(CLIP_BISHOP);
-	}
-	if(i==4)
-	{  
-	  King newClass = King(x,y,num);
-	  newPiece = &newClass;
-	  newPiece->setClip(CLIP_KING);
-	}
-	if(i==3)
-	{ 
-	  Queen newClass = Queen(x,y,num);
-	  newPiece = &newClass;
-	  newPiece->setClip(CLIP_QUEEN);
-	}
-      }
-      newPiece->setTeam(0);
-      pieces.push_back(*newPiece);
-      cerr << "Piece spot:" << newPiece->getPos().x << "," << newPiece->getPos().y << endl;
-      cerr << "Piece team:" << newPiece->getTeam() << endl;
-      cerr << "Piece sheet:" << newPiece->getSheet() << endl;
-    }
-  }
-  for(int i=0;i<pieces.size();i++)
-  {
-    cerr << pieces[i].toString() << endl;
-  }
-cerr << "[DEBUG] Done generating boards" << endl;
+   }
+   //Player 2
+   for(int j=0;j<2;j++){
+     for(int i=0;i<8;i++){
+       Piece* newPiece = NULL;
+       it++;
+       x = i*SPRITE_SIZE+BORDER_SIZE+SPRITE_SIZE*3;
+       y = j*SPRITE_SIZE+BORDER_SIZE+SPRITE_SIZE*12;
+       int num = it;
+       if(j == 0)
+       {
+	 newPiece = new Pawn(x,y,num,'U');
+	 newPiece->setClip(CLIP_PAWN);
+       }
+       else{
+	 if(i==0 || i ==7){  
+	   newPiece = new Rook(x,y,num);
+	   newPiece->setClip(CLIP_ROOK);
+	 }
+	 else if(i==1 || i ==6){ 
+	   newPiece = new Knight(x,y,num);
+	   newPiece->setClip(CLIP_KNIGHT);
+	 }
+	 else if(i==2 || i ==5){  
+	   newPiece = new Bishop(x,y,num);
+	   newPiece->setClip(CLIP_BISHOP);
+	 }
+	 else if(i==4){  
+	   newPiece = new King(x,y,num);
+	   newPiece->setClip(CLIP_KING);
+	 }
+	 else if(i==3){ 
+	   newPiece = new Queen(x,y,num);
+	   newPiece->setClip(CLIP_QUEEN);
+	 }
+       }
+       newPiece->setTeam(1);
+       c->board[newPiece->getSpot().x][newPiece->getSpot().y] = newPiece;
+       cerr << newPiece->toString() << endl;
+       pieces.push_back(newPiece);
+     }
+   }
+   //Player 3
+   for(int j=0;j<2;j++){
+     for(int i=0;i<8;i++){
+       Piece* newPiece = NULL;
+       it++;
+       y = i*SPRITE_SIZE+BORDER_SIZE+SPRITE_SIZE*3;
+       x = j*SPRITE_SIZE+BORDER_SIZE+SPRITE_SIZE*0;
+       int num = it;
+       if(j == 1)
+       {
+	 newPiece = new Pawn(x,y,num,'R');
+	 newPiece->setClip(CLIP_PAWN);
+       }
+       else{
+	 if(i==0 || i ==7){  
+	   newPiece = new Rook(x,y,num);
+	   newPiece->setClip(CLIP_ROOK);
+	 }
+	 else if(i==1 || i ==6){ 
+	   newPiece = new Knight(x,y,num);
+	   newPiece->setClip(CLIP_KNIGHT);
+	 }
+	 else if(i==2 || i ==5){  
+	   newPiece = new Bishop(x,y,num);
+	   newPiece->setClip(CLIP_BISHOP);
+	 }
+	 else if(i==4){  
+	   newPiece = new King(x,y,num);
+	   newPiece->setClip(CLIP_KING);
+	 }
+	 else if(i==3){ 
+	   newPiece = new Queen(x,y,num);
+	   newPiece->setClip(CLIP_QUEEN);
+	 }
+       }
+       newPiece->setTeam(2);
+       c->board[newPiece->getSpot().x][newPiece->getSpot().y] = newPiece;
+       cerr << newPiece->toString() << endl;
+       pieces.push_back(newPiece);
+     }
+   }
+   //Player 4
+   for(int j=0;j<2;j++){
+     for(int i=0;i<8;i++){
+       Piece* newPiece = NULL;
+       it++;
+       y = i*SPRITE_SIZE+BORDER_SIZE+SPRITE_SIZE*3;
+       x = j*SPRITE_SIZE+BORDER_SIZE+SPRITE_SIZE*12;
+       int num = it;
+       if(j == 0)
+       {
+	 newPiece = new Pawn(x,y,num,'L');
+	 newPiece->setClip(CLIP_PAWN);
+       }
+       else{
+	 if(i==0 || i ==7){  
+	   newPiece = new Rook(x,y,num);
+	   newPiece->setClip(CLIP_ROOK);
+	 }
+	 else if(i==1 || i ==6){ 
+	   newPiece = new Knight(x,y,num);
+	   newPiece->setClip(CLIP_KNIGHT);
+	 }
+	 else if(i==2 || i ==5){  
+	   newPiece = new Bishop(x,y,num);
+	   newPiece->setClip(CLIP_BISHOP);
+	 }
+	 else if(i==4){  
+	   newPiece = new King(x,y,num);
+	   newPiece->setClip(CLIP_KING);
+	 }
+	 else if(i==3){ 
+	   newPiece = new Queen(x,y,num);
+	   newPiece->setClip(CLIP_QUEEN);
+	 }
+       }
+       newPiece->setTeam(3);
+       c->board[newPiece->getSpot().x][newPiece->getSpot().y] = newPiece;
+       cerr << newPiece->toString() << endl;
+       pieces.push_back(newPiece);
+     }
+   }
+
+   cerr << "[DEBUG] Done generating boards" << endl;
 }
 
 void printChat()
@@ -720,8 +665,12 @@ void netProcess(string msg)
     int i_num = atoi(num.c_str());
 
     for(unsigned int i=0;i<pieces.size();i++){
-      if(pieces[i].getNum() == i_num){
-	pieces[i].setPos(atoi(s_x.c_str()), atoi(s_y.c_str()));
+      if(pieces[i]->getNum() == i_num){
+	//Make old space empty
+	c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y] = NULL;
+	pieces[i]->setPos(atoi(s_x.c_str()), atoi(s_y.c_str()));
+	//Make new space filled with piece
+	c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y] = pieces[i];
 	break;
       }
     }
@@ -745,9 +694,9 @@ void netProcess(string msg)
     //Find and remove piece
     for(unsigned int i=0;i<pieces.size();i++){
       int px, py;
-      Piece dummy = pieces[i];
-      px = dummy.getSpot().x;
-      py = dummy.getSpot().y;
+      Piece* dummy = pieces[i];
+      px = dummy->getSpot().x;
+      py = dummy->getSpot().y;
       if(x == px && y == py){
 	pieces[i] = pieces[pieces.size()-1];
 	pieces.pop_back();
@@ -762,19 +711,23 @@ void netProcess(string msg)
     int a_index, d_index;
     
     for(unsigned int i=0;i<pieces.size();i++){
-      if(pieces[i].getNum() == atoi(attack.c_str()))
+      if(pieces[i]->getNum() == atoi(attack.c_str()))
 	a_index = i;
-      if(pieces[i].getNum() == atoi(defend.c_str()))
+      if(pieces[i]->getNum() == atoi(defend.c_str()))
 	d_index = i;
     }
     //Remove piece 2*
-    coord loc = pieces[d_index].getPos();
+    coord loc = pieces[d_index]->getPos();
 
     pieces[d_index] = pieces[pieces.size()-1];
     pieces.pop_back();
 
     //Move piece 1
-    pieces[a_index].setPos(loc.x, loc.y);
+    //Update game board
+    c->board[pieces[a_index]->getSpot().x][pieces[a_index]->getSpot().y] = NULL;
+    pieces[a_index]->setPos(loc.x, loc.y);
+    c->board[pieces[a_index]->getSpot().x][pieces[a_index]->getSpot().y] = pieces[a_index];
+    
 
     //Remove ghost image
     ghostPiece.setPos(-64,-64);
@@ -874,27 +827,6 @@ int main ( int argc, char* argv[] )
 	    x = x - x%SPRITE_SIZE;
 	    y = y - y%SPRITE_SIZE;
 	    
-	    //XXX: [Engine] Translate to grid coords
-	    int spot_x = x / 64;
-	    int spot_y = y / 64;
-
-	    //XXX: [Engine] Perform check 
-	    
-	    spots = selected->validSpots(c);
-	    bool valid = false;
-	    for(unsigned int i=0;i<spots.size();i++){
-	      if(spots[i].x == spot_x && spots[i].y == spot_y)
-		valid = true;
-	    }
-	    //If valid continue
-	    //If invalid ignore the command
-	    if(!valid)
-	      continue;
-
-	    //XXX: [Engine] Send MOVE/CAPT command to server
-
-	    //Set sprite back to normal
-	    selected->setClip(selected->getClip()-6);
 
 	    //Send command
 	    stringstream ss;
@@ -904,13 +836,13 @@ int main ( int argc, char* argv[] )
 	    //Check if space is already occupied
 	    bool capture = false;
 	    for(unsigned int i=0;i<pieces.size();i++){
-	      if(pieces[i].getPos().x == x && pieces[i].getPos().y == y){
+	      if(pieces[i]->getPos().x == x && pieces[i]->getPos().y == y){
 		//It is! lets kill it!
-		ss << "CAPT " << selected->getNum() << " " << pieces[i].getNum();
+		ss << "CAPT " << selected->getNum() << " " << pieces[i]->getNum();
 	     
 	        //If we find our own selected piece, ignore it	
-		if(pieces[i].getSpot().x == selected->getSpot().x && 
-		    pieces[i].getSpot().y == selected->getSpot().y){
+		if(pieces[i]->getSpot().x == selected->getSpot().x && 
+		    pieces[i]->getSpot().y == selected->getSpot().y){
 		  failure = true;
 		  break;
 		}
@@ -925,13 +857,34 @@ int main ( int argc, char* argv[] )
 	      ss << "MOVE " << selected->getNum() << " " << x << " " << y;
 	    }
 
-	    selected = NULL;
-	    spots.clear(); 
-	    //If the move was not valid, dont send anything
+	    //XXX: [Engine] Translate to grid coords
+	    coord spot;
+	    spot.x = x / 64;
+	    spot.y = y / 64;
+	    cerr << "Spot:" << spot.x << "," << spot.y << endl;
+
+	    //XXX: [Engine] Perform check 
+	    //Acquire valid spots
+	    //spots.clear(); 
+	    //spots = selected->validSpots(c);
+	    bool valid = false;
+	    cerr << "size of spots:" << spots.size() << endl;
+	    for(unsigned int i=0;i<spots.size();i++){//check if our spot is valid
+	      cerr << "(" << spots[i].x << "," << spots[i].y << ")" << endl;
+	      if(spots[i].x == spot.x && spots[i].y == spot.y)
+		valid = true;
+	    }
 	    
-	    //Hide ghost image after moving
+	    //Ghost and highlight cleanup
+	    selected->setClip(selected->getClip()-6);
+	    selected = NULL;
 	    ghostPiece.setPos(-64,-64);
-	    if(failure)
+	    spots.clear();
+	    
+	    if(failure)//If we try to capture a friendly piece
+	      continue;
+	    
+	    if(!valid)//If we click on an invalid spot
 	      continue;
 
 	    s_socket.writeString(ss.str());
@@ -973,7 +926,7 @@ int main ( int argc, char* argv[] )
 	
 	//Perform local piece event handling (get clicked on)
 	for(unsigned int i=0;i<pieces.size();i++)
-	  pieces[i].handle_events();
+	  pieces[i]->handle_events();
 
 	//If chatmode is on, do chat things (get chatted in)
 	if(chat_mode){
@@ -1018,7 +971,7 @@ int main ( int argc, char* argv[] )
 
     //Show() pieces
     for(unsigned int i=0;i<pieces.size();i++)
-      pieces[i].show();
+      pieces[i]->show();
 
     ghostPiece.show();
 
@@ -1031,7 +984,7 @@ int main ( int argc, char* argv[] )
 
     //Show the highlights
     for(unsigned int i=0;i<spots.size();i++){
-      apply_surface(spots[i].x, spots[i].y, highlight, screen);
+      apply_surface(spots[i].x*64, spots[i].y*64, highlight, screen);
     }
 
     //Update screen

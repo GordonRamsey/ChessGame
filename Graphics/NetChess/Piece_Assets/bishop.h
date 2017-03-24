@@ -9,7 +9,7 @@ class Bishop : public Piece
   public:
     Bishop(int x, int y, int it);
     ~Bishop();
-    vector<coord> validSpots(Chess c);
+    vector<coord> validSpots(Chess* c);
 
 };
 #endif

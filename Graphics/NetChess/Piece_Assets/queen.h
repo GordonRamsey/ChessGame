@@ -9,7 +9,7 @@ class Queen : public Piece
   public:
     Queen(int x, int y, int it);
     ~Queen();
-    vector<coord> validSpots(Chess c);
+    vector<coord> validSpots(Chess* c);
 
 };
 #endif

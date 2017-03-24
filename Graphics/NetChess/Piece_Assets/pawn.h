@@ -8,9 +8,9 @@ class Pawn : public Piece
     char dir;
 
   public:
-    Pawn(int x, int y, int it);
+    Pawn(int x, int y, int it, char state);
     ~Pawn();
-    vector<coord> validSpots(Chess c);
+    vector<coord> validSpots(Chess* c);
 
 };
 #endif

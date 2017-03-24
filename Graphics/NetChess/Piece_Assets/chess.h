@@ -1,6 +1,11 @@
 #ifndef CHESS_H
 #define CHESS_H
-#include "piece.h"
+//#include "piece.h"
+#include <vector>
+
+using namespace std;
+
+class Piece;
 
 class Chess
 {
@@ -22,7 +27,7 @@ class Chess
      {0,0,0,1,1,1,1,1,1,1,1,0,0,0}};
     
     Piece* board [14][14];
-    vector<Piece>* pieces;
+    vector<Piece*> pieces;
 
     Chess();
     ~Chess();

@@ -10,18 +10,18 @@ King::~King()
 
 }
 
-vector<coord> King::validSpots(Chess c)
+vector<coord> King::validSpots(Chess* c)
 {
-  //c.board
+  //c->board
   vector<coord> spots;
 
   //North - cant cap
   coord seek = getSpot();
-  if(c.isValid(seek.x,seek.y-1))
+  if(c->isValid(seek.x,seek.y-1))
   {
     seek.y--;
-    if(c.board[seek.x][seek.y] != NULL){
-      if(c.board[seek.x][seek.y]->getTeam() != getTeam())
+    if(c->board[seek.x][seek.y] != NULL){
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam())
 	spots.push_back(seek);
       else	
 	spots.push_back(seek); 
@@ -29,12 +29,12 @@ vector<coord> King::validSpots(Chess c)
   }
   //NW - can cap
   seek = getSpot();
-  if(c.isValid(seek.x-1,seek.y-1))
+  if(c->isValid(seek.x-1,seek.y-1))
   {
     seek.y--;
     seek.x--;
-    if(c.board[seek.x][seek.y] != NULL){
-      if(c.board[seek.x][seek.y]->getTeam() != getTeam())
+    if(c->board[seek.x][seek.y] != NULL){
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam())
 	spots.push_back(seek);
       else
 	spots.push_back(seek); 
@@ -43,12 +43,12 @@ vector<coord> King::validSpots(Chess c)
   }
   //NE - can cap
   seek = getSpot();
-  if(c.isValid(seek.x+1,seek.y-1))
+  if(c->isValid(seek.x+1,seek.y-1))
   {
     seek.y--;
     seek.x++;
-    if(c.board[seek.x][seek.y] != NULL){
-      if(c.board[seek.x][seek.y]->getTeam() != getTeam())
+    if(c->board[seek.x][seek.y] != NULL){
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam())
 	spots.push_back(seek); 
       else
 	spots.push_back(seek); 
@@ -56,11 +56,11 @@ vector<coord> King::validSpots(Chess c)
   }
   //S - cant cap
   seek = getSpot();
-  if(c.isValid(seek.x,seek.y+1))
+  if(c->isValid(seek.x,seek.y+1))
   {
     seek.y++;
-    if(c.board[seek.x][seek.y] != NULL){
-      if(c.board[seek.x][seek.y]->getTeam() != getTeam())
+    if(c->board[seek.x][seek.y] != NULL){
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam())
 	spots.push_back(seek);
       else
 	spots.push_back(seek); 
@@ -68,12 +68,12 @@ vector<coord> King::validSpots(Chess c)
   }
   //SE - can cap
   seek = getSpot();
-  if(c.isValid(seek.x+1,seek.y+1))
+  if(c->isValid(seek.x+1,seek.y+1))
   {
     seek.y++;
     seek.x++;
-    if(c.board[seek.x][seek.y] != NULL){
-      if(c.board[seek.x][seek.y]->getTeam() != getTeam())
+    if(c->board[seek.x][seek.y] != NULL){
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam())
 	spots.push_back(seek); 
       else
 	spots.push_back(seek); 
@@ -81,12 +81,12 @@ vector<coord> King::validSpots(Chess c)
   }
   //SW - can cap
   seek = getSpot();
-  if(c.isValid(seek.x-1,seek.y+1))
+  if(c->isValid(seek.x-1,seek.y+1))
   {
     seek.y++;
     seek.x--;
-    if(c.board[seek.x][seek.y] != NULL){
-      if(c.board[seek.x][seek.y]->getTeam() != getTeam())
+    if(c->board[seek.x][seek.y] != NULL){
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam())
 	spots.push_back(seek); 
       else
 	spots.push_back(seek); 
@@ -94,11 +94,11 @@ vector<coord> King::validSpots(Chess c)
   } 
   //E - cant cap
   seek = getSpot();
-  if(c.isValid(seek.x+1,seek.y))
+  if(c->isValid(seek.x+1,seek.y))
   {
     seek.x++;
-    if(c.board[seek.x][seek.y] != NULL){
-      if(c.board[seek.x][seek.y]->getTeam() != getTeam())
+    if(c->board[seek.x][seek.y] != NULL){
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam())
 	spots.push_back(seek);
       else
 	spots.push_back(seek); 
@@ -106,11 +106,11 @@ vector<coord> King::validSpots(Chess c)
   }
   //W - cant cap
   seek = getSpot();
-  if(c.isValid(seek.x-1,seek.y))
+  if(c->isValid(seek.x-1,seek.y))
   {
     seek.x--;
-    if(c.board[seek.x][seek.y] != NULL){
-      if(c.board[seek.x][seek.y]->getTeam() != getTeam())
+    if(c->board[seek.x][seek.y] != NULL){
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam())
 	spots.push_back(seek);
       else
 	spots.push_back(seek); 

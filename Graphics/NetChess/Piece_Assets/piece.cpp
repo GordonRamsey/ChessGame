@@ -28,16 +28,6 @@ Piece& Piece::operator=(const Piece& other)
   return *this;
 }
 
-char Piece::getColor() const
-{
-    return m_color;
-}
-
-void Piece::setColor(const char color)
-{
-    m_color = color;
-}
-
 coord Piece::getPos() const
 {
     coord newcord;
@@ -50,16 +40,6 @@ void Piece::setPos(const int x, const int y)
 {
     box.x = x;
     box.y = y;
-}
-
-bool Piece::getCaptured() const
-{
-    return m_captured;
-}
-
-void Piece::setCaptured(const bool captured)
-{
-    m_captured = captured;
 }
 
 int Piece::getNum()
