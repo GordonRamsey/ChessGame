@@ -1,6 +1,10 @@
 #include "rook.h"
 using namespace std;
 
+vector<coord> Rook::AllPos()
+{
+    coord temp; 
+    vector<coord> set; 
 Rook::Rook()
 {
     m_name = "Rook"; 
@@ -40,7 +44,8 @@ bool Rook::isEnemy(int y, int x)
 
     if(TmpColor != myColor)
         return true; 
-    else return false; 
+    else 
+        return false; 
 }
 
 bool Rook::isEmpty(int y, int x)

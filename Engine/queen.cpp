@@ -1,10 +1,18 @@
 #include "queen.h"
 using namespace std;
 
+Queen::Queen()
+{
+    m_name = "Queen";
+}
+
+Queen::~Queen()
+{}
+
 vector<coords> Queen::AllPos()
 {
-	coords temp;
-	vector<coords> set;
+	coord temp;
+	vector<coord> set;
 
 	//Think we don't need to check color.
 	//Queen can move the same no matter what color.
@@ -97,6 +105,16 @@ vector<coords> Queen::AllPos()
             continue;
 	}
 
+}
+
+string Queen:getName() const
+{
+    return m_name;
+}
+
+void Queen::setName(const string name)
+{
+    m_name = name;
 }
 void Queen::Move(const coord posiiton)
 {

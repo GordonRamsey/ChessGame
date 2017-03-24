@@ -88,6 +88,9 @@ void SetUp()
         game_board[6][i] = new Pawn();
         game_board[6][i]->setColor('w');
         game_board[6][i]->setPos(6,i);
+        game_board[6][i]->setPosition(6,i);
+		temp.x = 6;
+		temp.y = i;
 		temp.x = i;
 		temp.y = 6;
 		WLocks.push_back(temp);	
@@ -171,46 +174,26 @@ void Move(int cur_x, int cur_y, int new_x, int new_y)
 
 }
 
-/*
-//Consider if the piece of KING
-void OpponentExists(char color, int validPos_y, int validPos_x, int curr_y, int curr_x){
-    
-    //difference is is 1
-    //ELSE for each if will need to call capture -- 
-    if((cur_y-1) != validPos_y)
-    
-    else{
-        //can be captured()
-        for(int i = 0; i < validPos.size(); ++i)
-        {
-            if((validPos_y-(i+1)) == validPos.at(i).y)
-                SeekandRemove((cury_y-i), validPos.at(i).x)
-        }
+void SeekandRemove(char color, int y, int x) //Don't need color yet
+{
+    for(int i = 0; i < validPos.size(); +=i)
+    {
+        if((validPos[i].y == y) && (validPos[i].x == x))
+            validPos.erase(validPos.begin()+i);
     }
-        //SeekandRemove(validPos_y, validPos__x); 
-    if((cur_y+1) != validPos_y)
-        SeekandRemove(validPos_y, validPos_x); 
-    if((cur_x-1) != validPos_x)
-        SeekandRemove(cur_y, cur_x); 
-    if((cur_x+1) != validPos_x)
-        SeekandRemove(validPos_y, validPos_x); 
 }
-*/
-/
-
 /* UNDER CONSTRUCTION */
-vector<coord> ValidMoves(const int x, const int y)
+vector<coord> ValidMoves(const int x, const int y) 
 {
     Piece* cur_piece = board[y][x];
-    in cp.y = cur_piece.y; 
+    int cp.y = cur_piece.y; 
     int cp.x = cur_piece.x; 
     info.cp.x, info.cp.y; 
    
-    info.
     char color = cur_piece->getColor(); 
     info.color; 
-    //string type = cur_piece->getName(); make special case for king  
     vector<coord> validPos(cur_piece->AllPos()); 
+    /*
     if(color == 'w')
     {
         for(int i = 0; i < validPos.size(); ++i)
@@ -592,11 +575,10 @@ coord checkKnight(char color, int y, int x)
 }
 
 
-/*
+
 coord checkQueen(char color, int y, int x)
 {
 }
-*/ //Same Code as King? 
 coord checkPawn(char color, int y, int x)
 {
     //only moving up
@@ -626,4 +608,4 @@ coord checkPawn(char color, int y, int x)
         
     }
 }
-
+*/

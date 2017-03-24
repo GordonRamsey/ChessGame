@@ -1,6 +1,14 @@
 #include "pawn.h"
 using namespace std;
 
+Pawn::Pawn()
+{
+    m_name = "Pawn";
+}
+
+Pawn::~Pawn()
+{}
+
 vector<coords> Pawn::AllPos()
 {
 	coord temp;
@@ -35,6 +43,17 @@ vector<coords> Pawn::AllPos()
     */
 }
 
+
+
+string Pawn::getName()const
+{
+    return m_name;
+}
+
+void Pawn::setName(const string name)
+{
+    m_name = name;
+}
 
 void Pawn::Move(const coord position)
 {

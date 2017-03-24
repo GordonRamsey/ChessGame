@@ -51,11 +51,18 @@ bool Bishop::isEmpty(int y, int x)
         return false; 
 }
 
-void Bishop::validMoves(int cp.y, int cp.x, &vector<coord> captureable, &vector<coord>validPos)
+Bishop::Bishop()
 {
-    coord temp, cap, valid;
-    temp.y = cp.y;
-    temp.x = cp.x; 
+    m_name = "Bishop";
+}
+
+Bishop::~Bishop()
+{}
+
+vectors<coords> Bishop::ValidMoves(int cp.y, int cp.x, &vector<coord> captureable, &vector<coord>validPos)
+{
+    coord temp; 
+    vector<coord> set; 
 
     //Move Diagonal up, right(w) AND down, left(b)  
     while((temp.y && temp.x) >= 0)
@@ -165,6 +172,16 @@ void Bishop::validMoves(int cp.y, int cp.x, &vector<coord> captureable, &vector<
         temp.x += 1; 
 
     }        
+}
+
+string Bishop::getName() const
+{
+    return m_name;
+}
+
+void Bishop::setName(const string name)
+{
+    m_name = name;
 }
 
 void Bishop::Move(const string posiiton)

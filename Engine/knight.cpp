@@ -1,10 +1,18 @@
 #include "knight.h"
 using namespace std;
 
+Knight::Knight()
+{
+    m_name = "Knight";
+}
+
+Knight::~Knight()
+{}
+
 vector<coords> Knight::AllPos()
 {
-    coords temp; 
-    vector<coords> set; 
+    coord temp; 
+    vector<coord> set; 
 
     //up 2, right 1(w) AND  down 2, left 1(b)
     temp.y = m_position.y - 2; 
@@ -49,6 +57,16 @@ vector<coords> Knight::AllPos()
     temp.x = m_position.x + 2;  
     if((temp.y && temp.x) < 8 && (temp.y && temp.x) >= 0)    
         set.push_back(temp); 
+}
+
+string Knight::getName() const
+{
+    return m_name;
+}
+
+void Knight::setName(const string name)
+{
+    m_name = name;
 }
 
 void Knight::Move(const string posiiton)
