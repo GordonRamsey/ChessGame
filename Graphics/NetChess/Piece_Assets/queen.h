@@ -1,12 +1,13 @@
-#ifndef ROOK_H
-#define ROOK_H
+#ifndef QUEEN_H
+#define QUEEN_H
 #include "piece.h"
-class Rook : public Piece
+
+class Queen : public Piece
 {
   private:
 
   public:
-    validSpots(Chess c);
+    vector<coord> validSpots(Chess c);
 
 };
 #endif
