@@ -1,23 +1,27 @@
 #include "knight.h"
 
+Knight::Knight(int x, int y, int it) : Piece(x, y, it)
+{
+  // :)
+}
+
 vector<coord> Knight::validSpots(Chess c)
 {
   //c.board
-  int it = 0;
   coord seek;
-  vector<coords> spots;
+  vector<coord> spots;
 
   //Check North/West
-  seek = getspot();
+  seek = getSpot();
   while(true){//Checking untill 1. hit board limit 2. hit a piece
-    seek.y-2;
-    seek.x-1;
+    seek.y-=2;
+    seek.x-=1;
     if(seek.y < 0 or seek.x > 13)//Out of bounds
       break;
     if(c.validspots[seek.x][seek.y] == 0)//valid spot
       break;
-    if(c.validspots[seek.x][seek.y] != NULL){
-      if(c.board[seek.x][seek.y].getTeam() != getTeam()){
+    if(c.board[seek.x][seek.y] != NULL){
+      if(c.board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
         break;
       }
@@ -29,16 +33,16 @@ vector<coord> Knight::validSpots(Chess c)
   }
 
   //Check North/East
-  seek = getspot();
+  seek = getSpot();
   while(true){//Checking untill 1. hit board limit 2. hit a piece
-    seek.y-2;
-    seek.x+1;
+    seek.y-=2;
+    seek.x+=1;
     if(seek.y < 0 or seek.x > 13)//Out of bounds
       break;
     if(c.validspots[seek.x][seek.y] == 0)//valid spot
       break;
-    if(c.validspots[seek.x][seek.y] != NULL){
-      if(c.board[seek.x][seek.y].getTeam() != getTeam()){
+    if(c.board[seek.x][seek.y] != NULL){
+      if(c.board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
         break;
       }
@@ -50,16 +54,16 @@ vector<coord> Knight::validSpots(Chess c)
   }
 
   //Check East/Norh
-  seek = getspot();
+  seek = getSpot();
   while(true){//Checking untill 1. hit board limit 2. hit a piece
-    seek.x+2;
-    seek.y-1;
+    seek.x+=2;
+    seek.y-=1;
     if(seek.y < 0 or seek.x > 13)//Out of bounds
       break;
     if(c.validspots[seek.x][seek.y] == 0)//valid spot
       break;
-    if(c.validspots[seek.x][seek.y] != NULL){
-      if(c.board[seek.x][seek.y].getTeam() != getTeam()){
+    if(c.board[seek.x][seek.y] != NULL){
+      if(c.board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
         break;
       }
@@ -71,16 +75,16 @@ vector<coord> Knight::validSpots(Chess c)
   }
 
   //Check East/South
-  seek = getspot();
+  seek = getSpot();
   while(true){//Checking untill 1. hit board limit 2. hit a piece
-    seek.x+2;
-    seek.y+1;
+    seek.x+=2;
+    seek.y+=1;
     if(seek.y < 0 or seek.x > 13)//Out of bounds
       break;
     if(c.validspots[seek.x][seek.y] == 0)//valid spot
       break;
-    if(c.validspots[seek.x][seek.y] != NULL){
-      if(c.board[seek.x][seek.y].getTeam() != getTeam()){
+    if(c.board[seek.x][seek.y] != NULL){
+      if(c.board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
         break;
       }
@@ -92,16 +96,16 @@ vector<coord> Knight::validSpots(Chess c)
   }
 
   //Check South/East
-  seek = getspot();
+  seek = getSpot();
   while(true){//Checking untill 1. hit board limit 2. hit a piece
-    seek.y+2;
-    seek.x+1;
+    seek.y+=2;
+    seek.x+=1;
     if(seek.y < 0 or seek.x > 13)//Out of bounds
       break;
     if(c.validspots[seek.x][seek.y] == 0)//valid spot
       break;
-    if(c.validspots[seek.x][seek.y] != NULL){
-      if(c.board[seek.x][seek.y].getTeam() != getTeam()){
+    if(c.board[seek.x][seek.y] != NULL){
+      if(c.board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
         break;
       }
@@ -113,16 +117,16 @@ vector<coord> Knight::validSpots(Chess c)
   }
 
   //Check South/West
-  seek = getspot();
+  seek = getSpot();
   while(true){//Checking untill 1. hit board limit 2. hit a piece
-    seek.y+2;
-    seek.x-1;
+    seek.y+=2;
+    seek.x-=1;
     if(seek.y < 0 or seek.x > 13)//Out of bounds
       break;
     if(c.validspots[seek.x][seek.y] == 0)//valid spot
       break;
-    if(c.validspots[seek.x][seek.y] != NULL){
-      if(c.board[seek.x][seek.y].getTeam() != getTeam()){
+    if(c.board[seek.x][seek.y] != NULL){
+      if(c.board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
         break;
       }
@@ -134,16 +138,16 @@ vector<coord> Knight::validSpots(Chess c)
   }
 
   //Check West/North
-  seek = getspot();
+  seek = getSpot();
   while(true){//Checking untill 1. hit board limit 2. hit a piece
-    seek.x-2;
-    seek.y-1;
+    seek.x-=2;
+    seek.y-=1;
     if(seek.y < 0 or seek.x > 13)//Out of bounds
       break;
     if(c.validspots[seek.x][seek.y] == 0)//valid spot
       break;
-    if(c.validspots[seek.x][seek.y] != NULL){
-      if(c.board[seek.x][seek.y].getTeam() != getTeam()){
+    if(c.board[seek.x][seek.y] != NULL){
+      if(c.board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
         break;
       }
@@ -155,16 +159,16 @@ vector<coord> Knight::validSpots(Chess c)
   }
 
   //Check West/South
-  seek = getspot();
+  seek = getSpot();
   while(true){//Checking untill 1. hit board limit 2. hit a piece
-    seek.x-2;
-    seek.y+1;
+    seek.x-=2;
+    seek.y+=1;
     if(seek.y < 0 or seek.x > 13)//Out of bounds
       break;
     if(c.validspots[seek.x][seek.y] == 0)//valid spot
       break;
-    if(c.validspots[seek.x][seek.y] != NULL){
-      if(c.board[seek.x][seek.y].getTeam() != getTeam()){
+    if(c.board[seek.x][seek.y] != NULL){
+      if(c.board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
         break;
       }
@@ -174,4 +178,5 @@ vector<coord> Knight::validSpots(Chess c)
     spots.push_back(seek);
     break;
   }
+  return spots;
 }

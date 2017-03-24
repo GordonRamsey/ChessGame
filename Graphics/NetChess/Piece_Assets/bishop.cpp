@@ -1,14 +1,19 @@
 #include "bishop.h"
 
+Bishop::Bishop(int x, int y, int it) : Piece(x, y, it)
+{
+  // :)
+}
+
 vector<coord> Bishop::validSpots(Chess c)
 {
   //c.board
   int it = 0;
   coord seek;
-  vector<coords> spots;
+  vector<coord> spots;
 
   //Check North/East
-  seek = getspot();
+  seek = getSpot();
   while(true){//Checking untill 1. hit board limit 2. hit a piece
     seek.y--;
     seek.x++;
@@ -16,7 +21,7 @@ vector<coord> Bishop::validSpots(Chess c)
       break;
     if(c.validspots[seek.x][seek.y] == 0)//valid spot
       break;
-    if(c.validspots[seek.x][seek.y] != NULL){
+    if(c.board[seek.x][seek.y] != NULL){
       if(c.board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
         break;
@@ -28,7 +33,7 @@ vector<coord> Bishop::validSpots(Chess c)
   }
 
   //Check South/East
-  seek = getspot();
+  seek = getSpot();
   while(true){//Checking untill 1. hit board limit 2. hit a piece
     seek.y++;
     seek.x++;
@@ -36,7 +41,7 @@ vector<coord> Bishop::validSpots(Chess c)
       break;
     if(c.validspots[seek.x][seek.y] == 0)//valid spot
       break;
-    if(c.validspots[seek.x][seek.y] != NULL){
+    if(c.board[seek.x][seek.y] != NULL){
       if(c.board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
         break;
@@ -48,7 +53,7 @@ vector<coord> Bishop::validSpots(Chess c)
   }
 
   //Check North/West
-  seek = getspot();
+  seek = getSpot();
   while(true){//Checking untill 1. hit board limit 2. hit a piece
     seek.y--;
     seek.x--;
@@ -56,7 +61,7 @@ vector<coord> Bishop::validSpots(Chess c)
       break;
     if(c.validspots[seek.x][seek.y] == 0)//valid spot
       break;
-    if(c.validspots[seek.x][seek.y] != NULL){
+    if(c.board[seek.x][seek.y] != NULL){
       if(c.board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
         break;
@@ -68,7 +73,7 @@ vector<coord> Bishop::validSpots(Chess c)
   }
 
   //Check South/West
-  seek = getspot();
+  seek = getSpot();
   while(true){//Checking untill 1. hit board limit 2. hit a piece
     seek.y++;
     seek.x--;
@@ -76,7 +81,7 @@ vector<coord> Bishop::validSpots(Chess c)
       break;
     if(c.validspots[seek.x][seek.y] == 0)//valid spot
       break;
-    if(c.validspots[seek.x][seek.y] != NULL){
+    if(c.board[seek.x][seek.y] != NULL){
       if(c.board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
         break;

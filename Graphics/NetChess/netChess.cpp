@@ -79,6 +79,9 @@ TTF_Font *font = NULL;
 SDL_Color textColor = {0, 0, 0};
 vector<string> history;
 
+//Our chess overhead object
+Chess c;
+
 //variables used in HOLD call
 Piece ghostPiece = Piece(-1,-64,-64);
 
@@ -356,6 +359,12 @@ bool load_files()
   else if(ghostSheet == NULL)
     return false;
 
+  cerr << "Sheet1:" << pieceSheet1 << endl;
+  cerr << "Sheet2:" << pieceSheet2 << endl;
+  cerr << "Sheet3:" << pieceSheet3 << endl;
+  cerr << "Sheet4:" << pieceSheet4 << endl;
+  
+  
   return true;
 }
 
@@ -383,27 +392,62 @@ void generatePieces()
    //Player 1 gen 
    for(int j=0;j<2;j++){
     for(int i=0;i<8;i++){
-      Piece newPiece = Piece(i*SPRITE_SIZE+BORDER_SIZE+SPRITE_SIZE*3, j*SPRITE_SIZE+BORDER_SIZE, it); 
+      Piece* newPiece = new Piece(i*SPRITE_SIZE+BORDER_SIZE+SPRITE_SIZE*3, j*SPRITE_SIZE+BORDER_SIZE, it); 
       it++;
-      newPiece.setTeam(0);
+      int x = newPiece->getPos().x;
+      int y = newPiece->getPos().y;
+      int num = newPiece->getNum();
       if(j == 1)
-	newPiece.setClip(CLIP_PAWN);
+      {
+	Pawn newClass = Pawn(x,y,num);
+	newPiece = &newClass;
+	newPiece->setClip(CLIP_PAWN);
+      }
       else{
 	if(i==0 || i ==7)
-	  newPiece.setClip(CLIP_ROOK);
+	{  
+	  Rook newClass = Rook(x,y,num);
+	  newPiece = &newClass;
+	  newPiece->setClip(CLIP_ROOK);
+	}
 	if(i==1 || i ==6)
-	  newPiece.setClip(CLIP_KNIGHT);
+	{ 
+	  Knight newClass = Knight(x,y,num);
+	  newPiece = &newClass;
+	  newPiece->setClip(CLIP_KNIGHT);
+	}
 	if(i==2 || i ==5)
-	  newPiece.setClip(CLIP_BISHOP);
+	{  
+	  Bishop newClass = Bishop(x,y,num);
+	  newPiece = &newClass;
+	  newPiece->setClip(CLIP_BISHOP);
+	}
 	if(i==4)
-	  newPiece.setClip(CLIP_KING);
+	{  
+	  King newClass = King(x,y,num);
+	  newPiece = &newClass;
+	  newPiece->setClip(CLIP_KING);
+	}
 	if(i==3)
-	  newPiece.setClip(CLIP_QUEEN);
+	{ 
+	  Queen newClass = Queen(x,y,num);
+	  newPiece = &newClass;
+	  newPiece->setClip(CLIP_QUEEN);
+	}
       }
-      pieces.push_back(newPiece);
+      newPiece->setTeam(0);
+      pieces.push_back(*newPiece);
+      cerr << "Piece spot:" << newPiece->getPos().x << "," << newPiece->getPos().y << endl;
+      cerr << "Piece team:" << newPiece->getTeam() << endl;
+      cerr << "Piece sheet:" << newPiece->getSheet() << endl;
     }
   }
+  for(int i=0;i<pieces.size();i++)
+  {
+    cerr << pieces[i].toString() << endl;
+  }
   //Player 2 gen
+   /*
   for(int j=2;j>0;j--){
     for(int i=0;i<8;i++){
       Piece newPiece = Piece(i*SPRITE_SIZE+BORDER_SIZE+SPRITE_SIZE*3, j*SPRITE_SIZE+(SPRITE_SIZE*11 + BORDER_SIZE), it); 
@@ -476,6 +520,8 @@ void generatePieces()
       pieces.push_back(newPiece);
     }
   }
+*/  
+cerr << "[DEBUG] Done generating boards" << endl;
 }
 
 void printChat()

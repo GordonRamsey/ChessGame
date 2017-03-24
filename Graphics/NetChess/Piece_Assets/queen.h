@@ -7,6 +7,7 @@ class Queen : public Piece
   private:
 
   public:
+    Queen(int x, int y, int it);
     vector<coord> validSpots(Chess c);
 
 };

@@ -1,13 +1,9 @@
 #include "piece.h"
+#include <sstream>
 using namespace std;
 
 Piece::Piece(int x, int y, int it)
 {
-  m_color = '\0';
-  m_position.x = x / 64; //Divides the coordinates
-  m_position.y = y / 64; //Gives a (x,y) for the grid
-  m_captured = false;
-
   box.x = x;
   box.y = y;
   box.w = 64;
@@ -18,6 +14,18 @@ Piece::Piece(int x, int y, int it)
 
 Piece::~Piece()
 {
+}
+
+Piece& Piece::operator=(const Piece& other)
+{
+  box = other.box;
+  clip = other.clip;
+  clip_num = other.clip_num;
+  num = other.num;
+  sheet = other.sheet;
+  owner = other.owner;
+
+  return *this;
 }
 
 char Piece::getColor() const
@@ -73,6 +81,10 @@ int Piece::getNum()
 //void Piece::setTeam(int x)
   //Defined in game code
 
+int Piece::getTeam()
+{
+  return owner;
+}
 
 coord Piece::getSpot()
 {
@@ -80,6 +92,13 @@ coord Piece::getSpot()
   newcord.y = (box.y) / 64;//row
   newcord.x = (box.x) / 64;
   return newcord;
+}
+
+string Piece::toString()
+{
+  stringstream ss;
+  ss << "ID:" << num << " Owner:" << owner << " Pos:" << box.x << "," << box.y << " Clip:" << clip_num << " Sheet:" << sheet;
+  return ss.str();
 }
 
 int Piece::getClip()

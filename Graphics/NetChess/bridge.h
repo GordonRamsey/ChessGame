@@ -2,9 +2,9 @@
 #include <SDL/SDL_image.h>
 #include "Net_Assets/Socket.h"
 #include "Net_Assets/SocketSet.h"
-#include "../../Engine/piece.h"
 #include "Text_Assets/StringInput.h"
 #include "Piece_Assets/piece.h"
+#include "Piece_Assets/pawn.h"
 #include "Piece_Assets/rook.h"
 #include "Piece_Assets/knight.h"
 #include "Piece_Assets/bishop.h"

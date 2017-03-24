@@ -7,6 +7,7 @@ class Knight : public Piece
   private:
 
   public:
+    Knight(int x, int y, int it);
     vector<coord> validSpots(Chess c);
 
 };

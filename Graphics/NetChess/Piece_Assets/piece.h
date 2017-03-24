@@ -1,7 +1,12 @@
 #include <SDL/SDL.h>
+#include <vector>
+#include <string>
+#include "chess.h"
 
 #ifndef PIECE_H
 #define PIECE_H
+
+using namespace std;
 
 struct coord {
     int x;
@@ -27,7 +32,7 @@ class Piece {
         
         Piece(int x, int y, int num); //Constructor
         ~Piece();//Deconstructor
-        
+        Piece& operator=(const Piece& other);
         //Accessors and Mutators
         char getColor() const;
         void setColor(const char color);
@@ -50,6 +55,9 @@ class Piece {
 	
 	void setTeam(int x);
 	int  getTeam();
+
+	SDL_Surface* getSheet() { return sheet; }
+	string toString();
 
 	void setAlpha(int x);
 

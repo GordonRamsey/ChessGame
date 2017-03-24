@@ -1,12 +1,15 @@
-#ifndef ROOK_H
-#define ROOK_H
+#ifndef PAWN_H
+#define PAWN_H
 #include "piece.h"
-class Rook : public Piece
+class Pawn : public Piece
 {
   private:
+    bool first_move = true;
+    char dir;
 
   public:
-    validSpots(Chess c);
+    Pawn(int x, int y, int it);
+    vector<coord> validSpots(Chess c);
 
 };
 #endif
