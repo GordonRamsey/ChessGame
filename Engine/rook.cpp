@@ -16,19 +16,19 @@ char Rook::getTmpcolor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
     char b, w, e; 
     for(int b = 0; b < BLocs.size(); ++b)
     {
-        for(int w = 0; w < WLocs.size(); ++w)
-        {
-            if((tmp.y == BLocs[b].y) && (tmp.x == BLocs[b].x))
-                return 'b'; 
-            if((tmp.y == WLocs[w].y) && (tmp.x == BLocs[w].y))
-                return 'w'; 
-            else
-                return 'e'
-        }
+        if((tmp.y == BLocs[b].y) && (tmp.x == BLocs[b].x))
+            return 'b'; 
     }
+    for(int w = 0; w < WLocs.size(); ++w)
+    {
+        if((tmp.y == WLocs[w].y) && (tmp.x == BLocs[w].y))
+                return 'w'; 
+    }
+    return 'e'; 
+    
 }
 
-bool Rook::isAlly(int y, int x)
+bool Rook::isAlly(int y, int x, char myColor)
 {
     char TmpColor = getTmpColor(int y, int x);
 
@@ -38,7 +38,7 @@ bool Rook::isAlly(int y, int x)
         return false;
 }
 
-bool Rook::isEnemy(int y, int x)
+bool Rook::isEnemy(int y, int x, char myColor)
 {
     char TmpColor = getTmpColor(int y, int x);
 
@@ -105,6 +105,7 @@ void Rook::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<coo
             cap.x = temp.x; 
             captureable.push_back(cap); 
             valid.push_back(cap); 
+            break; 
         }
 
         temp.y += 1; 
@@ -128,6 +129,7 @@ void Rook::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<coo
             cap.x = temp.x; 
             captureable.push_back(cap); 
             valid.push_back(cap); 
+            break; 
         }
 
         temp.x-=1; 
@@ -151,6 +153,7 @@ void Rook::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<coo
             cap.x = temp.x; 
             captureable.push_back(cap); 
             valid.push_back(cap); 
+            break; 
         }
 
         temp.x+=1;
