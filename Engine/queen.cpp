@@ -9,6 +9,21 @@ Queen::Queen()
 Queen::~Queen()
 {}
 
+string Queen:getName() const
+{
+    return m_name;
+}
+
+void Queen::setName(const string name)
+{
+    m_name = name;
+}
+void Queen::Move(const coord posiiton)
+{
+  //Check if valid move, then: 
+  m_position = position;
+}
+
 char Queen::getTmpColor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
 {
     coord tmp; 
@@ -259,19 +274,4 @@ void Queen::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<co
         temp.y +=1;       
         temp.x +=1; 
     }
-}
-
-string Queen:getName() const
-{
-    return m_name;
-}
-
-void Queen::setName(const string name)
-{
-    m_name = name;
-}
-void Queen::Move(const coord posiiton)
-{
-  //Check if valid move, then: 
-  m_position = position;
 }

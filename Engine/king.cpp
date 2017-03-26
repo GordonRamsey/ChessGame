@@ -9,7 +9,29 @@ King::King()
 King::~King()
 {}
 
-char King::getTmpColor(int y, int x, vector<coord> WLocs, vector<coord BLocs)
+void King::Move(const string posiiton)
+{
+  //Check if valid, then:
+  setPosition(position);
+}
+
+string King::getName() const
+{
+    return m_name; 
+}
+
+void King::setName(const string name)
+{
+    m_name = name; 
+}
+
+void King::Move(const string posiiton)
+{
+  //Check if valid, then:
+  setPosition(position);
+}
+
+char King::getTmpColor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
 {
     char b, w, e; 
     int temp.y = y;
@@ -244,8 +266,3 @@ void King::ValidMoves(cp.y, cp.x, vector<coord> captureable, vector<coord> valid
     }
 }
 
-void King::Move(const string posiiton)
-{
-  //Check if valid, then:
-  setPosition(position);
-}

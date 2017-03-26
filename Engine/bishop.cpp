@@ -1,6 +1,30 @@
 #include "bishop.h"
 using namespace std;
 
+Bishop::Bishop()
+{
+    m_name = "Bishop";
+}
+
+Bishop::~Bishop()
+{}
+
+string Bishop::getName() const
+{
+    return m_name;
+}
+
+void Bishop::setName(const string name)
+{
+    m_name = name;
+}
+
+void Bishop::Move(const string posiiton)
+{
+  //Check if valid, then:
+  setPosition(position);
+}
+
 char Bishop::getTmpColor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
 {
     char b, w, e; //E MEANS EMPTY
@@ -31,7 +55,7 @@ bool Bishop::isAlly(int y, int x, char myColor)
 }
 
 /* Here is where you are going to want to (1) go into chess.cpp and take the type, (2)check to see if it is a King so that we can (3)pass it in to our object 'info' to call checkmate */
-bool Bishop::isEnemy(int y, int x)
+bool Bishop::isEnemy(int y, int x, char myColor)
 {
     char TmpColor = getTmpColor(y,x); 
 
@@ -41,7 +65,7 @@ bool Bishop::isEnemy(int y, int x)
         return false; 
 }
 
-bool Bishop::isEmpty(int y, int x, char myColor)
+bool Bishop::isEmpty(int y, int x)
 {
     char TmpColor = getTmpColor(y,x); 
 
@@ -50,14 +74,6 @@ bool Bishop::isEmpty(int y, int x, char myColor)
     else 
         return false; 
 }
-
-Bishop::Bishop()
-{
-    m_name = "Bishop";
-}
-
-Bishop::~Bishop()
-{}
 
 void Bishop::ValidMoves(int cp.y, int cp.x, &vector<coord> captureable, &vector<coord>validPos)
 {
@@ -174,18 +190,3 @@ void Bishop::ValidMoves(int cp.y, int cp.x, &vector<coord> captureable, &vector<
     }        
 }
 
-string Bishop::getName() const
-{
-    return m_name;
-}
-
-void Bishop::setName(const string name)
-{
-    m_name = name;
-}
-
-void Bishop::Move(const string posiiton)
-{
-  //Check if valid, then:
-  setPosition(position);
-}
