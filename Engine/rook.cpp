@@ -155,9 +155,6 @@ void Rook::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<coo
             valid.push_back(cap); 
             break; 
         }
-
-        temp.x+=1;
-    }
 }
 void Rook::Move(const string posiiton)
 {
