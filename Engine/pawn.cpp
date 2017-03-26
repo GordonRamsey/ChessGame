@@ -71,18 +71,18 @@ bool Pawn::firstMove(int y, int x, char myColor)
 }
 
 /*You will want to clear both vectors after 2nd click? */
-void Pawn::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<coord>validPos)
+void Pawn::ValidMoves(int cp_y, int cp_x, &vector<coord>captureable, &vector<coord>validPos)
 {
 	coord cap, valid; 
-    int temp.y = cp.y; 
-    int temp.x = cp.x; 
+    int temp.y = cp_y; 
+    int temp.x = cp_x; 
 
-	if(firstMove(cp.y, cp.x))
+	if(firstMove(cp_y, cp_x))
 	{
         if(myColor == 'w')
         {
             temp.y = temp.y-2; 
-            temp.x = cp.x;  
+            temp.x = cp_x;  
             if(isAlly(temp.y, temp.x))
                 break; 
             if(isEmpty(temp.y, temp.x))
@@ -97,7 +97,7 @@ void Pawn::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<coo
         if(myColor == 'b')
         {
             temp.y = temp.y+2; 
-            temp.x = cp.x;  
+            temp.x = cp_x;  
             if(isAlly(temp.y, temp.x))
                 break; 
             if(isEmpty(temp.y, temp.x))
@@ -114,7 +114,7 @@ void Pawn::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<coo
     if(myColor == 'w')
     {
         temp.y -= 1; 
-        temp.x = cp.x; 
+        temp.x = cp_x; 
         if(isAlly(temp.y, temp.x))
             break; 
         if(isEmpty(temp.y, temp.x))
@@ -124,21 +124,12 @@ void Pawn::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<coo
             validPos.push_back(valid); 
         }
         if(isEnemy(temp.y, temp.x))
-        {
-            cap.y = temp.y-1;
-            cap.x = temp.x+1; //diagonal left
-            captureable.push_back(cap); 
-            validPos.push_back(cap); 
-            cap.y = temp.y-2; 
-            cap.x = temp.x+2; //diagonal right 
-            captureable.push_back(cap); 
-            validPos.push_back(cap); 
-        }
+            break;
     }
     if(myColor == 'b')
     {
         temp.y += 1; 
-        temp.x = cp.x; 
+        temp.x = cp_x; 
         if(isAlly(temp.y, temp.x))
             break; 
         if(isEmpty(temp.y, temp.x))

@@ -60,16 +60,15 @@ bool Bishop::isEmpty(int y, int x)
         return false; 
 }
 
-void Queen::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<coord>validPos)
+void Queen::ValidMoves(int cp_y, int cp_x, &vector<coord>captureable, &vector<coord>validPos)
 {
-    coord car, valid; 
-    int temp.y = cp.y; 
-    int temp.x = cp.x; 
+    coord temp, cap, valid; 
+    temp.y = cp_y-1; 
+    temp.x = cp_x; 
     vector<coord> set; 
     //Moving vertically towards "top" of the board: 
     while((temp.y) >= 0)
     {
-        temp.y -= 1; 
          
         if(isAlly(temp.y, temp.x))
             break; 
@@ -88,13 +87,12 @@ void Queen::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<co
             break; 
         }
 
-        temp.y-=1; 
+        temp.y -= 1; 
     }
+    temp.y = cp_y+1;
 	//Moving vertically towards "bottom" of board:
     while((temp.y) < 8)
     {
-        temp.y += 1; 
-        temp.x = cp.x; 
 
         if(isAlly(temp.y, temp.x))
             break; 
@@ -112,13 +110,13 @@ void Queen::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<co
             validPos.push_back(cap); 
             break; 
         }
-        temp.y+=1;
+        temp.y += 1; 
     }   
+    temp.y = cp_y;
+    temp.x = cp_x+1;
 	//Moving horizontally towards "right" of board:
     while((temp.x) >= 0)
     {
-        temp.y = cp.y; 
-        temp.x -= 1; 
         
         if(isAlly(temp.y, temp.x))
             break; 
@@ -136,13 +134,12 @@ void Queen::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<co
             validPos.push_back(cap); 
             break; 
         }
-        temp.y-=1;
+        temp.x += 1; 
     }
+    temp.x = cp_x-1;
 	//Moving horizontally towards "left" of board:
     while(temp.x < 8)
     {
-        temp.y = cp.y; 
-        temp.x += cp.x; 
         if(isAlly(temp.y, temp.x))
             break; 
         if(isEmpty(temp.y, temp.x))
@@ -159,13 +156,13 @@ void Queen::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<co
             validPos.push_back(cap); 
             break; 
         }
-        temp.y-=1;
+        temp.x -= 1; 
     }
+    temp.y = cp_y-1;
+    temp.x = cp_x+1;
 	//Moving diagonally towards "top right" of board:
     while((temp.y >= 0) && (temp.x) >= 0)
     {
-        temp.y -= 1; 
-        temp.x -= 1; 
         if(isAlly(temp.y, temp.x))
             break; 
         if(isEmpty(temp.y, temp.x))
@@ -183,13 +180,13 @@ void Queen::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<co
             break; 
         }
         temp.y-=1;
-        temp.x-=1; 
+        temp.x+=1; 
     }
 	//Moving diagonally towards "top left" of board:
+    temp.y = cp_y-1;
+    temp.y = cp_x-1;
     while((temp.y) >= 0 && (temp.x) < 8)
     {
-        temp.y -= 1;
-        temp.x += 1; 
 
         if(isAlly(temp.y, temp.x))
             break; 
@@ -208,13 +205,13 @@ void Queen::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<co
             break; 
         }
         temp.y -=1;
-        temp.x +=1; 
+        temp.x -=1; 
     }
 	//Moving diagonally towards "bottom right" of board:
+    temp.y = cp_y+1;
+    temp.x = cp_x+1;
     while((temp.y < 8) && (temp.x >= 0))
     {
-        temp.y += 1; 
-        temp.x -= 1; 
         if(isAlly(temp.y, temp.x))
             break; 
         if(isEmpty(temp.y, temp.x))
@@ -232,13 +229,13 @@ void Queen::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<co
             break; 
         }
         temp.y += 1;
-        temp.x -= 1; 
+        temp.x += 1; 
     }
 	//Moving diagonally towards "bottom left" of board:
+    temp.y = cp_y+1;
+    temp.x = cp_x-1;
     while((temp.y < 8) && (temp.x < 8))
     {
-        temp.y += 1; 
-        temp.x += 1; 
 
         if(isAlly(temp.y, temp.x))
             break; 
@@ -257,7 +254,7 @@ void Queen::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<co
             break; 
         }
         temp.y +=1;       
-        temp.x +=1; 
+        temp.x -=1; 
     }
 }
 

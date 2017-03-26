@@ -1,14 +1,13 @@
 #include "rook.h"
 using namespace std;
 
-vector<coord> Rook::AllPos()
-{
-    coord temp; 
-    vector<coord> set; 
 Rook::Rook()
 {
     m_name = "Rook"; 
 }
+
+Rook::~Rook()
+{}
 
 char Rook::getTmpcolor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
 {
@@ -58,15 +57,14 @@ bool Rook::isEmpty(int y, int x)
         return false; 
 }
 
-void Rook::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<coord>validPos)
+void Rook::ValidMoves(int cp_y, int cp_x, &vector<coord>captureable, &vector<coord>validPos)
 {
     coord temp, cap, valid; 
-    temp.y = cp.y; 
-    temp.x = cp.x; 
+    temp.y = cp_y-1; 
+    temp.x = cp_x; 
     //move up(w) down(b)
     while(temp.y >= 0)
     {
-        temp.y -= 1;
         if(isAlly(temp.y, temp.x))
             break; 
         if(isEmpty(temp.y, temp.x))
@@ -84,12 +82,12 @@ void Rook::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<coo
             break; 
         }
 
-        temp.y -= 1; 
+        temp.y -= 1;
     }
+    temp.y = cp_y+1;
     //move down(w) up(b)
     while(temp.y < 8)
     {
-        temp.y += 1; 
 
         if(isAlly(temp.y, temp.x))
             break; 
@@ -110,10 +108,11 @@ void Rook::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<coo
 
         temp.y += 1; 
     }
+    temp.y = cp_y;
+    temp.x=cp_x-1;
     //move right(w) left(b)
     while(temp.x >= 0)
     {
-        temp.x-=1;
 
         if(isAlly(temp.y, temp.x))
             break; 
@@ -132,12 +131,12 @@ void Rook::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<coo
             break; 
         }
 
-        temp.x-=1; 
+        temp.x-=1;
     }
+    temp.x = cp_x+1;
     //move left(w) right(w)
     while(temp.x < 8)
     {
-        temp.x+=1; 
 
         if(isAlly(temp.y, temp.x))
             break; 
@@ -155,16 +154,13 @@ void Rook::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<coo
             valid.push_back(cap); 
             break; 
         }
+
+        temp.x+=1; 
 }
 void Rook::Move(const string posiiton)
 {
   //Check if valid, then:  
   setPosition(position);
-}
-
-void Rook::IsValid(coord Position, &vector<coord> allpos)
-{
-	
 }
 
 string Rook::getName() const

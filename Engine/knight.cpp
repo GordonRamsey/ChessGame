@@ -60,16 +60,12 @@ bool Knight::isEmpty(int y, int x)
 
 void Knight::ValidMoves(int cp.y, int cp.x, vector<coord>WLocs, vector<coord>BLocs)
 {
-    coord cap, valid; 
-    int temp.y = cp.y; 
-    int temp.x = cp.x; 
+    coord cap, valid, temp; 
     //up 2, right 1(w) AND  down 2, left 1(b)
-    while((temp.y >= 0) && (temp.x >= 0))
-    {
-        temp.y = temp.y-2; 
-        temp.x = temp.x-1;
+    temp.y = cp_y-2; 
+    temp.x = cp_x-1;
+    if((temp.y >= 0) && (temp.x >= 0) && (temp.y < 8) && (temp.x < 8))
         if(isAlly(temp.y, temp.x))
-            break;
         if(isEmpty(temp.y, temp.x)) 
         {
             valid.y = temp.y; 
@@ -82,10 +78,7 @@ void Knight::ValidMoves(int cp.y, int cp.x, vector<coord>WLocs, vector<coord>BLo
             cap.x = temp.x; 
             captureable.push_back(cap); 
             validPos.push_back(cap);
-            break; 
         }
-        temp.y = temp.y-2; 
-        temp.x = temp.x-1; 
     }
     //up 1, right 2 AND down 1, left 2(b)
     while((temp.y >= 0) && (temp.x >= 0))

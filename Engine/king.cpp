@@ -3,7 +3,7 @@ using namespace std;
 
 King::King()
 {
-    m_name = name;
+    m_name = "King";
 }
 
 King::~King()
@@ -49,17 +49,17 @@ bool King::isEnemy(int y, int x, char myColor)
         return false; 
 }
 
-void King::ValidMoves(cp.y, cp.x, vector<coord> captureable, vector<coord> validPos)
+void King::ValidMoves(cp_y, cp_x, vector<coord> captureable, vector<coord> validPos)
 {
     coord cap, valid; 
-    int temp.y = cp.y; 
-    int temp.x = cp.x; 
+    int temp.y = cp_y; 
+    int temp.x = cp_x; 
     //move forward (w) back (b)  
-    while(tmp.y >= 0)
+    
+    temp.y = cp_y-1; 
+    if(temp.y >= 0 && temp.y < 8 && temp.x >= 0 && temp.y < 8)
     {
-        temp.y -= 1; 
         if(isAlly(temp.y, temp.x))
-            break; 
         if(isEmpty(temp.y, temp.x))
         {
             valid.y = temp.y; 
@@ -72,17 +72,14 @@ void King::ValidMoves(cp.y, cp.x, vector<coord> captureable, vector<coord> valid
             cap.x = temp.x; 
             captureable.push_back(cap); 
             validPos.push_back(cap); 
-            break; 
         }
-        temp.y -= 1; 
     }
+    
     //move back(w) forward (b)
-    while(temp.y < 8)
+    temp.y = cp_y+1; 
+    if(temp.y >= 0 && temp.y < 8 && temp.x >= 0 && temp.y < 8)
     {
-        temp.y += 1; 
-        temp.x = cp.x; 
         if(isAlly(temp.y, temp.x))
-            break; 
         if(isEmpty(temp.y, temp.x)) 
         {
             valid.y = temp.y; 
@@ -95,16 +92,16 @@ void King::ValidMoves(cp.y, cp.x, vector<coord> captureable, vector<coord> valid
             cap.x = temp.x; 
             captureable.push_back(cap); 
             validPos.push_back(cap); 
-            break;
         }
     }
     //move right (w) left (b)
-    while(temp.x >= 0)
+
+    temp.y = cp.y; 
+    temp.x = cp_x-1; 
+
+    if(temp.y >= 0 && temp.y < 8 && temp.x >= 0 && temp.y < 8)
     {
-        temp.y = cp.y; 
-        temp.x -= 1; 
         if(isAlly(temp.y, temp.x))
-            break; 
         if(isEmpty(temp.y, temp.x)) 
         {
             valid.y = temp.y; 
@@ -117,18 +114,15 @@ void King::ValidMoves(cp.y, cp.x, vector<coord> captureable, vector<coord> valid
             cap.x = temp.x; 
             captureable.push_back(cap); 
             validPos.push_back(cap); 
-            break;
         }
-        temp.y = cp.y; 
-        temp.x -= 1;
     }
+    
     //move left (w) right(b) 
-    while(temp.x < 8)
+    temp.x = cp_x+1; 
+
+    if(temp.y >= 0 && temp.y < 8 && temp.x >= 0 && temp.y < 8)
     {
-        temp.y = cp.y; 
-        temp.x += 1; 
         if(isAlly(temp.y, temp.x))
-            break; 
         if(isEmpty(temp.y, temp.x)) 
         {
             valid.y = temp.y; 
@@ -141,18 +135,15 @@ void King::ValidMoves(cp.y, cp.x, vector<coord> captureable, vector<coord> valid
             cap.x = temp.x; 
             captureable.push_back(cap); 
             validPos.push_back(cap); 
-            break; 
         }
-        temp.y = cp.y; 
-        temp.x += 1;
     }
     //D up, right
-    while((temp.y >= 0) && (temp.x >= 0))
+    temp.y = cp_y-1; 
+    temp.x = cp_x-1; 
+
+    if(temp.y >= 0 && temp.y < 8 && temp.x >= 0 && temp.y < 8)
     {
-        temp.y -= 1; 
-        temp.x -= 1; 
         if(isAlly(temp.y, temp.x))
-            break; 
         if(isEmpty(temp.y, temp.x)) 
         {
             valid.y = temp.y; 
@@ -165,18 +156,15 @@ void King::ValidMoves(cp.y, cp.x, vector<coord> captureable, vector<coord> valid
             cap.x = temp.x; 
             captureable.push_back(cap); 
             validPos.push_back(cap); 
-            break; 
         }
-        temp.y -= 1; 
-        temp.x -= 1; 
+
     }
     //D up, left
-    while((temp.y >= 0) && (temp.x < 8))
+    temp.y = cp_y-1; 
+    temp.x = cp_x+1; 
+    if(temp.y >= 0 && temp.y < 8 && temp.x >= 0 && temp.y < 8)
     {
-        temp.y -= 1; 
-        temp.x += 1; 
         if(isAlly(temp.y, temp.x))
-            break; 
         if(isEmpty(temp.y, temp.x)) 
         {
             valid.y = temp.y; 
@@ -189,18 +177,14 @@ void King::ValidMoves(cp.y, cp.x, vector<coord> captureable, vector<coord> valid
             cap.x = temp.x; 
             captureable.push_back(cap); 
             validPos.push_back(cap); 
-            break;
         }
-        temp.y -= 1; 
-        temp.x -= 1;
     }
     //D down, right
-    while((temp.y < 8) && (temp.x >= 0))
+    temp.y = cp_y+1; 
+    temp.x = cp_x-1; 
+    if(temp.y >= 0 && temp.y < 8 && temp.x >= 0 && temp.y < 8)
     {
-        temp.y += 1; 
-        temp.x -= 1; 
         if(isAlly(temp.y, temp.x))
-            break; 
         if(isEmpty(temp.y, temp.x)) 
         {
             valid.y = temp.y; 
@@ -213,18 +197,14 @@ void King::ValidMoves(cp.y, cp.x, vector<coord> captureable, vector<coord> valid
             cap.x = temp.x; 
             captureable.push_back(cap); 
             validPos.push_back(cap); 
-            break; 
         }
-        temp.y += 1; 
-        temp.x -= 1; 
     }
     //D down, left
-    while((temp.y < 8) && (temp.x < 8))
+    temp.y = cp_y+1; 
+    temp.x = cp_x+1; 
+    if(temp.y >= 0 && temp.y < 8 && temp.x >= 0 && temp.y < 8)
     {
-        temp.y += 1; 
-        temp.x += 1; 
         if(isAlly(temp.y, temp.x))
-            break; 
         if(isEmpty(temp.y, temp.x)) 
         {
             valid.y = temp.y; 
@@ -237,10 +217,7 @@ void King::ValidMoves(cp.y, cp.x, vector<coord> captureable, vector<coord> valid
             cap.x = temp.x; 
             captureable.push_back(cap); 
             validPos.push_back(cap); 
-            break; 
         }
-        temp.y += 1;
-        temp.x += 1; 
     }
 }
 
@@ -248,4 +225,14 @@ void King::Move(const string posiiton)
 {
   //Check if valid, then:
   setPosition(position);
+}
+
+string King::getName() const
+{
+    return m_name;
+}
+
+void King::setName(const string name)
+{
+    m_name = name;
 }

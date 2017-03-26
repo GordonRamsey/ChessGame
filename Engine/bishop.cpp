@@ -87,8 +87,6 @@ void Bishop::ValidMoves(int cp.y, int cp.x, &vector<coord> captureable, &vector<
             break; 
         }
 
-        temp.y -= 1; 
-        temp.x -= 1; 
     }
 
     //Move Diagonal down, right(w) AND up, left(b)

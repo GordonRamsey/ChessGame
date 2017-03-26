@@ -12,7 +12,5 @@ class Info{
         char myColor; //returns the color of the 1st click
         int cp.y; //cur_piece y 
         int cp.x; //cur_piece x
-        
-        
         vector<coord> captureable; //for 2nd click 
 }
