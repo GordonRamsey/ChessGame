@@ -45,9 +45,9 @@ char Queen::getTmpColor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
     return 'e'; 
 }
 
-bool Queen::isAlly(int y, int x, char myColor)
+bool Queen::isAlly(int y, int x, char myColor, vector<coord> WLocs, vector<coord> BLocs)
 {
-    char TmpColor = getTmpColor(y,x); 
+    char TmpColor = getTmpColor(y, x, WLocs, BLocs); 
 
     if(TmpColor = myColor); 
         return true;
@@ -55,9 +55,9 @@ bool Queen::isAlly(int y, int x, char myColor)
         return false; 
 }
 
-bool Queen::isEnemy(int y, int x, char myColor)
+bool Queen::isEnemy(int y, int x, char myColor, vector<coord> WLocs, vector<coord> BLocs)
 {
-    char TmpColor = getTmpColor(y, x); 
+    char TmpColor = getTmpColor(y, x, WLocs, BLocs); 
 
     if(TmpColor != myColor) 
         return true; 
@@ -65,7 +65,7 @@ bool Queen::isEnemy(int y, int x, char myColor)
         return false; 
 }
 
-bool Bishop::isEmpty(int y, int x)
+bool Bishop::isEmpty(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
 {
     char TmpColor = getTmpColor(y, x); 
 
@@ -75,26 +75,25 @@ bool Bishop::isEmpty(int y, int x)
         return false; 
 }
 
-void Queen::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<coord>validPos)
+void Queen::ValidMoves(int cp.y, int cp.x, char myColor, &vector<coord>captureable, &vector<coord>validPos, vector<coord> WLocs, vector<coord> BLocs)
 {
     coord car, valid; 
     int temp.y = cp.y; 
     int temp.x = cp.x; 
-    vector<coord> set; 
     //Moving vertically towards "top" of the board: 
     while((temp.y) >= 0)
     {
         temp.y -= 1; 
          
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x) 
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs) 
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
@@ -111,15 +110,15 @@ void Queen::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<co
         temp.y += 1; 
         temp.x = cp.x; 
 
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x) 
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs)) 
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
@@ -135,15 +134,15 @@ void Queen::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<co
         temp.y = cp.y; 
         temp.x -= 1; 
         
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-         if(isEnemy(temp.y, temp.x) 
+         if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs)) 
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
@@ -158,15 +157,15 @@ void Queen::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<co
     {
         temp.y = cp.y; 
         temp.x += cp.x; 
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x) 
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs)) 
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
@@ -181,15 +180,15 @@ void Queen::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<co
     {
         temp.y -= 1; 
         temp.x -= 1; 
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x) 
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs)) 
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
@@ -206,15 +205,15 @@ void Queen::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<co
         temp.y -= 1;
         temp.x += 1; 
 
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x) 
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs)) 
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
@@ -230,15 +229,15 @@ void Queen::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<co
     {
         temp.y += 1; 
         temp.x -= 1; 
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x) 
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs)) 
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
@@ -255,15 +254,15 @@ void Queen::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<co
         temp.y += 1; 
         temp.x += 1; 
 
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x) 
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs)) 
         {
             cap.y = temp.y; 
             cap.x = temp.x; 

@@ -25,17 +25,11 @@ void King::setName(const string name)
     m_name = name; 
 }
 
-void King::Move(const string posiiton)
-{
-  //Check if valid, then:
-  setPosition(position);
-}
-
 char King::getTmpColor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
 {
     char b, w, e; 
-    int temp.y = y;
-    int temp.x = x; 
+    int temp_y = y;
+    int temp_x = x; 
     for(int b = 0, b < BLocs.size(); ++b)
     {
         if((temp.y == BLocs[b].y) && (temp.x == BLocs[b].x))
@@ -53,42 +47,52 @@ char King::getTmpColor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
     return 'e'; 
 }
 
-char King::isAlly(int y, int x, char myColor)
+char King::isAlly(int y, int x, char myColor, vector<coord> WLocs, vector<coord> BLocs)
+
 {
-    char TmpColor = getTmpColor(y,x); 
+    char TmpColor = getTmpColor(y,x, WLocs, BLocs); 
     if(myColor == TmpColor)
         return true;
     else
         return false; 
 }
 
-bool King::isEnemy(int y, int x, char myColor)
+bool King::isEnemy(int y, int x, char myColor, vector<coord> WLocs, vector<coord> BLocs)
 {
-    char TmpColor = getTmpColor(y,x); 
-    if(tmpColor != myColor) 
+    char TmpColor = getTmpColor(y,x, WLocs, BLocs); 
+    if(TmpColor != myColor) 
         return true; 
     else 
         return false; 
 }
 
-void King::ValidMoves(cp.y, cp.x, vector<coord> captureable, vector<coord> validPos)
+bool King::isEmpty(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
+{
+    char TmpColor = getTmpColor(y, x, WLocs, BLocs); 
+    if(TmpColor == 'e')
+        return true; 
+    else 
+        return false; 
+}
+
+void King::ValidMoves(cp.y, cp.x, char myColor, vector<coord> captureable, vector<coord> validPos, vector<coord> WLocs, vector<coord> BLocs)
 {
     coord cap, valid; 
-    int temp.y = cp.y; 
-    int temp.x = cp.x; 
+    int temp_y = cp.y; 
+    int temp_x = cp.x; 
     //move forward (w) back (b)  
-    while(tmp.y >= 0)
+    while(tmp_y >= 0)
     {
-        temp.y -= 1; 
-        if(isAlly(temp.y, temp.x))
+        temp_y -= 1; 
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x))
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
@@ -103,15 +107,15 @@ void King::ValidMoves(cp.y, cp.x, vector<coord> captureable, vector<coord> valid
     {
         temp.y += 1; 
         temp.x = cp.x; 
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x)) 
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             valid.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x))
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
@@ -125,15 +129,15 @@ void King::ValidMoves(cp.y, cp.x, vector<coord> captureable, vector<coord> valid
     {
         temp.y = cp.y; 
         temp.x -= 1; 
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x)) 
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             valid.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x))
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
@@ -149,15 +153,15 @@ void King::ValidMoves(cp.y, cp.x, vector<coord> captureable, vector<coord> valid
     {
         temp.y = cp.y; 
         temp.x += 1; 
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x)) 
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             valid.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x))
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
@@ -173,15 +177,15 @@ void King::ValidMoves(cp.y, cp.x, vector<coord> captureable, vector<coord> valid
     {
         temp.y -= 1; 
         temp.x -= 1; 
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x)) 
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             valid.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x))
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
@@ -197,15 +201,15 @@ void King::ValidMoves(cp.y, cp.x, vector<coord> captureable, vector<coord> valid
     {
         temp.y -= 1; 
         temp.x += 1; 
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x)) 
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             valid.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x))
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
@@ -221,15 +225,15 @@ void King::ValidMoves(cp.y, cp.x, vector<coord> captureable, vector<coord> valid
     {
         temp.y += 1; 
         temp.x -= 1; 
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x)) 
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             valid.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x))
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
@@ -245,15 +249,15 @@ void King::ValidMoves(cp.y, cp.x, vector<coord> captureable, vector<coord> valid
     {
         temp.y += 1; 
         temp.x += 1; 
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x)) 
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             valid.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x))
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 

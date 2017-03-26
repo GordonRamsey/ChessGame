@@ -13,11 +13,11 @@ class Pawn : public Piece {
 	    ~Pawn();//Destructor
         string getName() const;
         void setName(const string name);
-        char getTmpColor(int y, int x, &vector<coord> captureable, &vector<coord> isValid);    
-        void ValidMoves(cp.y, cp.x, vector<coord> WLocs, vector<coord> BLocs); 
-        bool isAlly(int y, int x, char myColor); 
-        bool isEnemy(int y, int x, char myColor); 
-        bool isEmpty(int y, int x);
-        bool firstMove(int y, int x, char myColor); 
+        char getTmpColor(int y, int x, vector<coord> WLocs, vector<coord>BLocs); 
+        bool isEnemy(int y, int x, char myColor, vector<coord> WLocs, vector<coord>BLocs ); 
+        bool isAlly(int y, int x, char myColor, vector<coord> WLocs, vector<coord>BLocs); 
+        bool isEmpty(int y, int x, vector<coord> WLocs, vector<coord>BLocs); 
+        void ValidMoves(int cp.y, int cp.x, char myColor, &vector<coord> captureable, &vector<coord>validPos, vector<coord> WLocs, vector<coord> BLocs);
+        bool firstMove(int y, int, x, char myColor); 
 };
 #endif

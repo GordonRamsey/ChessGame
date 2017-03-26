@@ -21,33 +21,33 @@ char Pawn::getTmpColor(int y, int x, vector<coord>WLocs, vector<coord>BLocs)
     for(int w = 0; w < WLocs.size(); ++w)
     {
         if((temp.y == WLocs[w].y) == (temp.x == WLocs[w]
-            return 'c'
+            return 'c'; 
     }
 
-    return 'e'
+    return 'e'; 
 }
 
-bool Pawn::isAlly(int y, int x, char myColor)
+bool Pawn::isAlly(int y, int x, char myColor, vector<coord>WLocs, vector<coord>BLocs)
 {
-    char TmpColor = getTmpColor(y,x); 
+    char TmpColor = getTmpColor(y, x, WLocs, BLocs); 
     if(TmpColor == myColor)
         return true; 
     else
         return false; 
 }
-y
-bool Pawn::isEnemy(int y, int x, char myColor)
+
+bool Pawn::isEnemy(int y, int x, char myColor, vector<coord>WLocs, vector<coord>BLocs)
 {
-    char TmpColor == getTmpColor(y,x); 
+    char TmpColor = getTmpColor(y, x, WLocs, BLocs); 
     if(TmpColor != myColor)
         return true; 
     else 
         return false;
 }
 
-bool Pawn::isEmpty(int y, int x)
+bool Pawn::isEmpty(int y, int x, vector<coord>WLocs, vector<coord>BLocs)
 {
-    char TmpColor = getTmpColor(y,x); 
+    char TmpColor = getTmpColor(y, x, WLocs, BLocs); 
     if(TmpColor == 'e')
         return true; 
     else
@@ -71,13 +71,13 @@ bool Pawn::firstMove(int y, int x, char myColor)
 }
 
 /*You will want to clear both vectors after 2nd click? */
-void Pawn::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<coord>validPos)
+void Pawn::ValidMoves(int cp.y, int cp.x, char myColor, &vector<coord>captureable, &vector<coord>validPos, vector<coord> WLocs, vector<coord> BLocs)
 {
 	coord cap, valid; 
     int temp.y = cp.y; 
     int temp.x = cp.x; 
 
-	if(firstMove(cp.y, cp.x))
+	if(firstMove(cp.y, cp.x, myColor))
 	{
         if(myColor == 'w')
         {
@@ -98,15 +98,15 @@ void Pawn::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<coo
         {
             temp.y = temp.y+2; 
             temp.x = cp.x;  
-            if(isAlly(temp.y, temp.x))
+            if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
                 break; 
-            if(isEmpty(temp.y, temp.x))
+            if(isEmpty(temp.y, temp.x, WLocs, BLocs))
             {
                 valid.y = temp.y; 
                 valid.x = temp.x; 
                 validPos.push_back(valid);   
             }
-            if(isEnemy(temp.y, temp.x)) 
+            if(isEnemy(temp.y, temp.x, myColor, WLocs, Blocs)) 
                 break;                 
         }
 	}
@@ -115,15 +115,16 @@ void Pawn::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<coo
     {
         temp.y -= 1; 
         temp.x = cp.x; 
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x))
+        /*Fix isEnemy Coords
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
         {
             cap.y = temp.y-1;
             cap.x = temp.x+1; //diagonal left
@@ -134,20 +135,22 @@ void Pawn::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<coo
             captureable.push_back(cap); 
             validPos.push_back(cap); 
         }
+        */
     }
     if(myColor == 'b')
     {
         temp.y += 1; 
         temp.x = cp.x; 
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x))
+        /* Fix isEnemy Coords
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
         {
             cap.y = temp.y+1;
             cap.x = temp.x-1; //diagonal left
@@ -158,6 +161,7 @@ void Pawn::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<coo
             captureable.push_back(cap); 
             validPos.push_back(cap); 
         }
+        */ 
     }
 
 }
