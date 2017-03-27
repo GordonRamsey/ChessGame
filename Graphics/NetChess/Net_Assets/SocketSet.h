@@ -22,6 +22,7 @@ public:
     SocketSet();
     int wait();
     int wait(int t);
+    int wait(double t);
     void join(int fd);
     void leave(int fd);
     bool isSet(int fd);
