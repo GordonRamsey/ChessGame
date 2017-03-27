@@ -37,8 +37,6 @@ SocketSet socketSet;
 SDL_Surface *board = NULL;
 SDL_Surface *pieceSheet1 = NULL; //Player1s sprite sheet
 SDL_Surface *pieceSheet2 = NULL; //Player 2
-//SDL_Surface *pieceSheet3 = NULL; //Player 3
-//SDL_Surface *pieceSheet4 = NULL; //Player 4
 SDL_Surface *ghostSheet = NULL;
 SDL_Surface *screen = NULL;
 
@@ -122,14 +120,6 @@ void Piece::setTeam(int x)
     sheet = pieceSheet2;
     owner = 2;
   }
-/*  else if(x == 2){  
-    sheet = pieceSheet3;
-    owner = 3;
-  }
-  else if(x == 3){  
-    sheet = pieceSheet4;
-    owner = 4;
-  }*/
 }
 
 void set_clips()
@@ -249,8 +239,6 @@ bool load_files()
   board = load_image("twoPlayerBoardTest.png");
   pieceSheet1 = load_image("basicPieces64.png");
   pieceSheet2 = load_image("basicPieces642.png");
-//  pieceSheet3 = load_image("basicPieces643.png");
-//  pieceSheet4 = load_image("basicPieces644.png");
   ghostSheet = load_image("ghostPieces64.png");
 
   if(board == NULL)
@@ -258,7 +246,6 @@ bool load_files()
     return false;
   }
   else if (pieceSheet1 == NULL || pieceSheet2 == NULL) 
-      //|| pieceSheet3 == NULL || pieceSheet4 == NULL)
   {
     return false;
   }
@@ -273,8 +260,6 @@ void clean_up()
   SDL_FreeSurface(board);
   SDL_FreeSurface(pieceSheet1);
   SDL_FreeSurface(pieceSheet2);
-//  SDL_FreeSurface(pieceSheet3);
-//  SDL_FreeSurface(pieceSheet4);
   SDL_FreeSurface(ghostSheet);
 
   SDL_Quit();
@@ -335,56 +320,6 @@ void generatePieces()
       pieces.push_back(newPiece);
     }
   } 
-/*  //Player 3 gen
-  for(int j=0;j<2;j++){
-    for(int i=0;i<8;i++){
-      Piece newPiece = Piece(j*SPRITE_SIZE+BORDER_SIZE, i*SPRITE_SIZE+(SPRITE_SIZE*3 + BORDER_SIZE), it); 
-      it++;
-      newPiece.setTeam(2);
-      if(j == 1)
-	newPiece.setClip(CLIP_PAWN);
-      else{
-	if(i==0 || i ==7)
-	  newPiece.setClip(CLIP_ROOK);
-	if(i==1 || i ==6)
-	  newPiece.setClip(CLIP_KNIGHT);
-	if(i==2 || i ==5)
-	  newPiece.setClip(CLIP_BISHOP);
-	if(i==4)
-	  newPiece.setClip(CLIP_KING);
-	if(i==3)
-	  newPiece.setClip(CLIP_QUEEN);
-      }
-      coord asdf = newPiece.getSpot();
-      cerr << asdf.x << " " << asdf.y << endl;
-      pieces.push_back(newPiece);
-    }
-  }
-
-  //Player 4 gen
-  for(int j=2;j>0;j--){
-    for(int i=0;i<8;i++){
-      Piece newPiece = Piece(j*SPRITE_SIZE+BORDER_SIZE+(SPRITE_SIZE*11), i*SPRITE_SIZE+(SPRITE_SIZE*3 + BORDER_SIZE), it); 
-      it++;
-      newPiece.setTeam(3);
-      if(j == 1)
-	newPiece.setClip(CLIP_PAWN);
-      else{
-	if(i==0 || i ==7)
-	  newPiece.setClip(CLIP_ROOK);
-	if(i==1 || i ==6)
-	  newPiece.setClip(CLIP_KNIGHT);
-	if(i==2 || i ==5)
-	  newPiece.setClip(CLIP_BISHOP);
-	if(i==4)
-	  newPiece.setClip(CLIP_KING);
-	if(i==3)
-	  newPiece.setClip(CLIP_QUEEN);
-      }
-      newPiece.getSpot();
-      pieces.push_back(newPiece);
-    }
-  }*/
 }
 
 //Connect to the server Whoaaaa!
