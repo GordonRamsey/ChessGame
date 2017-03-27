@@ -4,91 +4,91 @@
 #include <string.h>
 #include "info.h"
 
-Info update;
+Info update = new Info();
 void SetUp()
 {//put update infront of things 
     coord temp; 
     
-    update.game_board[0][0] = new Rook();
-    update.game_board[0][0]->setColor('b');
-    update.game_board[0][0]->setPos(0,0);
+    update->game_board[0][0] = new Rook();
+    update->game_board[0][0]->setColor('b');
+    update->game_board[0][0]->setPos(0,0);
     temp.y = 0; 
     temp.x = 0; 
-    update.BLocs.push_back(temp); 
+    update->BLocs.push_back(temp); 
 
-    update.game_board[0][1] = new Knight();
-    update.game_board[0][1]->setColor('b');
-    update.game_board[0][1]->setPos(1,0);
+    update->game_board[0][1] = new Knight();
+    update->game_board[0][1]->setColor('b');
+    update->game_board[0][1]->setPos(1,0);
     temp.y = 0; 
     temp.x = 1; 
-    update.BLocs.push_back(temp);
+    update->BLocs.push_back(temp);
 
-    update.game_board[0][2] = new Bishop();
-    update.game_board[0][2]->setColor('b');
-    update.game_board[0][2]->setPos(2,0);
+    update->game_board[0][2] = new Bishop();
+    update->game_board[0][2]->setColor('b');
+    update->game_board[0][2]->setPos(2,0);
     temp.y = 0; 
     temp.x = 2; 
-    update.BLocs.push_back(temp);
+    update->BLocs.push_back(temp);
 
-    update.game_board[0][3] = new Queen();
-    update.game_board[0][3]->setColor('b');
-    update.game_board[0][3]->setPos(3,0);
+    update->game_board[0][3] = new Queen();
+    update->game_board[0][3]->setColor('b');
+    update->game_board[0][3]->setPos(3,0);
     temp.y = 0; 
     temp.x = 3; 
-    update.BLocs.push_back(temp);
+    update->BLocs.push_back(temp);
 
-    update.game_board[0][4] = new King();
-    update.game_board[0][4]->setColor('b');
-    update.game_board[0][4]->setPos(4,0);
+    update->game_board[0][4] = new King();
+    update->game_board[0][4]->setColor('b');
+    update->game_board[0][4]->setPos(4,0);
     temp.y = 0; 
     temp.x = 0; 
-    update.BLocs.push_back(temp);
+    update->BLocs.push_back(temp);
 
-    update.game_board[0][5] = new Bishop();
-    update.game_board[0][5]->setColor('b');
-    update.game_board[0][5]->setPos(5,0);
+    update->game_board[0][5] = new Bishop();
+    update->game_board[0][5]->setColor('b');
+    update->game_board[0][5]->setPos(5,0);
     temp.y = 0; 
     temp.x = 5; 
-    update.BLocs.push_back(temp);
+    update->BLocs.push_back(temp);
 
-    update.game_board[0][6] = new Knight();
-    update.game_board[0][6]->setColor('b');
-    update.game_board[0][6]->setPos(6,0);
+    update->game_board[0][6] = new Knight();
+    update->game_board[0][6]->setColor('b');
+    update->game_board[0][6]->setPos(6,0);
     temp.y = 0; 
     temp.x = 6; 
-    update.BLocs.push_back(temp);
+    update->BLocs.push_back(temp);
 
-    update.game_board[0][7] = new Rook();
-    update.game_board[0][7]->setColor('b');
-    update.game_board[0][7]->setPos(7,0);
+    update->game_board[0][7] = new Rook();
+    update->game_board[0][7]->setColor('b');
+    update->game_board[0][7]->setPos(7,0);
     temp.y = 0; 
     temp.x = 7; 
-    update.BLocs.push_back(temp);
+    update->BLocs.push_back(temp);
 
     for(int i = 0; i < 8; ++i)
     {
-        update.game_board[1][i] = new Pawn();
-        update.game_board[1][i]->setColor('b');
-        update.game_board[1][i]->setPos(1,i);
+        update->game_board[1][i] = new Pawn();
+        update->game_board[1][i]->setColor('b');
+        update->game_board[1][i]->setPos(1,i);
         temp.y = 1; 
         temp.x = i; 
-        update.BLocs.push_back(temp); 
+        update->BLocs.push_back(temp); 
     }
 
     for(int i = 2; 2 < 6; ++i)
     {
         for(int j = 0; j < 8; ++j)
         {
-            update.game_board[i][j] = NULL;
+            update->game_board[i][j] = NULL;
         }
     }
 
     for(int i = 0; i < 8; ++i)
     {
-        update.game_board[6][i] = new Pawn();
-        update.game_board[6][i]->setColor('w');
-        update.game_board[6][i]->setPos(6,i);
-        update.game_board[6][i]->setPosition(6,i);
+        update->game_board[6][i] = new Pawn();
+        update->game_board[6][i]->setColor('w');
+        update->game_board[6][i]->setPos(6,i);
+        update->game_board[6][i]->setPosition(6,i);
 		temp.x = 6;
 		temp.y = i;
 		temp.x = i;
@@ -96,65 +96,65 @@ void SetUp()
 		update.WLocks.push_back(temp);	
     }
 
-    update.game_board[7][0] = new Rook();
-    update.game_board[7][0]->setColor('w');
-    update.game_board[7][0]->setPos(0,7);
+    update->game_board[7][0] = new Rook();
+    update->game_board[7][0]->setColor('w');
+    update->game_board[7][0]->setPos(0,7);
 	temp.x = 0;
 	temp.y = 7;
-	update.WLocs.push_back(temp);
+	update->WLocs.push_back(temp);
 
-    update.game_board[7][1] = new Knight();
-    update.game_board[7][1]->setColor('w');
-    update.game_board[7][1]->setPosition(1,7);
+    update->game_board[7][1] = new Knight();
+    update->game_board[7][1]->setColor('w');
+    update->game_board[7][1]->setPosition(1,7);
 	temp.x = 1;
 	temp.y = 7;
-	update.WLocs.push_back(temp);
+	update->WLocs.push_back(temp);
 
-    update.game_board[7][2] = new Bishop();
-    update.game_board[7][2]->setColor('w');
-    update.game_board[7][2]->setPosition(2,7);
+    update->game_board[7][2] = new Bishop();
+    update->game_board[7][2]->setColor('w');
+    update->game_board[7][2]->setPosition(2,7);
 	temp.x = 2;
 	temp.y = 7;
-	update.WLocs.push_back(temp);
+	update->WLocs.push_back(temp);
 
-    update.game_board[7][3] = new Queen();
-    update.game_board[7][3]->setColor('w');
-    update.game_board[7][3]->setPos(3,7);
+    update->game_board[7][3] = new Queen();
+    update->game_board[7][3]->setColor('w');
+    update->game_board[7][3]->setPos(3,7);
 	temp.x = 3;
 	temp.y = 7;
-	update.WLocs.push_back(temp);
+	update->WLocs.push_back(temp);
 
 
-    update.game_board[7][4] = new King();
-    update.game_board[7][4]->setColor('w');
-    update.game_board[7][4]->setPos(4,7);
+    update->game_board[7][4] = new King();
+    update->game_board[7][4]->setColor('w');
+    update->game_board[7][4]->setPos(4,7);
 	temp.x = 4;
 	temp.y = 7;
-	update.WLocs.push_back(temp);
+	update->WLocs.push_back(temp);
 
 
-    update.game_board[7][5] = new Bishop();
-    update.game_board[7][5]->setColor('w');
-    update.game_board[7][5]->setPosition(5,7);
+    update->game_board[7][5] = new Bishop();
+    update->game_board[7][5]->setColor('w');
+    update->game_board[7][5]->setPosition(5,7);
 	temp.x = 5;
 	temp.y = 7;
-	update.WLocs.push_back(temp);
+	update->WLocs.push_back(temp);
 
 
-    update.game_board[7][6] = new Knight();
-    update.game_board[7][6]->setColor('w');
-    update.game_board[7][6]->setPosition(6,7);
+    update->game_board[7][6] = new Knight();
+    update->game_board[7][6]->setColor('w');
+    update->game_board[7][6]->setPosition(6,7);
 	temp.x = 6;
 	temp.y = 7;
-	update.WLocs.push_back(temp);
+	update->WLocs.push_back(temp);
 
 
-    update.game_board[7][7] = new Rook();
-    update.game_board[7][7]->setColor('w');
-    update.game_board[7][7]->setPosition(7,7);
+    update->game_board[7][7] = new Rook();
+    update->game_board[7][7]->setColor('w');
+    update->game_board[7][7]->setPosition(7,7);
 	temp.x = 7;
 	temp.y = 7;
-	update.WLocs.push_back(temp);
+	update->WLocs.push_back(temp);
 
 
 }
@@ -174,25 +174,15 @@ void Move(int cur_x, int cur_y, int new_x, int new_y)
 
 }
 
-void SeekandRemove(char color, int y, int x) //Don't need color yet
-{
-    for(int i = 0; i < validPos.size(); +=i)
-    {
-        if((validPos[i].y == y) && (validPos[i].x == x))
-            validPos.erase(validPos.begin()+i);
-    }
-}
 /* UNDER CONSTRUCTION */
-vector<coord> ValidMoves(const int x, const int y) 
+vector<coord> PotentialMoves(const coord position) 
 {
-    Piece* cur_piece = board[y][x];
-    int cp.y = cur_piece.y; 
-    int cp.x = cur_piece.x; 
-    info.cp.x, info.cp.y; 
-   
-    char color = cur_piece->getColor(); 
-    info.color; 
-    vector<coord> validPos(cur_piece->AllPos()); 
+    Piece* cur_piece = board[position.y][position.x];
+    vector<coord> temp(cur_piece->ValidMoves(game_board));
+    
+    for(int i=0; i<temp.size(); ++i)
+        update->validPos.push_back(temp[i]);
+
     /*
     if(color == 'w')
     {

@@ -587,7 +587,7 @@ int main ( int argc, char* argv[] )
 	    y = y - y%SPRITE_SIZE;
 
 	    //XXX: [Engine] Translate to grid coords
-
+        //ValidMoves(selected->getSpot());
 	    //XXX: [Engine] Perform check 
 	    //If valid continue
 	    //If invalid ignore the command
