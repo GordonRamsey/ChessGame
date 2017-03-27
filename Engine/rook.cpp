@@ -1,14 +1,13 @@
 #include "rook.h"
 using namespace std;
 
-vector<coord> Rook::AllPos()
-{
-    coord temp; 
-    vector<coord> set; 
 Rook::Rook()
 {
     m_name = "Rook"; 
 }
+
+Rook::~Rook()
+{}
 
 char Rook::getTmpcolor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
 {
@@ -16,21 +15,21 @@ char Rook::getTmpcolor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
     char b, w, e; 
     for(int b = 0; b < BLocs.size(); ++b)
     {
-        for(int w = 0; w < WLocs.size(); ++w)
-        {
-            if((tmp.y == BLocs[b].y) && (tmp.x == BLocs[b].x))
-                return 'b'; 
-            if((tmp.y == WLocs[w].y) && (tmp.x == BLocs[w].y))
-                return 'w'; 
-            else
-                return 'e'
-        }
+        if((tmp.y == BLocs[b].y) && (tmp.x == BLocs[b].x))
+            return 'b'; 
     }
+    for(int w = 0; w < WLocs.size(); ++w)
+    {
+        if((tmp.y == WLocs[w].y) && (tmp.x == BLocs[w].y))
+                return 'w'; 
+    }
+    return 'e'; 
+    
 }
 
-bool Rook::isAlly(int y, int x)
+bool Rook::isAlly(int y, int x, char myColor, vector<coord> WLocs, vector<coord> BLocs)
 {
-    char TmpColor = getTmpColor(int y, int x);
+    char TmpColor = getTmpColor(int y, int x, WLocs, BLocs);
 
     if(myColor == TmpColor)
         return true;
@@ -38,9 +37,9 @@ bool Rook::isAlly(int y, int x)
         return false;
 }
 
-bool Rook::isEnemy(int y, int x)
+bool Rook::isEnemy(int y, int x, char myColor, vector<coord> WLocs, vector<coord> BLocs)
 {
-    char TmpColor = getTmpColor(int y, int x);
+    char TmpColor = getTmpColor(int y, int x, WLocs, BLocs);
 
     if(TmpColor != myColor)
         return true; 
@@ -48,9 +47,9 @@ bool Rook::isEnemy(int y, int x)
         return false; 
 }
 
-bool Rook::isEmpty(int y, int x)
+bool Rook::isEmpty(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
 {
-    char TmpColor = getTmpcolor(int y, int x);
+    char TmpColor = getTmpcolor(int y, int x, WLocs, BLocs);
     
     if(tmpColor == 'e')
         return true; 
@@ -58,24 +57,23 @@ bool Rook::isEmpty(int y, int x)
         return false; 
 }
 
-void Rook::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<coord>validPos)
+void Rook::ValidMoves(int cp.y, int cp.x, char myColor, &vector<coord> captureable, &vector<coord> validPos, vector<coord>WLocs, vector<coord> BLocs)
 {
     coord temp, cap, valid; 
-    temp.y = cp.y; 
-    temp.x = cp.x; 
+    temp.y = cp_y-1; 
+    temp.x = cp_x; 
     //move up(w) down(b)
     while(temp.y >= 0)
     {
-        temp.y -= 1;
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x))
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
@@ -84,87 +82,85 @@ void Rook::ValidMoves(int cp.y, int cp.x, &vector<coord>captureable, &vector<coo
             break; 
         }
 
-        temp.y -= 1; 
+        temp.y -= 1;
     }
+    temp.y = cp_y+1;
     //move down(w) up(b)
     while(temp.y < 8)
     {
-        temp.y += 1; 
 
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if((isEnemy(temp.y, temp.x))
+        if((isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
             captureable.push_back(cap); 
             valid.push_back(cap); 
+            break; 
         }
 
         temp.y += 1; 
     }
+    temp.y = cp_y;
+    temp.x=cp_x-1;
     //move right(w) left(b)
     while(temp.x >= 0)
     {
-        temp.x-=1;
 
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, myColor, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
             captureable.push_back(cap); 
             valid.push_back(cap); 
+            break; 
         }
 
-        temp.x-=1; 
+        temp.x-=1;
     }
+    temp.x = cp_x+1;
     //move left(w) right(w)
     while(temp.x < 8)
     {
-        temp.x+=1; 
 
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, myColor, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
             captureable.push_back(cap); 
             valid.push_back(cap); 
+            break; 
         }
 
-        temp.x+=1;
-    }
+        temp.x+=1; 
 }
 void Rook::Move(const string posiiton)
 {
   //Check if valid, then:  
   setPosition(position);
-}
-
-void Rook::IsValid(coord Position, &vector<coord> allpos)
-{
-	
 }
 
 string Rook::getName() const
