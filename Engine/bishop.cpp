@@ -1,6 +1,30 @@
 #include "bishop.h"
 using namespace std;
 
+Bishop::Bishop()
+{
+    m_name = "Bishop";
+}
+
+Bishop::~Bishop()
+{}
+
+string Bishop::getName() const
+{
+    return m_name;
+}
+
+void Bishop::setName(const string name)
+{
+    m_name = name;
+}
+
+void Bishop::Move(const string posiiton)
+{
+  //Check if valid, then:
+  setPosition(position);
+}
+
 char Bishop::getTmpColor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
 {
     char b, w, e; //E MEANS EMPTY
@@ -20,9 +44,9 @@ char Bishop::getTmpColor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
         return 'e'; 
 }
 
-bool Bishop::isAlly(int y, int x, char myColor)
+bool Bishop::isAlly(int y, int x, char myColor, vector<coord>WLocs, vector<coord>BLocs)
 {
-    char TmpColor = getTmpColor(y,x); 
+    char TmpColor = getTmpColor(y,x, WLocs, BLocs); 
     
     if(myColor == TmpColor) 
         return true; 
@@ -31,9 +55,9 @@ bool Bishop::isAlly(int y, int x, char myColor)
 }
 
 /* Here is where you are going to want to (1) go into chess.cpp and take the type, (2)check to see if it is a King so that we can (3)pass it in to our object 'info' to call checkmate */
-bool Bishop::isEnemy(int y, int x)
+bool Bishop::isEnemy(int y, int x, char myColor, vector<coord>WLocs, vector<coord>BLocs)
 {
-    char TmpColor = getTmpColor(y,x); 
+    char TmpColor = getTmpColor(y,x, WLocs, BLocs); 
 
     if(TmpColor != myColor) 
         return true; 
@@ -41,23 +65,15 @@ bool Bishop::isEnemy(int y, int x)
         return false; 
 }
 
-bool Bishop::isEmpty(int y, int x, char myColor)
+bool Bishop::isEmpty(int y, int x, vector<coord>WLocs, vector<coord>BLocs)
 {
-    char TmpColor = getTmpColor(y,x); 
+    char TmpColor = getTmpColor(y, x, WLocs, BLocs); 
 
     if(tmpColor == 'e') 
         return true; 
     else 
         return false; 
 }
-
-Bishop::Bishop()
-{
-    m_name = "Bishop";
-}
-
-Bishop::~Bishop()
-{}
 
 void Bishop::ValidMoves(int cp.y, int cp.x, &vector<coord> captureable, &vector<coord>validPos)
 {
@@ -70,15 +86,15 @@ void Bishop::ValidMoves(int cp.y, int cp.x, &vector<coord> captureable, &vector<
         temp.y -= 1; 
         temp.x -= 1; 
             
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x))
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
@@ -95,15 +111,15 @@ void Bishop::ValidMoves(int cp.y, int cp.x, &vector<coord> captureable, &vector<
         temp.y += 1; 
         temp.x -= 1; 
             
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x))
+        if(isEnemy(temp.y, temp.x. myColor, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
@@ -117,20 +133,20 @@ void Bishop::ValidMoves(int cp.y, int cp.x, &vector<coord> captureable, &vector<
        
     }   
     //Move Diagonal up, left(w) AND down, right(b)
-    while((temp.y <= 0) && (temp.x < 8))
+    while((temp.y >= 0) && (temp.x < 8))
     {
         temp.y -= 1; 
         temp.x += 1; 
             
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x))
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
@@ -149,15 +165,15 @@ void Bishop::ValidMoves(int cp.y, int cp.x, &vector<coord> captureable, &vector<
         temp.y += 1; 
         temp.x += 1; 
             
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x))
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
@@ -172,18 +188,3 @@ void Bishop::ValidMoves(int cp.y, int cp.x, &vector<coord> captureable, &vector<
     }        
 }
 
-string Bishop::getName() const
-{
-    return m_name;
-}
-
-void Bishop::setName(const string name)
-{
-    m_name = name;
-}
-
-void Bishop::Move(const string posiiton)
-{
-  //Check if valid, then:
-  setPosition(position);
-}

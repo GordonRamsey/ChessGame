@@ -31,16 +31,16 @@ char Knight::getTmpColor(int y, int, x, vector<coord>WLocs, vector<coord>BLocs)
     return 'e'; 
 }
 
-bool Knight::isAlly(int y, int x, char myColor)
+bool Knight::isAlly(int y, int x, char myColor, vector<coord> WLocs, vector<coord> BLocs)
 {
-    char TmpColor = getTmpColor(y,x); 
+    char TmpColor = getTmpColor(y,x, WLocs, BLocs); 
     if(TmpColor == myColor)
         return true; 
     else 
         return false
 }
 
-bool Knight::isEnemy(int y, int x, char myColor)
+bool Knight::isEnemy(int y, int x, char myColor, vector<coord> WLocs, vector<coord> BLocs)
 {
     char TmpColor = getTmpColor(y,x); 
     if(TmpColor != myColor)
@@ -49,30 +49,31 @@ bool Knight::isEnemy(int y, int x, char myColor)
         return false; 
 }
 
-bool Knight::isEmpty(int y, int x)
+bool Knight::isEmpty(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
 {
-    char TmpColor = getTmpColor(y,x); 
+    char TmpColor = getTmpColor(y,x, WLocs, BLocs); 
     if(TmpColor == 'e')
         return true; 
     else
         return false;
 }
 
-void Knight::ValidMoves(int cp.y, int cp.x, vector<coord>WLocs, vector<coord>BLocs)
+void Knight::ValidMoves(int cp.y, int cp.x, char myColor, &vector<coord>captureable, &vector<coord>validPos, vector<coord>WLocs, vector<coord>BLocs)
 {
     coord cap, valid, temp; 
-    //up 2, right 1(w) AND  down 2, left 1(b)
+    //up 2, right 1
     temp.y = cp_y-2; 
-    temp.x = cp_x-1;
+    temp.x = cp_x+1;
     if((temp.y >= 0) && (temp.x >= 0) && (temp.y < 8) && (temp.x < 8))
-        if(isAlly(temp.y, temp.x))
-        if(isEmpty(temp.y, temp.x)) 
+    {
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(cap); 
         }
-        if(isEnemy(temp.y, temp.x)) 
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs)) 
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
@@ -80,176 +81,145 @@ void Knight::ValidMoves(int cp.y, int cp.x, vector<coord>WLocs, vector<coord>BLo
             validPos.push_back(cap);
         }
     }
-    //up 1, right 2 AND down 1, left 2(b)
-    while((temp.y >= 0) && (temp.x >= 0))
+    //up 1, right 2
+    temp.y = cp_y-1;
+    temp.x = cp_x+2;
+    if((temp.y >= 0) && (temp.x >= 0) && (temp.y < 8) && (temp.x <8))
     {
-        temp.y = temp.y-1; 
-        temp.x = temp.x-2;
-        if(isAlly(temp.y, temp.x))
-            break;
-        if(isEmpty(temp.y, temp.x)) 
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(cap); 
         }
-        if(isEnemy(temp.y, temp.x)) 
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs)) 
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
             captureable.push_back(cap); 
             validPos.push_back(cap);
-            break; 
         }
-        temp.y = temp.y-1; 
-        temp.x = temp.x-2; 
-
     }
-    //down 2, right 1 AND up 2, left 1(b)
-    while((temp.y < 8) && (temp.x >= 0)
+    //down 2, right 1
+    temp.y = cp_y+2;
+    temp.x = cp_x+1;
+    if((temp.y < 8) && (temp.x >= 0) && (temp.y < 8) && (temp.x < 8))
     {
-        temp.y = temp.y+2; 
-        temp.x = temp.x-1;
-        if(isAlly(temp.y, temp.x))
-            break;
-        if(isEmpty(temp.y, temp.x)) 
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(cap); 
         }
-        if(isEnemy(temp.y, temp.x)) 
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs)) 
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
             captureable.push_back(cap); 
             validPos.push_back(cap);
-            break; 
         }
-        temp.y = temp.y+2; 
-        temp.x = temp.x-1; 
     }
-    //down 1, right 2 AND up 1, left 2(b)
-    while((temp.y < 8) && (temp.x >= 0))
+    //down 1, right 2
+    temp.y = cp_y+1;
+    temp.x = cp_x+2;
+    if((temp.y < 8) && (temp.x >= 0) && (temp.y >= 0) && (temp.x < 8))
     {
-        temp.y = temp.y+1; 
-        temp.x = temp.x-2;
-        if(isAlly(temp.y, temp.x))
-            break;
-        if(isEmpty(temp.y, temp.x)) 
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(cap); 
         }
-        if(isEnemy(temp.y, temp.x)) 
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs)) 
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
             captureable.push_back(cap); 
             validPos.push_back(cap);
-            break; 
         }
-        temp.y = temp.y+1; 
-        temp.x = temp.x-2; 
     }
-    //up 2, left 1 AND down 1, right 2(b)
-    while((temp.y >= 0) && (temp.x < 8))
+    //up 2, left 1
+    temp.y = cp_y-2;
+    temp.x = cp_x-1;
+    if((temp.y >= 0) && (temp.x < 8) && (temp.y < 8) && (temp.x >= 0))
     {
-        temp.y = temp.y-2; 
-        temp.x = temp.x+1;
-        if(isAlly(temp.y, temp.x))
-            break;
-        if(isEmpty(temp.y, temp.x)) 
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(cap); 
         }
-        if(isEnemy(temp.y, temp.x)) 
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs)) 
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
             captureable.push_back(cap); 
             validPos.push_back(cap);
-            break; 
         }
-        temp.y = temp.y-2; 
-        temp.x = temp.x+1; 
-
     }
-    //up 1, left 2 AND down 1, right 2(b)
-    while((temp.y >= 0) && (temp.x < 8))
+    //up 1, left 2
+    temp.y = cp_y-1;
+    temp.x = cp_x-2;
+    if((temp.y >= 0) && (temp.x < 8) && (temp.y < 8) && (temp.x >= 0))
     {
-        temp.y = temp.y-1; 
-        temp.x = temp.x+2;
-        if(isAlly(temp.y, temp.x))
-            break;
-        if(isEmpty(temp.y, temp.x)) 
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(cap); 
         }
-        if(isEnemy(temp.y, temp.x)) 
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs)) 
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
             captureable.push_back(cap); 
             validPos.push_back(cap);
-            break; 
         }
-        temp.y = temp.y-1; 
-        temp.x = temp.x+2; 
-
     }
-    //down 2, left 1 AND up 2, right 1(b)
-    while((temp.y < 8) && (temp.x < 8))
+    //down 2, left 1 
+    temp.y = cp_y+2;
+    temp.x = cp_x-1;
+    if((temp.y < 8) && (temp.x < 8) && (temp.y >= 0) && (temp.x >= 0))
     {
-        temp.y = temp.y+2; 
-        temp.x = temp.x+1;
-        if(isAlly(temp.y, temp.x))
-            break;
-        if(isEmpty(temp.y, temp.x)) 
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(cap); 
         }
-        if(isEnemy(temp.y, temp.x)) 
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs)) 
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
             captureable.push_back(cap); 
             validPos.push_back(cap);
-            break; 
         }
-        temp.y = temp.y+2; 
-        temp.x = temp.x+1; 
     }
-    //down 1, left 2 AND up 1, right 2(b)
-    while((temp.y < 8) && (temp.x < 8))
+    //down 1, left 2
+    temp.y = cp_y+1;
+    temp.x = cp_x-2;
+    if((temp.y < 8) && (temp.x < 8) && (temp.y >= 0) && (temp.x >= 0))
     {
-        temp.y = temp.y+1; 
-        temp.x = temp.x+2;
-        if(isAlly(temp.y, temp.x))
-            break;
-        if(isEmpty(temp.y, temp.x)) 
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(cap); 
         }
-        if(isEnemy(temp.y, temp.x)) 
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs)) 
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
             captureable.push_back(cap); 
             validPos.push_back(cap);
-            break; 
         }
-        temp.y = temp.y+1; 
-        temp.x = temp.x+2; 
     }
 }
 

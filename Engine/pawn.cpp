@@ -21,33 +21,33 @@ char Pawn::getTmpColor(int y, int x, vector<coord>WLocs, vector<coord>BLocs)
     for(int w = 0; w < WLocs.size(); ++w)
     {
         if((temp.y == WLocs[w].y) == (temp.x == WLocs[w]
-            return 'c'
+            return 'c'; 
     }
 
-    return 'e'
+    return 'e'; 
 }
 
-bool Pawn::isAlly(int y, int x, char myColor)
+bool Pawn::isAlly(int y, int x, char myColor, vector<coord>WLocs, vector<coord>BLocs)
 {
-    char TmpColor = getTmpColor(y,x); 
+    char TmpColor = getTmpColor(y, x, WLocs, BLocs); 
     if(TmpColor == myColor)
         return true; 
     else
         return false; 
 }
-y
-bool Pawn::isEnemy(int y, int x, char myColor)
+
+bool Pawn::isEnemy(int y, int x, char myColor, vector<coord>WLocs, vector<coord>BLocs)
 {
-    char TmpColor == getTmpColor(y,x); 
+    char TmpColor = getTmpColor(y, x, WLocs, BLocs); 
     if(TmpColor != myColor)
         return true; 
     else 
         return false;
 }
 
-bool Pawn::isEmpty(int y, int x)
+bool Pawn::isEmpty(int y, int x, vector<coord>WLocs, vector<coord>BLocs)
 {
-    char TmpColor = getTmpColor(y,x); 
+    char TmpColor = getTmpColor(y, x, WLocs, BLocs); 
     if(TmpColor == 'e')
         return true; 
     else
@@ -71,20 +71,19 @@ bool Pawn::firstMove(int y, int x, char myColor)
 }
 
 /*You will want to clear both vectors after 2nd click? */
-void Pawn::ValidMoves(int cp_y, int cp_x, &vector<coord>captureable, &vector<coord>validPos)
+void Pawn::ValidMoves(int cp.y, int cp.x, char myColor, &vector<coord>captureable, &vector<coord>validPos, vector<coord> WLocs, vector<coord> BLocs)
 {
 	coord cap, valid; 
     int temp.y = cp_y; 
     int temp.x = cp_x; 
 
-	if(firstMove(cp_y, cp_x))
+	if(firstMove(cp_y, cp_x, myColor))
 	{
         if(myColor == 'w')
         {
-            temp.y = temp.y-2; 
+            temp.y = cp_y-2; 
             temp.x = cp_x;  
             if(isAlly(temp.y, temp.x))
-                break; 
             if(isEmpty(temp.y, temp.x))
             {
                 valid.y = temp.y; 
@@ -92,60 +91,82 @@ void Pawn::ValidMoves(int cp_y, int cp_x, &vector<coord>captureable, &vector<coo
                 validPos.push_back(valid);   
             }
             if(isEnemy(temp.y, temp.x))
-                break; 
         }
         if(myColor == 'b')
         {
-            temp.y = temp.y+2; 
+            temp.y = cp_y+2; 
             temp.x = cp_x;  
-            if(isAlly(temp.y, temp.x))
-                break; 
-            if(isEmpty(temp.y, temp.x))
+            if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
+            if(isEmpty(temp.y, temp.x, WLocs, BLocs))
             {
                 valid.y = temp.y; 
                 valid.x = temp.x; 
                 validPos.push_back(valid);   
             }
-            if(isEnemy(temp.y, temp.x)) 
-                break;                 
+            if(isEnemy(temp.y, temp.x, myColor, WLocs, Blocs)) 
         }
 	}
     
     if(myColor == 'w')
     {
-        temp.y -= 1; 
+        temp.y = cp_y-1; 
         temp.x = cp_x; 
-        if(isAlly(temp.y, temp.x))
-            break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x))
-            break;
+        //Check for Diagonal Enemies
+        temp.y = cp_y-1;
+        temp.x = cp_x-1;
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
+        {
+            cap.y = temp.y;
+            cap.x = temp.x; //diagonal left
+            captureable.push_back(cap); 
+            validPos.push_back(cap); 
+        }
+        temp.y = cp_y-1;
+        temp.x = cp_x+1; 
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
+        {
+            cap.y = temp.y;
+            cap.x = temp.x;
+            captureable.push_back(cap);
+            validPos.push_back(temp);
+        }
+
     }
     if(myColor == 'b')
     {
-        temp.y += 1; 
+        temp.y = cp_y+1; 
         temp.x = cp_x; 
-        if(isAlly(temp.y, temp.x))
-            break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x))
+        
+        temp.y = cp_y+1;
+        temp.x = cp_x-1;
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
         {
-            cap.y = temp.y+1;
-            cap.x = temp.x-1; //diagonal left
+            cap.y = temp.y;
+            cap.x = temp.x; //diagonal left
             captureable.push_back(cap); 
-            validPos.push_back(cap); 
-            cap.y = temp.y+2; 
-            cap.x = temp.x+2; //diagonal right 
+            validPos.push_back(cap);          
+        }
+        
+        temp.y = cp_y+1;
+        temp.x = cp_x+1;
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
+        {
+            cap.y = temp.y; 
+            cap.x = temp.x; //diagonal right 
             captureable.push_back(cap); 
             validPos.push_back(cap); 
         }

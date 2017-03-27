@@ -27,9 +27,9 @@ char Rook::getTmpcolor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
     
 }
 
-bool Rook::isAlly(int y, int x, char myColor)
+bool Rook::isAlly(int y, int x, char myColor, vector<coord> WLocs, vector<coord> BLocs)
 {
-    char TmpColor = getTmpColor(int y, int x);
+    char TmpColor = getTmpColor(int y, int x, WLocs, BLocs);
 
     if(myColor == TmpColor)
         return true;
@@ -37,9 +37,9 @@ bool Rook::isAlly(int y, int x, char myColor)
         return false;
 }
 
-bool Rook::isEnemy(int y, int x, char myColor)
+bool Rook::isEnemy(int y, int x, char myColor, vector<coord> WLocs, vector<coord> BLocs)
 {
-    char TmpColor = getTmpColor(int y, int x);
+    char TmpColor = getTmpColor(int y, int x, WLocs, BLocs);
 
     if(TmpColor != myColor)
         return true; 
@@ -47,9 +47,9 @@ bool Rook::isEnemy(int y, int x, char myColor)
         return false; 
 }
 
-bool Rook::isEmpty(int y, int x)
+bool Rook::isEmpty(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
 {
-    char TmpColor = getTmpcolor(int y, int x);
+    char TmpColor = getTmpcolor(int y, int x, WLocs, BLocs);
     
     if(tmpColor == 'e')
         return true; 
@@ -57,7 +57,7 @@ bool Rook::isEmpty(int y, int x)
         return false; 
 }
 
-void Rook::ValidMoves(int cp_y, int cp_x, &vector<coord>captureable, &vector<coord>validPos)
+void Rook::ValidMoves(int cp.y, int cp.x, char myColor, &vector<coord> captureable, &vector<coord> validPos, vector<coord>WLocs, vector<coord> BLocs)
 {
     coord temp, cap, valid; 
     temp.y = cp_y-1; 
@@ -65,15 +65,15 @@ void Rook::ValidMoves(int cp_y, int cp_x, &vector<coord>captureable, &vector<coo
     //move up(w) down(b)
     while(temp.y >= 0)
     {
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x))
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
@@ -89,15 +89,15 @@ void Rook::ValidMoves(int cp_y, int cp_x, &vector<coord>captureable, &vector<coo
     while(temp.y < 8)
     {
 
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if((isEnemy(temp.y, temp.x))
+        if((isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
@@ -114,15 +114,15 @@ void Rook::ValidMoves(int cp_y, int cp_x, &vector<coord>captureable, &vector<coo
     while(temp.x >= 0)
     {
 
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, myColor, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
@@ -138,15 +138,15 @@ void Rook::ValidMoves(int cp_y, int cp_x, &vector<coord>captureable, &vector<coo
     while(temp.x < 8)
     {
 
-        if(isAlly(temp.y, temp.x))
+        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEmpty(temp.y, temp.x))
+        if(isEmpty(temp.y, temp.x, myColor, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
