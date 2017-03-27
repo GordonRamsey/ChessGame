@@ -6,6 +6,23 @@ SocketSet::SocketSet(){
     maxFD = -1;
 }
 
+//Only use this with < 1 second things
+int SocketSet::wait(double t){
+    selected = sockets;
+    
+
+    struct timeval tv;
+    tv.tv_sec = 0;
+    tv.tv_usec = t;
+    int error = 0;
+    
+    if(t >= 0){
+        error = select(maxFD+1, &selected,NULL,NULL,&tv);
+    }else{
+        error = select(maxFD+1, &selected,NULL,NULL,NULL);
+    }
+    return error;
+}
 
 //time to wait
 int SocketSet::wait(int t){

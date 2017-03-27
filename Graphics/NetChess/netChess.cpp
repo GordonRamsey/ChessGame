@@ -914,12 +914,13 @@ int main ( int argc, char* argv[] )
 	    chat.reset();
 	  }
 	}
+	//HOLD MOUSE MOTION
 	else if(event.type == SDL_MOUSEMOTION && selected != NULL)
 	{
 	  stringstream ss;
 	  ss.str("");
 	  ss << "HOLD " << selected->getClip() << " " << event.motion.x-32 << " " << event.motion.y-32;
-	  socketSet.wait(0);
+	  //socketSet.wait(0);
 	  s_socket.writeString(ss.str());
 	  
 	}
