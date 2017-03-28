@@ -1,188 +1,222 @@
+#include "chess.h"
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "info.h"
+using namespace std;
 
-Info update = new Info();
-void SetUp()
+Chess::Chess()
 {//put update infront of things 
     coord temp; 
+    cur_piece = NULL;
     
-    update->game_board[0][0] = new Rook();
-    update->game_board[0][0]->setColor('b');
-    update->game_board[0][0]->setPos(0,0);
+    game_board[0][0] = new Rook();
+    game_board[0][0]->setColor('b');
+    game_board[0][0]->setPos(0,0);
     temp.y = 0; 
     temp.x = 0; 
-    update->BLocs.push_back(temp); 
+    BLocs.push_back(temp); 
 
-    update->game_board[0][1] = new Knight();
-    update->game_board[0][1]->setColor('b');
-    update->game_board[0][1]->setPos(1,0);
+    game_board[0][1] = new Knight();
+    game_board[0][1]->setColor('b');
+    game_board[0][1]->setPos(1,0);
     temp.y = 0; 
     temp.x = 1; 
-    update->BLocs.push_back(temp);
+    BLocs.push_back(temp);
 
-    update->game_board[0][2] = new Bishop();
-    update->game_board[0][2]->setColor('b');
-    update->game_board[0][2]->setPos(2,0);
+    game_board[0][2] = new Bishop();
+    game_board[0][2]->setColor('b');
+    game_board[0][2]->setPos(2,0);
     temp.y = 0; 
     temp.x = 2; 
-    update->BLocs.push_back(temp);
+    BLocs.push_back(temp);
 
-    update->game_board[0][3] = new Queen();
-    update->game_board[0][3]->setColor('b');
-    update->game_board[0][3]->setPos(3,0);
+    game_board[0][3] = new Queen();
+    game_board[0][3]->setColor('b');
+    game_board[0][3]->setPos(3,0);
     temp.y = 0; 
     temp.x = 3; 
-    update->BLocs.push_back(temp);
+    BLocs.push_back(temp);
 
-    update->game_board[0][4] = new King();
-    update->game_board[0][4]->setColor('b');
-    update->game_board[0][4]->setPos(4,0);
+    game_board[0][4] = new King();
+    game_board[0][4]->setColor('b');
+    game_board[0][4]->setPos(4,0);
     temp.y = 0; 
     temp.x = 0; 
-    update->BLocs.push_back(temp);
+    BLocs.push_back(temp);
 
-    update->game_board[0][5] = new Bishop();
-    update->game_board[0][5]->setColor('b');
-    update->game_board[0][5]->setPos(5,0);
+    game_board[0][5] = new Bishop();
+    game_board[0][5]->setColor('b');
+    game_board[0][5]->setPos(5,0);
     temp.y = 0; 
     temp.x = 5; 
-    update->BLocs.push_back(temp);
+    BLocs.push_back(temp);
 
-    update->game_board[0][6] = new Knight();
-    update->game_board[0][6]->setColor('b');
-    update->game_board[0][6]->setPos(6,0);
+    game_board[0][6] = new Knight();
+    game_board[0][6]->setColor('b');
+    game_board[0][6]->setPos(6,0);
     temp.y = 0; 
     temp.x = 6; 
-    update->BLocs.push_back(temp);
+    BLocs.push_back(temp);
 
-    update->game_board[0][7] = new Rook();
-    update->game_board[0][7]->setColor('b');
-    update->game_board[0][7]->setPos(7,0);
+    game_board[0][7] = new Rook();
+    game_board[0][7]->setColor('b');
+    game_board[0][7]->setPos(7,0);
     temp.y = 0; 
     temp.x = 7; 
-    update->BLocs.push_back(temp);
+    BLocs.push_back(temp);
 
     for(int i = 0; i < 8; ++i)
     {
-        update->game_board[1][i] = new Pawn();
-        update->game_board[1][i]->setColor('b');
-        update->game_board[1][i]->setPos(1,i);
+        game_board[1][i] = new Pawn();
+        game_board[1][i]->setColor('b');
+        game_board[1][i]->setPos(1,i);
         temp.y = 1; 
         temp.x = i; 
-        update->BLocs.push_back(temp); 
+        BLocs.push_back(temp); 
     }
 
     for(int i = 2; 2 < 6; ++i)
     {
         for(int j = 0; j < 8; ++j)
         {
-            update->game_board[i][j] = NULL;
+            game_board[i][j] = NULL;
         }
     }
 
     for(int i = 0; i < 8; ++i)
     {
-        update->game_board[6][i] = new Pawn();
-        update->game_board[6][i]->setColor('w');
-        update->game_board[6][i]->setPos(6,i);
-        update->game_board[6][i]->setPosition(6,i);
+        game_board[6][i] = new Pawn();
+        game_board[6][i]->setColor('w');
+        game_board[6][i]->setPos(6,i);
+        game_board[6][i]->setPosition(6,i);
 		temp.x = 6;
 		temp.y = i;
 		temp.x = i;
 		temp.y = 6;
-		update.WLocks.push_back(temp);	
+		WLocks.push_back(temp);	
     }
 
-    update->game_board[7][0] = new Rook();
-    update->game_board[7][0]->setColor('w');
-    update->game_board[7][0]->setPos(0,7);
+    game_board[7][0] = new Rook();
+    game_board[7][0]->setColor('w');
+    game_board[7][0]->setPos(0,7);
 	temp.x = 0;
 	temp.y = 7;
-	update->WLocs.push_back(temp);
+	WLocs.push_back(temp);
 
-    update->game_board[7][1] = new Knight();
-    update->game_board[7][1]->setColor('w');
-    update->game_board[7][1]->setPosition(1,7);
+    game_board[7][1] = new Knight();
+    game_board[7][1]->setColor('w');
+    game_board[7][1]->setPosition(1,7);
 	temp.x = 1;
 	temp.y = 7;
-	update->WLocs.push_back(temp);
+	WLocs.push_back(temp);
 
-    update->game_board[7][2] = new Bishop();
-    update->game_board[7][2]->setColor('w');
-    update->game_board[7][2]->setPosition(2,7);
+    game_board[7][2] = new Bishop();
+    game_board[7][2]->setColor('w');
+    game_board[7][2]->setPosition(2,7);
 	temp.x = 2;
 	temp.y = 7;
-	update->WLocs.push_back(temp);
+	WLocs.push_back(temp);
 
-    update->game_board[7][3] = new Queen();
-    update->game_board[7][3]->setColor('w');
-    update->game_board[7][3]->setPos(3,7);
+    game_board[7][3] = new Queen();
+    game_board[7][3]->setColor('w');
+    game_board[7][3]->setPos(3,7);
 	temp.x = 3;
 	temp.y = 7;
-	update->WLocs.push_back(temp);
+	WLocs.push_back(temp);
 
 
-    update->game_board[7][4] = new King();
-    update->game_board[7][4]->setColor('w');
-    update->game_board[7][4]->setPos(4,7);
+    game_board[7][4] = new King();
+    game_board[7][4]->setColor('w');
+    game_board[7][4]->setPos(4,7);
 	temp.x = 4;
 	temp.y = 7;
-	update->WLocs.push_back(temp);
+	WLocs.push_back(temp);
 
 
-    update->game_board[7][5] = new Bishop();
-    update->game_board[7][5]->setColor('w');
-    update->game_board[7][5]->setPosition(5,7);
+    game_board[7][5] = new Bishop();
+    game_board[7][5]->setColor('w');
+    game_board[7][5]->setPosition(5,7);
 	temp.x = 5;
 	temp.y = 7;
-	update->WLocs.push_back(temp);
+	WLocs.push_back(temp);
 
 
-    update->game_board[7][6] = new Knight();
-    update->game_board[7][6]->setColor('w');
-    update->game_board[7][6]->setPosition(6,7);
+    game_board[7][6] = new Knight();
+    game_board[7][6]->setColor('w');
+    game_board[7][6]->setPosition(6,7);
 	temp.x = 6;
 	temp.y = 7;
-	update->WLocs.push_back(temp);
+	WLocs.push_back(temp);
 
 
-    update->game_board[7][7] = new Rook();
-    update->game_board[7][7]->setColor('w');
-    update->game_board[7][7]->setPosition(7,7);
+    game_board[7][7] = new Rook();
+    game_board[7][7]->setColor('w');
+    game_board[7][7]->setPosition(7,7);
 	temp.x = 7;
 	temp.y = 7;
-	update->WLocs.push_back(temp);
+	WLocs.push_back(temp);
 
 
 }
 
-/* UNDER CONSTRUCTION */
-void Move(int cur_x, int cur_y, int new_x, int new_y)
+vector<coord> Chess::PotentialMoves(const coord position) 
 {
-    if(cur_x < 0 || cur_x > 7 || cur_y < 0 || cur_y > 7 || new_x < 0 || new_x > 7 || new_y < 0 || new_y > 7)
+    cur_piece = board[position.y][position.x];
+    if(cur_piece == NULL)
     {
-        cout << "Invalid Coordinates" << endl;
-        return;
+        coord error;
+        cerr << "Piece selected is not a piece" << endl;
+        return error;
     }
-    Piece* moving_piece = board[cur_x][cur_y];
-    if(moving_piece != NULL)
-    {
-        Piece* defending_piece = board[new_x][new_y];
-
-}
-
-/* UNDER CONSTRUCTION */
-vector<coord> PotentialMoves(const coord position) 
-{
-    Piece* cur_piece = board[position.y][position.x];
     vector<coord> temp(cur_piece->ValidMoves(game_board));
     
     for(int i=0; i<temp.size(); ++i)
         update->validPos.push_back(temp[i]);
 
+    for(int i=0; i <temp.size(); ++i)
+    {
+        Piece temp_piece = board[temp[i].y][temp[i].x];
+        if(temp_piece != NULL)
+        {
+            if(temp_piece->getColor() == cur_piece->getColor())
+                captureable.push_back(temp[i]);
+        }
+    }
+    return validPos;
+}
+
+vector<coord> Chess::CaptureableMoves() const //SHOULD ONLY BE CALLED AFTER PotentialMoves()
+{
+    return captureable;
+}
+    
+ /* UNDER CONSTRUCTION */
+bool Chess::Move(const coord place)
+{
+    for(int i=0; i < validPos.size(); ++i)
+    {
+        if(validPos[i].x == place.x && validPos[i].y == place.y)//Found place we want to move
+        {
+            Piece* temp = game_board[place.y][place.x];
+            if(temp == NULL)
+            {
+                temp = cur_piece;
+                coord pos = temp->getSpot();
+                game_board[pos.y][pos.x] = NULL;
+                game_board[place.y][place.x] = temp;
+                cur_piece = NULL;
+                //UPDATE BLOCS OR WLOCS
+            }
+
+            else //Piece is enemy
+            {
+                //UPDATE BLOCS AND WLOCS, REMOVE ENEMY FROM BOARD
+
+}
+    
+    
+    
     /*
     if(color == 'w')
     {

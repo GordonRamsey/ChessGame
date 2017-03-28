@@ -139,7 +139,7 @@ void Piece::handle_events()
 	    this->setClip(this->getClip()+6);
 	    selected = this;
 	    spots = validSpots(c);
-	    cerr << "[DEBUG] Piece clicekd on, valid spots:" << endl;
+	    cerr << "[DEBUG] Piece clicked on, valid spots:" << endl;
 	    for(unsigned int i=0;i<spots.size();i++)
 	    {
 	      cerr << "(" << spots[i].x << "," << spots[i].y << ")" << endl;
