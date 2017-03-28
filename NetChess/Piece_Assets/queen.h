@@ -10,6 +10,5 @@ class Queen : public Piece
     Queen(int x, int y, int it);
     ~Queen();
     vector<coord> validSpots(Chess* c);
-
 };
 #endif
