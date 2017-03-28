@@ -37,10 +37,9 @@ vector<coord> Pawn::validSpots(Chess* c)
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam())
 	spots.push_back(seek);
-      else
-	spots.push_back(seek); 
     }
-
+    else
+      spots.push_back(seek); 
   }
   //NE - can cap
   seek = getSpot();
@@ -52,9 +51,9 @@ vector<coord> Pawn::validSpots(Chess* c)
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam())
 	spots.push_back(seek); 
-      else
-	spots.push_back(seek); 
     }
+    else
+      spots.push_back(seek); 
   }
   //S - cant cap
   seek = getSpot();
@@ -75,9 +74,9 @@ vector<coord> Pawn::validSpots(Chess* c)
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam())
 	spots.push_back(seek); 
-      else
-	spots.push_back(seek);
     }
+    else
+      spots.push_back(seek);
   }
   //SW - can cap
   seek = getSpot();
@@ -89,9 +88,9 @@ vector<coord> Pawn::validSpots(Chess* c)
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam())
 	spots.push_back(seek); 
-      else
-	spots.push_back(seek); 
     }
+    else
+      spots.push_back(seek); 
   } 
   //E - cant cap
   seek = getSpot();
