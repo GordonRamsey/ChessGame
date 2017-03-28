@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <vector>
+#include <queue>
 #include <sstream>
 #include "bridge.h"
 
@@ -617,9 +618,9 @@ int connectServer(int argc, char* argv[])
 string snip_to_end(string msg, int &cursor)
 {
   int last = cursor;
-  cursor = msg.find(" ",cursor);
+  cursor = msg.find("~",cursor);
   string ret;
-  ret = msg.substr(last,msg.length()-last);
+  ret = msg.substr(last,cursor-last);
   cursor++;
   return ret;
 
@@ -636,7 +637,7 @@ string snip(string msg, int &cursor)
   if((unsigned)cursor != string::npos)
     ret = msg.substr(last, cursor-last);
   else
-    ret = msg.substr(last,msg.length()-last);
+    ret = msg.substr(last,msg.length()-last-1);
   cursor++;
   return ret;
 }
@@ -678,6 +679,7 @@ void netProcess(string msg)
     }
     //Remove Ghost image
     ghostPiece.setPos(-64,-64);
+
 
   }//If- MOVE
   else if(cmd == "PLAC")//PLAC <piece> <piece id> <x> <y> <owner>
@@ -734,12 +736,11 @@ void netProcess(string msg)
     //Remove ghost image
     ghostPiece.setPos(-64,-64);
 
+
   }//If- CAPT
   else if(cmd == "REDY")//REDY <playernum>   
   {
-    last = index;
-    index = msg.find(" ",index);
-    string num = msg.substr(last,index-last);
+    string num = snip(msg,index);
     player_num = atoi(num.c_str());
     ss.str("");
     ss << "NetChess - " << player_num << " - Waiting for players...";
@@ -757,18 +758,39 @@ void netProcess(string msg)
 
     ghostPiece.setClip(i_clip-6);
     ghostPiece.setPos(i_x,i_y);
+    
   }//If- HOLD
   else if(cmd == "GMSG")//GMSG <player> <msg>
   {
     string s_player = snip(msg,index);
-    string player_message = snip_to_end(msg,index);
+    string player_message = snip(msg,index);
     ss.str("");
     ss << s_player << " @ " << player_message;
     addChat(ss.str());
+    
+  }//If- GMSG
+  else if(cmd == "STAT")//STAT <code>
+  {
+    string code = snip(msg,index);
+    if(code == "01"){     
+      cerr << "Handshake received" << endl;
+    }
   }
   else
   {
     cerr << "Unknown command received:" << msg << endl;
+    return;
+  }
+  string end = msg.substr(index,1);
+  index += 1;
+  if(end != "~"){
+    cerr << "[ERROR] corrupted message received:" << msg << endl;
+    cerr << "[ERROR] Ending:" << end << endl;
+  }
+  if(msg.size() > (unsigned)index)//If message is greater than ending char ~
+  {
+    cerr << "[LONG STRING] Recursing with string:" << msg.substr(index,msg.size()-index) << endl;;
+    netProcess(msg.substr(index,msg.size()-index));
   }
 
 }
@@ -819,6 +841,7 @@ int main ( int argc, char* argv[] )
       if(game_start){ 
 	if(event.type == SDL_MOUSEBUTTONDOWN)
 	{
+	  
 	  if(selected != NULL){//If we are trying to move a piece
 	    bool failure = false; //set to true if the move is invalid
 	    
@@ -840,7 +863,7 @@ int main ( int argc, char* argv[] )
 	    for(unsigned int i=0;i<pieces.size();i++){
 	      if(pieces[i]->getPos().x == x && pieces[i]->getPos().y == y){
 		//It is! lets kill it!
-		ss << "CAPT " << selected->getNum() << " " << pieces[i]->getNum();
+		ss << "CAPT " << selected->getNum() << " " << pieces[i]->getNum() << " ~";
 	     
 	        //If we find our own selected piece, ignore it	
 		if(pieces[i]->getSpot().x == selected->getSpot().x && 
@@ -856,7 +879,7 @@ int main ( int argc, char* argv[] )
 	    //Send move command
 	    if(!capture)
 	    {  
-	      ss << "MOVE " << selected->getNum() << " " << x << " " << y;
+	      ss << "MOVE " << selected->getNum() << " " << x << " " << y << " ~";
 	    }
 
 	    //XXX: [Engine] Translate to grid coords
@@ -909,8 +932,8 @@ int main ( int argc, char* argv[] )
 	    if(chat.getText() != "" && chat.getText() != "_"){
 	      stringstream ss;
 	      ss.str("");
-	      ss << "GMSG " << player_num << " " << chat.getText();
-	      socketSet.wait(0);
+	      ss << "GMSG " << player_num << " " << chat.getText() << " ~";
+	      //socketSet.wait(0);
 	      s_socket.writeString(ss.str());
 	    }
 	    chat.reset();
@@ -919,14 +942,17 @@ int main ( int argc, char* argv[] )
 	//HOLD MOUSE MOTION
 	else if(event.type == SDL_MOUSEMOTION && selected != NULL)
 	{
+	  int x = event.motion.x-32;
+	  int y = event.motion.y-32;
+
 	  stringstream ss;
 	  ss.str("");
-	  ss << "HOLD " << selected->getClip() << " " << event.motion.x-32 << " " << event.motion.y-32;
+	  ss << "HOLD " << selected->getClip() << " " << x << " " << y << " ~";
 	  //socketSet.wait(0);
 	  s_socket.writeString(ss.str());
-	  
+
 	}
-	
+
 	//Perform local piece event handling (get clicked on)
 	for(unsigned int i=0;i<pieces.size();i++)
 	  pieces[i]->handle_events();
@@ -952,12 +978,13 @@ int main ( int argc, char* argv[] )
       printf("Lost connection with server\n");
       return 1;
     }
+    
     socketSet.wait(0);
     if(s_socket.hasEvent())
     {
       //Do appropriate things with server message
       string msg = "DEFAULT";
-      int bytes = s_socket.readString(msg,64);
+      int bytes = s_socket.readString(msg,256);
       cerr << "Message Received:" << msg << " | " << bytes << endl;
 
       netProcess(msg);

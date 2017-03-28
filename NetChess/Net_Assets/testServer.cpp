@@ -21,7 +21,7 @@ void startGame(SocketSet socs)
   socs.wait(2);
   game_start = true;
   ss.str("");
-  ss << "STRT";
+  ss << "STRT ~";
   for(unsigned int i=0;i<sockets.size();i++){
     sockets[i].writeString(ss.str());
   }
@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
       sockets.push_back(sock);
       
       ss.str("");
-      ss << "REDY " << player_num;
+      ss << "REDY " << player_num << " ~";
       cerr << "Sending new Client player number:" << player_num << endl;
       sock.writeString(ss.str());
 
@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
 		if(players[j].sock == sockets[i])
 		  if(players[j].number == current_player){
 		    for(int j=0;j<sockets.size(); ++j)
-		      sockets[j].writeString(msg);
+		      sockets[j].writeString(msg);//Relay
 		    nextPlayer();
 		    success = true;
 		    break;
@@ -116,30 +116,30 @@ int main(int argc, char* argv[])
 	    //HOLD method test
 	    else if(strncmp(msg.c_str(), "HOLD",4) == 0)
 	    {
-              bool success = false;
-	      if (msg.size() <= 20){
-		cerr << "HOLD command recognized" << endl;
-		for(int j=0;j<players.size(); ++j){
-		  if(players[j].sock == sockets[i])
-		    if(players[j].number == current_player){
-		      for(int j=0;j<sockets.size(); ++j)
-			sockets[j].writeString(msg);
-		      success = true;
-		      break;
-		    }
-		}
+	      bool success = false;
+	      cerr << "HOLD command recognized" << endl;
+	      for(int j=0;j<players.size(); ++j){
+		if(players[j].sock == sockets[i])
+		  if(players[j].number == current_player){
+		    for(int j=0;j<sockets.size(); ++j)
+		      sockets[j].writeString(msg);
+		    success = true;
+		    break;
+		  }
 		if(!success)
 		  cerr << "Command received from invalid player" << endl;	    
 	      }
-	      else
-		continue;
 	    }//HOLD comparison
+	    else if(strncmp(msg.c_str(), "GMSG", 4) == 0)
+	    {//simple handshake and relay this one
+	      for(int j=0;j<sockets.size(); ++j)
+		sockets[j].writeString(msg);
+	    }
 	    else //Anything that isnt a command
 	    {
 	      cerr << "Sending unknown message to clients:" << msg << endl;
 	      for(int j=0;j<sockets.size(); ++j){
 		Socket sock = sockets[j];
-		//cerr << "To socket:" << sock.toString() << " Sending message:" << msg << endl;
 		sock.writeString(msg);
 	      }
 	    }
