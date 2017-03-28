@@ -4,6 +4,7 @@ using namespace std;
 King::King()
 {
     m_name = "King";
+    m_castle = false;
 }
 
 King::~King()
@@ -264,5 +265,133 @@ void King::ValidMoves(cp.y, cp.x, char myColor, vector<coord> captureable, vecto
             validPos.push_back(cap); 
         }
     }
+}
+void King::ValidMoves(Piece* board[8][8]) //Checks all 8 positions, and checks for castling
+{
+    coord cur, temp;
+    vector<coord> positions;
+    cur = this->getPos();
+    temp = cur;
+    
+    //move up
+    temp.y -=1;
+    if(temp.y >= 0)
+    {
+        Piece* piece = board[temp.y][temp.x];
+        if(piece == NULL)
+            positions.push_back(temp);
+        else
+        {
+            if(piece->getColor() != m_color)
+                positions.push_back(temp);
+        }
+    }
+
+    //move down 
+    temp.y = cur.y+1; 
+    if(temp.y < 8)
+    {
+        Piece* piece = board[temp.y][temp.x];
+        if(piece == NULL)
+            positions.push_back(temp);
+        else
+        {
+            if(piece->getColor() != m_color)
+                positions.push_back(temp);
+        }
+    }
+    
+    //move right
+    temp.y = cur.y; 
+    temp.x = cur.x+1; 
+
+    if(temp.y < 8)
+    {
+        Piece* piece = board[temp.y][temp.x];
+        if(piece == NULL)
+            positions.push_back(temp);
+        else
+        {
+            if(piece->getColor() != m_color)
+                positions.push_back(temp);
+        }
+    }
+    
+    //move left
+    temp.x = cur.x-1; 
+    if(temp.x >= 0)
+    {
+        Piece* piece = board[temp.y][temp.x];
+        if(piece == NULL)
+            positions.push_back(temp);
+        else
+        {
+            if(piece->getColor() != m_color)
+                positions.push_back(temp);
+        }
+    }
+    
+    //D up, left 
+    temp.y = cur.y-1; 
+    temp.x = cur.x-1; 
+    if(temp.y >= 0 && temp.x >= 0)
+    {
+        Piece* piece = board[temp.y][temp.x];
+        if(piece == NULL)
+            positions.push_back(temp);
+        else
+        {
+            if(piece->getColor() != m_color)
+                positions.push_back(temp);
+        }
+    }
+    
+    //D up, right 
+    temp.y = cur.y-1; 
+    temp.x = cur.x+1; 
+    if(temp.y >= 0 && temp.x < 8)
+    {
+        Piece* piece = board[temp.y][temp.x];
+        if(piece == NULL)
+            positions.push_back(temp);
+        else
+        {
+            if(piece->getColor() != m_color)
+                positions.push_back(temp);
+        }
+    }
+    
+    //D down, left
+    temp.y = cur.y+1; 
+    temp.x = cur.x-1; 
+    if(temp.y < 8 && temp.x >= 0)
+    {
+        Piece* piece = board[temp.y][temp.x];
+        if(piece == NULL)
+            positions.push_back(temp);
+        else
+        {
+            if(piece->getColor() != m_color)
+                positions.push_back(temp);
+        }
+    }
+    
+    //D down, right
+    temp.y = cur.y+1; 
+    temp.x = cur.x+1; 
+    if(temp.y < 8 && temp.x < 8)
+    {
+        Piece* piece = board[temp.y][temp.x];
+        if(piece == NULL)
+            positions.push_back(temp);
+        else
+        {
+            if(piece->getColor() != m_color)
+                positions.push_back(temp);
+        }
+    }
+
+    //CHECK FOR CASTLING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 }
 

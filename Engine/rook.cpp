@@ -4,6 +4,7 @@ using namespace std;
 Rook::Rook()
 {
     m_name = "Rook"; 
+    m_castle = false;
 }
 
 Rook::~Rook()
