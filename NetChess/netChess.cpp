@@ -361,7 +361,7 @@ bool load_files()
   font = TTF_OpenFont("Graphic_Assets/edosz.ttf",28);
   if(font == NULL)
   {  
-    cerr << "Fuck me no font" << endl;
+    cerr << "no font" << endl;
     return false;
   }
 
