@@ -179,7 +179,7 @@ vector<coord> Chess::PotentialMoves(const coord position)
         Piece temp_piece = board[temp[i].y][temp[i].x];
         if(temp_piece != NULL)
         {
-            if(temp_piece->getColor() == cur_piece->getColor())
+            if(temp_piece->getColor() != cur_piece->getColor())
                 captureable.push_back(temp[i]);
         }
     }
