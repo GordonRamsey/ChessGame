@@ -9,7 +9,7 @@ Rook::Rook()
 Rook::~Rook()
 {}
 
-char Rook::getTmpcolor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
+/*char Rook::getTmpcolor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
 {
     coord tmp; 
     char b, w, e; 
@@ -157,10 +157,105 @@ void Rook::ValidMoves(int cp.y, int cp.x, char myColor, &vector<coord> captureab
 
         temp.x+=1; 
 }
-void Rook::Move(const string posiiton)
+*/
+vector<coord> Rook::ValidMoves(Piece* board[8][8])
 {
-  //Check if valid, then:  
-  setPosition(position);
+    coord temp, cur;
+    vector<coord> positions;
+    cur = this->getPos();
+
+
+    //move up
+    temp.y = cur.y-1;
+    temp.x = cur.x;
+    while(temp.y >= 0)
+    {
+        Piece* piece = board[temp.y][temp.x];
+        if(piece == NULL) //Space is empty, add it and continue
+        {
+            positions.push_back(temp);
+            temp.y -= 1;
+        }
+
+        else
+        {
+            if(piece->getColor() == m_color) //Found Ally, so stop looping
+                break;
+            else //Found enemy, so add it and stop looping
+            {
+                positions.push_back(temp);
+                break;
+            }
+        }
+    }
+
+    temp.y = cur.y+1;
+    //move down
+    while(temp.y < 8)
+    {
+        Piece* piece = board[temp.y][temp.x];
+        if(piece == NULL)
+        {
+            positions.push_back(temp);
+            temp.y +=1;
+        }
+
+        else
+        {
+            if(piece->getColor() == m_color)
+                break;
+            else
+            {
+                positions.push_back(temp);
+                break;
+            }
+        }
+    }
+    temp.y = cur.y;
+    temp.x= cur.x-1;
+    //move left
+    while(temp.x >= 0)
+    {
+        Piece* piece = board[temp.y][temp.x];
+        if(piece == NULL_
+        {
+            positions.push_back(temp);
+            temp.x -=1;
+        }
+        else
+        {
+            if(piece->getColor() == m_color)
+                break;
+            else
+            {
+                positions.push_back(temp);
+                break;
+            }
+        }
+    }
+
+    temp.x = cur.x+1;
+    //move right
+    while(temp.x < 8)
+    {
+        Piece* piece = board[temp.y][temp.x];
+        if(piece == NULL)
+        {
+            positions.push_back(temp);
+            temp.x +=1;
+        }
+        else
+        {
+            if(piece->getColor() == m_color)
+                break;
+            else
+            {
+                positions.push_back(temp);
+                break;
+            }
+        }
+    }
+    return positions;
 }
 
 string Rook::getName() const

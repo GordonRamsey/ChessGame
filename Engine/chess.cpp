@@ -192,7 +192,7 @@ vector<coord> Chess::CaptureableMoves() const //SHOULD ONLY BE CALLED AFTER Pote
 }
     
  /* UNDER CONSTRUCTION */
-bool Chess::Move(const coord place)
+bool Chess::Move(const coord place) //SHOULD ONLY BE CALLED AFTEr PotentialMoves()
 {
     for(int i=0; i < validPos.size(); ++i)
     {
@@ -206,13 +206,24 @@ bool Chess::Move(const coord place)
                 game_board[pos.y][pos.x] = NULL;
                 game_board[place.y][place.x] = temp;
                 cur_piece = NULL;
+                return true;
                 //UPDATE BLOCS OR WLOCS
             }
 
             else //Piece is enemy
             {
+                delete temp;
+                temp = cur_piece;
+                coord pos = temp->getSpot();
+                game_board[pos.y][pos.x] = NULL;
+                game_board[place.y][place.x] = temp;
+                cur_piece = NULL;
+                return true;
                 //UPDATE BLOCS AND WLOCS, REMOVE ENEMY FROM BOARD
-
+            }
+        }
+    }
+    return false;
 }
     
     
