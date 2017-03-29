@@ -1,8 +1,8 @@
-#include <SDL/SDL.h>
-
 #ifndef PIECE_H
 #define PIECE_H
-
+#include <string>
+#include <vector>
+using namespace std;
 struct coord {
     int x;
     int y;
@@ -11,21 +11,21 @@ struct coord {
 class Piece {
 
     private:
-        char m_color; // 'w' is white, 'b' is black
-        coord m_position; // initially will be set to "", chess functions will handle set up. Positions range from "A1" to "H8", where 1-8 is the y-axis and A-H is the x-axis
-        bool m_captured; //Initially set to false in constructor. We could just use the pieces position to determine if it's empty or not, but this seems faster since we can just negate the function call
+        char m_color;
+        bool m_captured;
+        coord m_position;
 
 	//SDL Necessary variables
-	SDL_Rect box; //Bounding box of sprite
+/*	SDL_Rect box; //Bounding box of sprite
 	SDL_Rect* clip; //Sprite of... sprite
 	int clip_num; //Number on clips sheet
 	int num; //Piece number, for network purposes
 	SDL_Surface* sheet;
 	int owner;
-
+*/
     public:
         
-        Piece(int x, int y, int num); //Constructor
+        Piece(int x, int y); //Constructor
         ~Piece();//Deconstructor
         
         //Accessors and Mutators
@@ -37,9 +37,10 @@ class Piece {
         
         bool getCaptured() const;
         void setCaptured(const bool captured);
+        virtual void ValidMoves(int cp_y, int cp_x, char myColor, vector<coord> &captureable, vector<coord> &validPos, vector<coord> WLocs, vector<coord> BLocs) =0;
 	
 	//SDL Functions
-	void handle_events();
+/*	void handle_events();
 	void show();
 	int  getNum();
 	
@@ -52,6 +53,6 @@ class Piece {
 	int  getTeam();
 
 	void setAlpha(int x);
-
+*/
 };
 #endif

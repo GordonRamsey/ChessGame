@@ -56,6 +56,7 @@ SDL_Surface *pieceSheet3 = NULL; //Player 3
 SDL_Surface *pieceSheet4 = NULL; //Player 4
 SDL_Surface *ghostSheet = NULL;
 SDL_Surface *highlight = NULL;
+SDL_Surface *lastHighlight = NULL;
 SDL_Surface *screen = NULL;
 
 //Text input
@@ -92,6 +93,9 @@ vector<coord> spots;
 
 //variables used in HOLD call
 Piece ghostPiece = Piece(-1,-64,-64);
+
+//array to store locations for lastMove highlighting
+vector<coord> lastMove;
 
 void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL)
 {
@@ -355,13 +359,14 @@ bool load_files()
   pieceSheet4 = load_image("Graphic_Assets/basicPieces644.png");
   ghostSheet = load_image("Graphic_Assets/ghostPieces64.png");
   textBack = load_image("Graphic_Assets/textBackground.png");
+  lastHighlight = load_image("Graphic_Assets/lastHighlight.png");
 
   highlight = load_image("Graphic_Assets/highlight.png");
 
   font = TTF_OpenFont("Graphic_Assets/edosz.ttf",28);
   if(font == NULL)
   {  
-    cerr << "Fuck me no font" << endl;
+    cerr << "no font" << endl;
     return false;
   }
 
@@ -672,10 +677,16 @@ void netProcess(string msg)
     for(unsigned int i=0;i<pieces.size();i++){
       if(pieces[i]->getNum() == i_num){
 	//Make old space empty
+	//lastMove.push_back(c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y]);
+	lastMove.push_back(pieces[i]->getSpot());
 	c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y] = NULL;
 	pieces[i]->setPos(atoi(s_x.c_str()), atoi(s_y.c_str()));
 	//Make new space filled with piece
 	c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y] = pieces[i];
+	lastMove.push_back(pieces[i]->getSpot());
+	//lastMove.push_back(c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y]);
+	if(lastMove.size()>2)
+		cerr << "Too many lastMove coords"<<endl;
 	break;
       }
     }
@@ -905,7 +916,8 @@ int main ( int argc, char* argv[] )
 	    selected = NULL;
 	    ghostPiece.setPos(-64,-64);
 	    spots.clear();
-	    
+	    lastMove.clear();
+
 	    if(failure)//If we try to capture a friendly piece
 	      continue;
 	    
@@ -1020,6 +1032,9 @@ int main ( int argc, char* argv[] )
 	if((pieces[j]->getSpot().x == spots[i].x) and (pieces[j]->getSpot().y == spots[i].y))
           apply_surface(spots[i].x*64, spots[i].y*64, highlight, screen, &clips[1]);
       }
+    }
+    for(unsigned int i=0;i<lastMove.size();i++){
+      apply_surface(lastMove[i].x*64, lastMove[i].y*64, lastHighlight, screen);
     }
 
     //Update screen
