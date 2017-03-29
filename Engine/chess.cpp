@@ -12,7 +12,7 @@ Chess::Chess()
     
     game_board[0][0] = new Rook();
     game_board[0][0]->setColor('b');
-    game_board[0][0]->setPos(0,0);
+    game_board[0][30]->setPos(0,0);
     temp.y = 0; 
     temp.x = 0; 
     BLocs.push_back(temp); 
@@ -42,7 +42,7 @@ Chess::Chess()
     game_board[0][4]->setColor('b');
     game_board[0][4]->setPos(4,0);
     temp.y = 0; 
-    temp.x = 0; 
+    temp.x = 4; 
     BLocs.push_back(temp);
 
     game_board[0][5] = new Bishop();
@@ -76,88 +76,87 @@ Chess::Chess()
         BLocs.push_back(temp); 
     }
 
-    for(int i = 2; 2 < 6; ++i)
+    for(int i = 2; i < 6; ++i)
     {
-        for(int j = 0; j < 8; ++j)
-        {
+        for(int j = 0; j < 8; ++i)
             game_board[i][j] = NULL;
-        }
-    }
-
-    for(int i = 0; i < 8; ++i)
-    {
-        game_board[6][i] = new Pawn();
-        game_board[6][i]->setColor('w');
-        game_board[6][i]->setPos(6,i);
-        game_board[6][i]->setPosition(6,i);
-		temp.x = 6;
-		temp.y = i;
-		temp.x = i;
-		temp.y = 6;
-		WLocks.push_back(temp);	
     }
 
     game_board[7][0] = new Rook();
     game_board[7][0]->setColor('w');
-    game_board[7][0]->setPos(0,7);
-	temp.x = 0;
-	temp.y = 7;
-	WLocs.push_back(temp);
+    game_board[13][3]->setPos(0, 7);
+    temp.x = 0;
+    temp.y = 7;
+    WLocs.push_back(temp);
 
     game_board[7][1] = new Knight();
     game_board[7][1]->setColor('w');
-    game_board[7][1]->setPosition(1,7);
-	temp.x = 1;
-	temp.y = 7;
-	WLocs.push_back(temp);
+    game_board[7][1]->setPos(1, 7);
+    temp.x = 1;
+    temp.y = 7;
+    WLocs.push_back(temp);
 
     game_board[7][2] = new Bishop();
     game_board[7][2]->setColor('w');
-    game_board[7][2]->setPosition(2,7);
-	temp.x = 2;
-	temp.y = 7;
-	WLocs.push_back(temp);
+    game_board[7][2]->setPos(2, 7);
+    temp.x = 2;
+    temp.y = 7;
+    WLocs.push_back(temp);
 
     game_board[7][3] = new Queen();
     game_board[7][3]->setColor('w');
-    game_board[7][3]->setPos(3,7);
-	temp.x = 3;
-	temp.y = 7;
-	WLocs.push_back(temp);
-
+    game_board[7][3]->setPos(3, 7);
+    temp.x = 3;
+    temp.y = 7;
+    WLocs.push_back(temp);
 
     game_board[7][4] = new King();
     game_board[7][4]->setColor('w');
-    game_board[7][4]->setPos(4,7);
-	temp.x = 4;
-	temp.y = 7;
-	WLocs.push_back(temp);
-
+    game_board[7][4]->setPos(4, 7);
+    temp.x = 4;
+    temp.y = 7;
+    WLocs.push_back(temp);
 
     game_board[7][5] = new Bishop();
     game_board[7][5]->setColor('w');
-    game_board[7][5]->setPosition(5,7);
-	temp.x = 5;
-	temp.y = 7;
-	WLocs.push_back(temp);
-
+    game_board[7][5]->setPos(5, 7);
+    temp.x = 5;
+    temp.y = 7;
+    WLocs.push_back(temp);
 
     game_board[7][6] = new Knight();
     game_board[7][6]->setColor('w');
-    game_board[7][6]->setPosition(6,7);
-	temp.x = 6;
-	temp.y = 7;
-	WLocs.push_back(temp);
-
+    game_board[7][6]->setPos(6, 7);
+    temp.x = 6;
+    temp.y = 7;
+    WLocs.push_back(temp);
 
     game_board[7][7] = new Rook();
     game_board[7][7]->setColor('w');
-    game_board[7][7]->setPosition(7,7);
-	temp.x = 7;
-	temp.y = 7;
-	WLocs.push_back(temp);
+    game_board[7][7]->setPos(7, 7);
+    temp.x = 7;
+    temp.y = 7;
+    WLocs.push_back(temp);
+    
+    for(int i = 0; i < 8; ++i)
+    {
+        game_board[6][i] = new Pawn();
+        game_board[6][i]->setColor('w');
+        game_board[6][i]->setPos(i, 6);
+        temp.x = i;
+        temp.y = 6;
+        WLocs.push_back(temp);
+    }
 
+}
 
+Chess:~Chess()
+{
+    for(int i = 0; i < 8; ++i)
+    {
+        for(int j = 0; j < 8; ++j)
+            delete game_board[i][j];
+    }
 }
 
 vector<coord> Chess::PotentialMoves(const coord position) 
@@ -169,20 +168,8 @@ vector<coord> Chess::PotentialMoves(const coord position)
         cerr << "Piece selected is not a piece" << endl;
         return error;
     }
-    vector<coord> temp(cur_piece->ValidMoves(game_board));
+    cur_piece->ValidMoves(position.y, position.x, cur_piece->getColor(), captureable, validPos, Wlocs, Blocs);
     
-    for(int i=0; i<temp.size(); ++i)
-        update->validPos.push_back(temp[i]);
-
-    for(int i=0; i <temp.size(); ++i)
-    {
-        Piece temp_piece = board[temp[i].y][temp[i].x];
-        if(temp_piece != NULL)
-        {
-            if(temp_piece->getColor() != cur_piece->getColor())
-                captureable.push_back(temp[i]);
-        }
-    }
     return validPos;
 }
 
@@ -191,35 +178,110 @@ vector<coord> Chess::CaptureableMoves() const //SHOULD ONLY BE CALLED AFTER Pote
     return captureable;
 }
     
- /* UNDER CONSTRUCTION */
-bool Chess::Move(const coord place) //SHOULD ONLY BE CALLED AFTEr PotentialMoves()
+bool Chess::Move(const coord place) //SHOULD ONLY BE CALLED AFTER PotentialMoves()
 {
     for(int i=0; i < validPos.size(); ++i)
     {
         if(validPos[i].x == place.x && validPos[i].y == place.y)//Found place we want to move
         {
-            Piece* temp = game_board[place.y][place.x];
-            if(temp == NULL)
+            Piece* piece = game_board[place.y][place.x];
+            if(piece== NULL)
             {
-                temp = cur_piece;
-                coord pos = temp->getSpot();
+                if(cur_piece->getColor() == 'b') //Update BLocs
+                {
+                    coord temp = cur_piece->getPos();
+                    for(int i = 0; i < BLocs.size(); ++i)
+                    {
+                        if((temp.x == BLocs[i].x) && (temp.y == BLocs[i].y))
+                        {
+                            Blocs[i].x = temp.x;
+                            Blocs[i].y = temp.y;
+                        }
+                    }
+                }
+                else //Update WLocs
+                {
+                    coord temp = cur_piece->getPos();
+                    for(int i = 0; i < WLocs.size(); ++i)
+                    {
+                        if((temp.x == WLocs[i].x) && (temp.y == WLocs[i].y))
+                        {
+                            WLocs[i].x = temp.x;
+                            WLocs[i].y = temp.y;
+                        }
+                    }
+                }
+
+                piece = cur_piece;
+                coord pos = piece->getSpot();
                 game_board[pos.y][pos.x] = NULL;
-                game_board[place.y][place.x] = temp;
+                game_board[place.y][place.x] = piece;
                 cur_piece = NULL;
+
                 return true;
-                //UPDATE BLOCS OR WLOCS
             }
 
             else //Piece is enemy
             {
-                delete temp;
-                temp = cur_piece;
-                coord pos = temp->getSpot();
+                if(piece->getColor() == 'b') //Update BLocs
+                {
+                    coord temp = piece->getPos();
+                    for(int i = 0; i < BLocs.size(); ++i)
+                    {
+                        if((temp.x == BLocs[i].x) && (temp.y == BLocs[i].y))
+                        {
+                            Blocs[i].x = temp.x;
+                            Blocs[i].y = temp.y;
+                        }
+                    }
+                }
+                else //Update WLocs
+                {
+                    coord temp = piece->getPos();
+                    for(int i = 0; i < WLocs.size(); ++i)
+                    {
+                        if((temp.x == WLocs[i].x) && (temp.y == WLocs[i].y))
+                        {
+                            WLocs[i].x = temp.x;
+                            WLocs[i].y = temp.y;
+                        }
+                    }
+                }
+                
+                //Check cur_piece
+                if(cur_piece->getColor() == 'b') //Update BLocs
+                {
+                    coord temp = cur_piece->getPos();
+                    for(int i = 0; i < BLocs.size(); ++i)
+                    {
+                        if((temp.x == BLocs[i].x) && (temp.y == BLocs[i].y))
+                        {
+                            Blocs[i].x = temp.x;
+                            Blocs[i].y = temp.y;
+                        }
+                    }
+                }
+                else //Update WLocs
+                {
+                    coord temp = cur_piece->getPos();
+                    for(int i = 0; i < WLocs.size(); ++i)
+                    {
+                        if((temp.x == WLocs[i].x) && (temp.y == WLocs[i].y))
+                        {
+                            WLocs[i].x = temp.x;
+                            WLocs[i].y = temp.y;
+                        }
+                    }
+                }
+
+
+                delete piece;
+                piece = cur_piece;
+                coord pos = piece->getSpot();
                 game_board[pos.y][pos.x] = NULL;
-                game_board[place.y][place.x] = temp;
+                game_board[place.y][place.x] = piece;
                 cur_piece = NULL;
                 return true;
-                //UPDATE BLOCS AND WLOCS, REMOVE ENEMY FROM BOARD
             }
         }
     }
