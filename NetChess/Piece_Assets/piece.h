@@ -37,7 +37,7 @@ class Piece {
         void setPos(int x, int y);
         
 	//Called to give a network message to spawn other things
-        string Move(coord newpos);
+        virtual string Move(coord newpos) { return "DEFAULT MOVE"; }
 
 	//SDL Functions
 	void handle_events();

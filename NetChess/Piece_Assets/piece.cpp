@@ -43,11 +43,6 @@ void Piece::setPos(const int x, const int y)
     box.y = y;
 }
 
-string Piece::Move(coord newpos)
-{
-  return "[MOVE] DEFAULT";
-}
-
 int Piece::getNum()
 {
     return num;
