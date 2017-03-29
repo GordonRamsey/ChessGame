@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include "chess.h"
+#include <sstream>
 
 #ifndef PIECE_H
 #define PIECE_H
@@ -30,10 +31,13 @@ class Piece {
         ~Piece();//Deconstructor
         Piece& operator=(const Piece& other);
         
-        coord getPos() const;
+	string debug_name;
+        
+	coord getPos() const;
         void setPos(int x, int y);
-       
-        string Move(coord original, coord newpos);
+        
+	//Called to give a network message to spawn other things
+        string Move(coord newpos);
 
 	//SDL Functions
 	void handle_events();
