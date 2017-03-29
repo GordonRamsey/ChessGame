@@ -909,6 +909,10 @@ int main ( int argc, char* argv[] )
 		valid = true;
 	    }
 
+	    //Faction extra things like moveing and capturing spawning fun
+	    cerr << "Testing polymprphism:" << endl;
+	    cerr << "Move message:" << selected->Move(spot) << " Piece name:" << selected->debug_name << endl;
+	    
 	    //Ghost and highlight cleanup
 	    selected->setClip(selected->getClip()-6);
 	    selected = NULL;
