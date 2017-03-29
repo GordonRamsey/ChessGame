@@ -348,29 +348,31 @@ bool init()
 bool load_files()
 {
   //Load the image
-  board = load_image("./Graphic_Assests/fourPlayerBoard64.png");
-  pieceSheet1 = load_image("./Graphic_Assests/basicPieces64.png");
-  pieceSheet2 = load_image("./Graphic_Assests/basicPieces642.png");
-  pieceSheet3 = load_image("./Graphic_Assests/basicPieces643.png");
-  pieceSheet4 = load_image("./Graphic_Assests/basicPieces644.png");
-  ghostSheet = load_image("./Graphic_Assests/ghostPieces64.png");
-  textBack = load_image("./Graphic_Assests/textBackground.png");
+  board = load_image("Graphic_Assets/fourPlayerBoard64.png");
+  pieceSheet1 = load_image("Graphic_Assets/basicPieces64.png");
+  pieceSheet2 = load_image("Graphic_Assets/basicPieces642.png");
+  pieceSheet3 = load_image("Graphic_Assets/basicPieces643.png");
+  pieceSheet4 = load_image("Graphic_Assets/basicPieces644.png");
+  ghostSheet = load_image("Graphic_Assets/ghostPieces64.png");
+  textBack = load_image("Graphic_Assets/textBackground.png");
 
-  highlight = load_image("./Graphic_Assests/highlight.png");
+  highlight = load_image("Graphic_Assets/highlight.png");
 
-  font = TTF_OpenFont("./Graphic_Assests/edosz.ttf",28);
+  font = TTF_OpenFont("Graphic_Assets/edosz.ttf",28);
   if(font == NULL)
   {  
-    cerr << "Fuck me no font" << endl;
+    cerr << "no font" << endl;
     return false;
   }
 
   if(board == NULL)
   {
+    cerr << "No board" << endl;
     return false;
   }
   else if (pieceSheet1 == NULL || pieceSheet2 == NULL || pieceSheet3 == NULL || pieceSheet4 == NULL)
   {
+    cerr << "No piece sheets" << endl;
     return false;
   }
   else if(ghostSheet == NULL)
@@ -621,7 +623,7 @@ string snip_to_end(string msg, int &cursor)
   cursor = msg.find("~",cursor);
   string ret;
   ret = msg.substr(last,cursor-last);
-  cursor++;
+  //cursor++;
   return ret;
 
 }
@@ -763,7 +765,7 @@ void netProcess(string msg)
   else if(cmd == "GMSG")//GMSG <player> <msg>
   {
     string s_player = snip(msg,index);
-    string player_message = snip(msg,index);
+    string player_message = snip_to_end(msg,index);
     ss.str("");
     ss << s_player << " @ " << player_message;
     addChat(ss.str());
@@ -847,11 +849,9 @@ int main ( int argc, char* argv[] )
 	    
 	    x = event.button.x;
 	    y = event.button.y;
-
 	    //Snap location to grid
 	    x = x - x%SPRITE_SIZE;
 	    y = y - y%SPRITE_SIZE;
-	    
 
 	    //Send command
 	    stringstream ss;
