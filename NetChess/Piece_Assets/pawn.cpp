@@ -5,12 +5,20 @@
 Pawn::Pawn(int x, int y, int it, char state) : Piece(x, y, it)
 {
   dir = state;
+  debug_name = "pawn";
   // :)
 }
 
 Pawn::~Pawn()
 {
 
+}
+
+string Pawn::Move(coord newpos)
+{
+  stringstream ss;
+  ss << "[MOVE-PAWN]" << newpos.x << "," << newpos.y << endl;
+  return ss.str();
 }
 
 vector<coord> Pawn::validSpots(Chess* c)

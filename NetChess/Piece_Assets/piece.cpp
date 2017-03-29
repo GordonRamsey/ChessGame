@@ -10,6 +10,7 @@ Piece::Piece(int x, int y, int it)
   box.h = 64;
 
   num = it;
+  debug_name = "DEFAULT PIECE";
 }
 
 Piece::~Piece()
@@ -40,6 +41,11 @@ void Piece::setPos(const int x, const int y)
 {
     box.x = x;
     box.y = y;
+}
+
+string Piece::Move(coord newpos)
+{
+  return "[MOVE] DEFAULT";
 }
 
 int Piece::getNum()

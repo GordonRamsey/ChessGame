@@ -10,6 +10,7 @@ class Pawn : public Piece
   public:
     Pawn(int x, int y, int it, char state);
     ~Pawn();
+    string Move(coord newpos);
     vector<coord> validSpots(Chess* c);
 };
 #endif

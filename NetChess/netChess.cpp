@@ -653,7 +653,7 @@ string snip(string msg, int &cursor)
 void netProcess(string msg)
 {
   stringstream ss;
-  int index, last;
+  int index;
   index = msg.find(" ");
   string cmd = msg.substr(0,index);
   index++;
@@ -911,6 +911,9 @@ int main ( int argc, char* argv[] )
 		valid = true;
 	    }
 	    
+	    cerr << "About to access movement function" << endl;
+	    cerr << "piece message:" << selected->Move(spot) << " piece name:" << selected->debug_name << endl;
+	    
 	    //Ghost and highlight cleanup
 	    selected->setClip(selected->getClip()-6);
 	    selected = NULL;
@@ -924,6 +927,7 @@ int main ( int argc, char* argv[] )
 	    if(!valid)//If we click on an invalid spot
 	      continue;
 
+	    //Movement is valid and we send it off to server
 	    s_socket.writeString(ss.str());
 
 	    continue;
