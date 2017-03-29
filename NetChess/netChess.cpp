@@ -399,6 +399,7 @@ void clean_up()
 	SDL_FreeSurface(pieceSheet4);
 	SDL_FreeSurface(ghostSheet);
 	SDL_FreeSurface(highlight);
+	TTF_CloseFont(font);
 	SDL_Quit();
 }
 
