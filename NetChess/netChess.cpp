@@ -654,7 +654,7 @@ string snip(string msg, int &cursor)
 void netProcess(string msg)
 {
   stringstream ss;
-  int index, last;
+  int index;
   index = msg.find(" ");
   string cmd = msg.substr(0,index);
   index++;
@@ -835,16 +835,16 @@ int main ( int argc, char* argv[] )
   set_clips();
   generatePieces();
 
-  //// --------------
-  //// MAIN GAME LOOP
-  //// --------------
+//// --------------
+//// MAIN GAME LOOP
+//// --------------
   //While the user hasn't quit
   while(quit == false)
   {
 
-    //// ----------
-    //// SDL EVENTS
-    //// ----------
+//// ----------
+//// SDL EVENTS
+//// ----------
     //While theres an event to handle
     while(SDL_PollEvent(&event))
     {
@@ -984,9 +984,9 @@ int main ( int argc, char* argv[] )
 
     }//While- SDL_PollEvent
 
-    //// ------------------
-    //// NETWORK CONNECTION
-    //// ------------------
+//// ------------------
+//// NETWORK CONNECTION
+//// ------------------
     if(s_socket.isClosed()){
       printf("Lost connection with server\n");
       return 1;
@@ -1003,9 +1003,9 @@ int main ( int argc, char* argv[] )
       netProcess(msg);
     }//if- socket has event
 
-    //// -------
-    //// DRAWING
-    //// -------
+//// -------
+//// DRAWING
+//// -------
     //Make window white instead of black - obselete
     SDL_FillRect(screen, &screen->clip_rect, SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF));
 
