@@ -392,14 +392,15 @@ bool load_files()
 
 void clean_up()
 {
-  SDL_FreeSurface(board);
-  SDL_FreeSurface(pieceSheet1);
-  SDL_FreeSurface(pieceSheet2);
-  SDL_FreeSurface(pieceSheet3);
-  SDL_FreeSurface(pieceSheet4);
-  SDL_FreeSurface(ghostSheet);
-  SDL_FreeSurface(highlight);
-  SDL_Quit();
+	SDL_FreeSurface(board);
+	SDL_FreeSurface(pieceSheet1);
+	SDL_FreeSurface(pieceSheet2);
+	SDL_FreeSurface(pieceSheet3);
+	SDL_FreeSurface(pieceSheet4);
+	SDL_FreeSurface(ghostSheet);
+	SDL_FreeSurface(highlight);
+	TTF_CloseFont(font);
+	SDL_Quit();
 }
 
 //Generate starting board
