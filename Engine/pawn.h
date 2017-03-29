@@ -7,8 +7,6 @@ class Pawn : public Piece {
         bool m_first;
         string m_name
     public:
-        //Look up inheritance constructor and deconstructor
-        void Move(const coord position); //Use piece m_position and compare
 	    Pawn();//Contructor
 	    ~Pawn();//Destructor
         string getName() const;

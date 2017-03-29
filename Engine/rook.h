@@ -5,10 +5,7 @@ class Rook : public Piece
 {
   private:
     string m_name; 
-    bool m_castle;
   public:
-    //Look up inheritance constructor and deconstructor
-    void Move(const string position); //Use piece m_position and compare
     string getName() const; 
     void setName(const string name);
    Rook();//Constructor

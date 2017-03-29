@@ -6,8 +6,6 @@ class Bishop : public Piece
   private:
     string m_name;
   public:
-    //Look up inheritance constructor and deconstructor
-    void Move(const string position); //Use piece m_position and compare
     Bishop();//Construtor
     ~Bishop();//Destructor
     string getName() const

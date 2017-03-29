@@ -10,11 +10,6 @@ King::King()
 King::~King()
 {}
 
-void King::Move(const string posiiton)
-{
-  //Check if valid, then:
-  setPosition(position);
-}
 
 string King::getName() const
 {
@@ -77,7 +72,7 @@ bool King::isEnemy(int y, int x, char myColor, vector<coord> WLocs, vector<coord
     {
         if(isAlly(temp.y, temp.x))
         if(isEmpty(temp.y, temp.x))
-=======
+
 bool King::isEmpty(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
 {
     char TmpColor = getTmpColor(y, x, WLocs, BLocs); 
@@ -87,17 +82,16 @@ bool King::isEmpty(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
         return false; 
 }
 
-void King::ValidMoves(cp.y, cp.x, char myColor, vector<coord> captureable, vector<coord> validPos, vector<coord> WLocs, vector<coord> BLocs)
+void King::ValidMoves(int cp_y, int cp_x, char myColor, &vector<coord> captureable, &vector<coord> validPos, vector<coord> WLocs, vector<coord> BLocs)
 {
-    coord cap, valid; 
-    int temp.y = cp_y; 
-    int temp.x = cp_x; 
+    coord cap, valid, temp;
+    temp.y = cp_y; 
+    temp.x = cp_x; 
     //move forward (w) back (b)  
     
     temp.y = cp_y-1; 
     if(temp.y >= 0 && temp.y < 8 && temp.x >= 0 && temp.y < 8)
     {
-        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs)) //Remove this???
         if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
@@ -117,16 +111,7 @@ void King::ValidMoves(cp.y, cp.x, char myColor, vector<coord> captureable, vecto
     temp.y = cp_y+1; 
     if(temp.y >= 0 && temp.y < 8 && temp.x >= 0 && temp.y < 8)
     {
-<<<<<<< HEAD
-        if(isAlly(temp.y, temp.x))
-        if(isEmpty(temp.y, temp.x)) 
-=======
-        temp.y += 1; 
-        temp.x = cp.x; 
-        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
-            break; 
         if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
->>>>>>> 6f9292968d28b35d4d1019d0adc1f323919505fa
         {
             valid.y = temp.y; 
             valid.x = temp.x; 
@@ -147,7 +132,6 @@ void King::ValidMoves(cp.y, cp.x, char myColor, vector<coord> captureable, vecto
 
     if(temp.y >= 0 && temp.y < 8 && temp.x >= 0 && temp.y < 8)
     {
-        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
         if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
@@ -168,7 +152,6 @@ void King::ValidMoves(cp.y, cp.x, char myColor, vector<coord> captureable, vecto
 
     if(temp.y >= 0 && temp.y < 8 && temp.x >= 0 && temp.y < 8)
     {
-        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
         if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
@@ -189,7 +172,6 @@ void King::ValidMoves(cp.y, cp.x, char myColor, vector<coord> captureable, vecto
 
     if(temp.y >= 0 && temp.y < 8 && temp.x >= 0 && temp.y < 8)
     {
-        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
         if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
@@ -210,7 +192,6 @@ void King::ValidMoves(cp.y, cp.x, char myColor, vector<coord> captureable, vecto
     temp.x = cp_x+1; 
     if(temp.y >= 0 && temp.y < 8 && temp.x >= 0 && temp.y < 8)
     {
-        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
         if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
@@ -230,7 +211,6 @@ void King::ValidMoves(cp.y, cp.x, char myColor, vector<coord> captureable, vecto
     temp.x = cp_x-1; 
     if(temp.y >= 0 && temp.y < 8 && temp.x >= 0 && temp.y < 8)
     {
-        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
         if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
@@ -250,7 +230,6 @@ void King::ValidMoves(cp.y, cp.x, char myColor, vector<coord> captureable, vecto
     temp.x = cp_x+1; 
     if(temp.y >= 0 && temp.y < 8 && temp.x >= 0 && temp.y < 8)
     {
-        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
         if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
@@ -266,6 +245,7 @@ void King::ValidMoves(cp.y, cp.x, char myColor, vector<coord> captureable, vecto
         }
     }
 }
+/*
 void King::ValidMoves(Piece* board[8][8]) //Checks all 8 positions, and checks for castling
 {
     coord cur, temp;
@@ -394,4 +374,4 @@ void King::ValidMoves(Piece* board[8][8]) //Checks all 8 positions, and checks f
     //CHECK FOR CASTLING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 }
-
+*/

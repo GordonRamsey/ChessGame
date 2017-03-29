@@ -58,7 +58,7 @@ bool Knight::isEmpty(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
         return false;
 }
 
-void Knight::ValidMoves(int cp.y, int cp.x, char myColor, &vector<coord>captureable, &vector<coord>validPos, vector<coord>WLocs, vector<coord>BLocs)
+void Knight::ValidMoves(int cp_y, int cp_x, char myColor, &vector<coord>captureable, &vector<coord>validPos, vector<coord>WLocs, vector<coord>BLocs)
 {
     coord cap, valid, temp; 
     //up 2, right 1
@@ -66,7 +66,6 @@ void Knight::ValidMoves(int cp.y, int cp.x, char myColor, &vector<coord>capturea
     temp.x = cp_x+1;
     if((temp.y >= 0) && (temp.x >= 0) && (temp.y < 8) && (temp.x < 8))
     {
-        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
         if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
@@ -86,7 +85,6 @@ void Knight::ValidMoves(int cp.y, int cp.x, char myColor, &vector<coord>capturea
     temp.x = cp_x+2;
     if((temp.y >= 0) && (temp.x >= 0) && (temp.y < 8) && (temp.x <8))
     {
-        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
         if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
@@ -106,7 +104,6 @@ void Knight::ValidMoves(int cp.y, int cp.x, char myColor, &vector<coord>capturea
     temp.x = cp_x+1;
     if((temp.y < 8) && (temp.x >= 0) && (temp.y < 8) && (temp.x < 8))
     {
-        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
         if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
@@ -126,7 +123,6 @@ void Knight::ValidMoves(int cp.y, int cp.x, char myColor, &vector<coord>capturea
     temp.x = cp_x+2;
     if((temp.y < 8) && (temp.x >= 0) && (temp.y >= 0) && (temp.x < 8))
     {
-        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
         if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
@@ -146,7 +142,6 @@ void Knight::ValidMoves(int cp.y, int cp.x, char myColor, &vector<coord>capturea
     temp.x = cp_x-1;
     if((temp.y >= 0) && (temp.x < 8) && (temp.y < 8) && (temp.x >= 0))
     {
-        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
         if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
@@ -166,7 +161,6 @@ void Knight::ValidMoves(int cp.y, int cp.x, char myColor, &vector<coord>capturea
     temp.x = cp_x-2;
     if((temp.y >= 0) && (temp.x < 8) && (temp.y < 8) && (temp.x >= 0))
     {
-        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
         if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
@@ -186,7 +180,6 @@ void Knight::ValidMoves(int cp.y, int cp.x, char myColor, &vector<coord>capturea
     temp.x = cp_x-1;
     if((temp.y < 8) && (temp.x < 8) && (temp.y >= 0) && (temp.x >= 0))
     {
-        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
         if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
@@ -206,7 +199,6 @@ void Knight::ValidMoves(int cp.y, int cp.x, char myColor, &vector<coord>capturea
     temp.x = cp_x-2;
     if((temp.y < 8) && (temp.x < 8) && (temp.y >= 0) && (temp.x >= 0))
     {
-        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
         if(isEmpty(temp.y, temp.x, WLocs, BLocs)) 
         {
             valid.y = temp.y; 
@@ -233,9 +225,4 @@ void Knight::setName(const string name)
     m_name = name;
 }
 
-void Knight::Move(const string posiiton)
-{
-	//Check isValid first, then:
-  	setPosition(position);
-}
 

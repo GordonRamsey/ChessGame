@@ -4,13 +4,12 @@ using namespace std;
 Rook::Rook()
 {
     m_name = "Rook"; 
-    m_castle = false;
 }
 
 Rook::~Rook()
 {}
 
-/*char Rook::getTmpcolor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
+char Rook::getTmpcolor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
 {
     coord tmp; 
     char b, w, e; 
@@ -58,7 +57,7 @@ bool Rook::isEmpty(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
         return false; 
 }
 
-void Rook::ValidMoves(int cp.y, int cp.x, char myColor, &vector<coord> captureable, &vector<coord> validPos, vector<coord>WLocs, vector<coord> BLocs)
+void Rook::ValidMoves(int cp_y, int cp_x, char myColor, &vector<coord> captureable, &vector<coord> validPos, vector<coord>WLocs, vector<coord> BLocs)
 {
     coord temp, cap, valid; 
     temp.y = cp_y-1; 
@@ -158,7 +157,7 @@ void Rook::ValidMoves(int cp.y, int cp.x, char myColor, &vector<coord> captureab
 
         temp.x+=1; 
 }
-*/
+/*
 vector<coord> Rook::ValidMoves(Piece* board[8][8])
 {
     coord temp, cur;
@@ -258,7 +257,7 @@ vector<coord> Rook::ValidMoves(Piece* board[8][8])
     }
     return positions;
 }
-
+*/
 string Rook::getName() const
 {
     return m_name; 

@@ -19,12 +19,6 @@ void Bishop::setName(const string name)
     m_name = name;
 }
 
-void Bishop::Move(const string posiiton)
-{
-  //Check if valid, then:
-  setPosition(position);
-}
-
 char Bishop::getTmpColor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
 {
     char b, w, e; //E MEANS EMPTY
@@ -75,16 +69,14 @@ bool Bishop::isEmpty(int y, int x, vector<coord>WLocs, vector<coord>BLocs)
         return false; 
 }
 
-void Bishop::ValidMoves(int cp.y, int cp.x, &vector<coord> captureable, &vector<coord>validPos)
+void Bishop::ValidMoves(int cp_y, int cp_x, &vector<coord> captureable, &vector<coord>validPos, vector<coord> WLocs, vector<coord> BLocs)
 {
-    coord cap, valid; 
-    int temp.y = cp.y; 
-    int temp.x = cp.x; 
-    //Move Diagonal up, right(w) AND down, left(b)  
+    coord cap, valid, temp;
+    temp.y = cp_y-1; 
+    temp.x = cp_x-1; 
+    //Move Diagonal up and left
     while((temp.y && temp.x) >= 0)
     {
-        temp.y -= 1; 
-        temp.x -= 1; 
             
         if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
@@ -102,14 +94,16 @@ void Bishop::ValidMoves(int cp.y, int cp.x, &vector<coord> captureable, &vector<
             validPos.push_back(cap); 
             break; 
         }
+        temp.y -= 1;
+        temp.x -= 1;
 
     }
 
-    //Move Diagonal down, right(w) AND up, left(b)
+    //Move Diagonal down and left
+    temp.y = cp_y+1;
+    temp.x = cp_x-1;
     while((temp.y < 8) && (temp.x >= 0))
     {
-        temp.y += 1; 
-        temp.x -= 1; 
             
         if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
@@ -132,11 +126,11 @@ void Bishop::ValidMoves(int cp.y, int cp.x, &vector<coord> captureable, &vector<
         temp.x -= 1; 
        
     }   
-    //Move Diagonal up, left(w) AND down, right(b)
+    //Move Diagonal up and right
+    temp.y = cp_y-1;
+    temp.x = cp_x+1;
     while((temp.y >= 0) && (temp.x < 8))
     {
-        temp.y -= 1; 
-        temp.x += 1; 
             
         if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 
@@ -159,11 +153,11 @@ void Bishop::ValidMoves(int cp.y, int cp.x, &vector<coord> captureable, &vector<
         temp.x += 1; 
 
     }   
-    //Move Diagonal down, left(w) AND up, right(b)
+    //Move Diagonal down and right
+    temp.y = cp_y+1;
+    temp.x = cp_x+1;
     while((temp.y < 8) && (temp.x < 8))
     {
-        temp.y += 1; 
-        temp.x += 1; 
             
         if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             break; 

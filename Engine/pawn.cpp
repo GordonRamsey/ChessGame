@@ -71,11 +71,11 @@ bool Pawn::firstMove(int y, int x, char myColor)
 }
 
 /*You will want to clear both vectors after 2nd click? */
-void Pawn::ValidMoves(int cp.y, int cp.x, char myColor, &vector<coord>captureable, &vector<coord>validPos, vector<coord> WLocs, vector<coord> BLocs)
+void Pawn::ValidMoves(int cp_y, int cp_x, char myColor, &vector<coord>captureable, &vector<coord>validPos, vector<coord> WLocs, vector<coord> BLocs)
 {
-	coord cap, valid; 
-    int temp.y = cp_y; 
-    int temp.x = cp_x; 
+	coord cap, valid, temp;
+    temp.y = cp_y; 
+    temp.x = cp_x; 
 
 	if(firstMove(cp_y, cp_x, myColor))
 	{
@@ -83,27 +83,23 @@ void Pawn::ValidMoves(int cp.y, int cp.x, char myColor, &vector<coord>captureabl
         {
             temp.y = cp_y-2; 
             temp.x = cp_x;  
-            if(isAlly(temp.y, temp.x))
             if(isEmpty(temp.y, temp.x))
             {
                 valid.y = temp.y; 
                 valid.x = temp.x; 
                 validPos.push_back(valid);   
             }
-            if(isEnemy(temp.y, temp.x))
         }
         if(myColor == 'b')
         {
             temp.y = cp_y+2; 
             temp.x = cp_x;  
-            if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
             if(isEmpty(temp.y, temp.x, WLocs, BLocs))
             {
                 valid.y = temp.y; 
                 valid.x = temp.x; 
                 validPos.push_back(valid);   
             }
-            if(isEnemy(temp.y, temp.x, myColor, WLocs, Blocs)) 
         }
 	}
     
@@ -111,7 +107,6 @@ void Pawn::ValidMoves(int cp.y, int cp.x, char myColor, &vector<coord>captureabl
     {
         temp.y = cp_y-1; 
         temp.x = cp_x; 
-        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
         if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
@@ -143,7 +138,6 @@ void Pawn::ValidMoves(int cp.y, int cp.x, char myColor, &vector<coord>captureabl
     {
         temp.y = cp_y+1; 
         temp.x = cp_x; 
-        if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
         if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             valid.y = temp.y; 
@@ -184,13 +178,4 @@ void Pawn::setName(const string name)
     m_name = name;
 }
 
-void Pawn::Move(const coord position)
-{
-    //Will only be called if the piece is moved
-    if(m_first == false)    
-    {
-        m_first == true;
-    }
-    m_position = position;
-}
 

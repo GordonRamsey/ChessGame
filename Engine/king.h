@@ -5,10 +5,8 @@ class King : public Piece
 {
   private:
     string m_name;
-    bool m_castle;
   public:
     //Look up inheritance constructor and deconstructor
-    void Move(const string position); //Use piece m_position and compare
     King();//Constructor
     ~King();//Destructor
     string getName() const;
