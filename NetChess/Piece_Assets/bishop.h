@@ -10,6 +10,5 @@ class Bishop : public Piece
     Bishop(int x, int y, int it);
     ~Bishop();
     vector<coord> validSpots(Chess* c);
-
 };
 #endif

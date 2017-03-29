@@ -10,6 +10,5 @@ class Rook : public Piece
     Rook(int x, int y, int it);
     ~Rook();
     vector<coord> validSpots(Chess* c);
-
 };
 #endif

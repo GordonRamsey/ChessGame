@@ -1030,7 +1030,11 @@ int main ( int argc, char* argv[] )
 
     //Show the highlights
     for(unsigned int i=0;i<spots.size();i++){
-      apply_surface(spots[i].x*64, spots[i].y*64, highlight, screen);
+      apply_surface(spots[i].x*64, spots[i].y*64, highlight, screen, &clips[0]);
+      for(unsigned int j=0; j<pieces.size(); j++){
+	if((pieces[j]->getSpot().x == spots[i].x) and (pieces[j]->getSpot().y == spots[i].y))
+          apply_surface(spots[i].x*64, spots[i].y*64, highlight, screen, &clips[1]);
+      }
     }
 
     //Update screen

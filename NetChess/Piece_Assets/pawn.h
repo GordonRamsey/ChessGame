@@ -11,6 +11,5 @@ class Pawn : public Piece
     Pawn(int x, int y, int it, char state);
     ~Pawn();
     vector<coord> validSpots(Chess* c);
-
 };
 #endif

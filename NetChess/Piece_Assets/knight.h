@@ -10,6 +10,5 @@ class Knight : public Piece
     Knight(int x, int y, int it);
     ~Knight();
     vector<coord> validSpots(Chess* c);
-
 };
 #endif
