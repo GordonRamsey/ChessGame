@@ -10,6 +10,13 @@ Bishop::~Bishop()
 
 }
 
+string Bishop::Move(coord newpos)
+{
+  stringstream ss;
+  ss << "[MOVE-BISHOP]" << newpos.x << "," << newpos.y << endl;
+  return ss.str();
+}
+
 vector<coord> Bishop::validSpots(Chess* c)
 {
   //c->board

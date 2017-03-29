@@ -9,6 +9,7 @@ class Queen : public Piece
   public:
     Queen(int x, int y, int it);
     ~Queen();
+    string Move(coord newpos);
     vector<coord> validSpots(Chess* c);
 };
 #endif

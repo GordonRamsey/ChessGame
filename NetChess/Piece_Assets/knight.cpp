@@ -9,6 +9,12 @@ Knight::~Knight()
 {
 
 }
+string Knight::Move(coord newpos)
+{
+  stringstream ss;
+  ss << "[MOVE-KNIGHT]" << newpos.x << "," << newpos.y << endl;
+  return ss.str();
+}
 
 vector<coord> Knight::validSpots(Chess* c)
 {

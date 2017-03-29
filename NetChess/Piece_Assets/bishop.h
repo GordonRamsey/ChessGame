@@ -9,6 +9,7 @@ class Bishop : public Piece
   public:
     Bishop(int x, int y, int it);
     ~Bishop();
+    string Move(coord newpos);
     vector<coord> validSpots(Chess* c);
 };
 #endif

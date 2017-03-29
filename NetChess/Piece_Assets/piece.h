@@ -3,6 +3,7 @@
 #include <string>
 #include "chess.h"
 #include <sstream>
+#include <iostream>
 
 #ifndef PIECE_H
 #define PIECE_H

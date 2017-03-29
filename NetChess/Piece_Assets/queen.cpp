@@ -10,6 +10,12 @@ Queen::~Queen()
 
 }
 
+string Queen::Move(coord newpos)
+{
+  stringstream ss;
+  ss << "[MOVE-Queen]" << newpos.x << "," << newpos.y << endl;
+  return ss.str();
+}
 
 vector<coord> Queen::validSpots(Chess* c)
 {

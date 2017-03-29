@@ -138,10 +138,12 @@ void Piece::handle_events()
       if ((x > box.x) && (x < box.x + box.w) && (y > box.y) && (y < box.y + box.h))
       {
 	//Make sure its our piece
-	if(player_num == owner)
+	if(player_num == owner){
 	  if(selected == NULL){
 	    this->setClip(this->getClip()+6);
 	    selected = this;
+	    cerr << "Its our piece" << endl;
+	    cerr << "Selected:" << selected->debug_name << endl;
 	    spots = validSpots(c);
 	    cerr << "[DEBUG] Piece clicekd on, valid spots:" << endl;
 	    for(unsigned int i=0;i<spots.size();i++)
@@ -149,6 +151,7 @@ void Piece::handle_events()
 	      cerr << "(" << spots[i].x << "," << spots[i].y << ")" << endl;
 	    }
 	  }
+	}//if its our piece
       }//if its really us
     }
   }
@@ -682,8 +685,6 @@ void netProcess(string msg)
 	//Make new space filled with piece
 	c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y] = pieces[i];
 	lastMove.push_back(pieces[i]->getSpot());
-	if(lastMove.size()>2)
-	  cerr << "Too many lastMove coords"<<endl;
 	break;
       }
     }
@@ -892,40 +893,38 @@ int main ( int argc, char* argv[] )
 	      ss << "MOVE " << selected->getNum() << " " << x << " " << y << " ~";
 	    }
 
-	    //XXX: [Engine] Translate to grid coords
+	    //[Engine] Translate to grid coords
 	    coord spot;
 	    spot.x = x / 64;
 	    spot.y = y / 64;
 	    cerr << "Spot:" << spot.x << "," << spot.y << endl;
 
-	    //XXX: [Engine] Perform check 
+	    //[Engine] Perform check 
 	    //Acquire valid spots
-	    //spots.clear(); 
-	    //spots = selected->validSpots(c);
 	    bool valid = false;
-	    cerr << "size of spots:" << spots.size() << endl;
 	    for(unsigned int i=0;i<spots.size();i++){//check if our spot is valid
 	      cerr << "(" << spots[i].x << "," << spots[i].y << ")" << endl;
 	      if(spots[i].x == spot.x && spots[i].y == spot.y)
 		valid = true;
 	    }
 
-	    //Faction extra things like moveing and capturing spawning fun
-	    cerr << "Testing polymprphism:" << endl;
-	    cerr << "Move message:" << selected->Move(spot) << " Piece name:" << selected->debug_name << endl;
-	    
 	    //Ghost and highlight cleanup
 	    selected->setClip(selected->getClip()-6);
-	    selected = NULL;
 	    ghostPiece.setPos(-64,-64);
 	    spots.clear();
+
+	    if(failure || !valid){//If we try to capture a friendly pieceor try to click on an invalid spot
+	      selected = NULL;
+	      continue;
+	    }
+	    
+	    //FINALLY- We know our move is valid, perform faction checks
+	    cerr << "Testing polymprphism:" << endl;
+	    cerr << "Move message:" << selected->Move(spot) << "Piece name:" << selected->debug_name << endl;
+	    //TODO: This is where we perform faction checks through Move and *isCapturable
+	     
+	    selected = NULL;
 	    lastMove.clear();
-
-	    if(failure)//If we try to capture a friendly piece
-	      continue;
-
-	    if(!valid)//If we click on an invalid spot
-	      continue;
 
 	    s_socket.writeString(ss.str());
 

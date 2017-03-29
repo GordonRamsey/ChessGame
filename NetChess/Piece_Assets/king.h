@@ -8,6 +8,7 @@ class King : public Piece
   public:
     King(int x, int y, int it);
     ~King();
+    string Move(coord newpos);
     vector<coord> validSpots(Chess* c);
 };
 #endif
