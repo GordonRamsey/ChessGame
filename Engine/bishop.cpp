@@ -1,7 +1,7 @@
 #include "bishop.h"
 using namespace std;
 
-Bishop::Bishop()
+Bishop::Bishop(int x, int y) : Piece(x, y)
 {
     m_name = "Bishop";
 }
@@ -22,8 +22,9 @@ void Bishop::setName(const string name)
 char Bishop::getTmpColor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
 {
     char b, w, e; //E MEANS EMPTY
-    int temp.y = y;
-    int temp.x = x; 
+    coord temp;
+    temp.y = y;
+    temp.x = x; 
     for(int b = 0; b < BLocs.size(); ++b)
     {
         if((temp.y == BLocs[b].y) && (temp.x == BLocs[b].x))
@@ -32,9 +33,8 @@ char Bishop::getTmpColor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
     for(int w = 0; w < WLocs.size(); ++w)
     {
         if((temp.y == WLocs[w].y) && (temp.x == BLocs[w].y))
-            return 'w'
+            return 'w';
     }
-    else 
         return 'e'; 
 }
 
@@ -63,13 +63,13 @@ bool Bishop::isEmpty(int y, int x, vector<coord>WLocs, vector<coord>BLocs)
 {
     char TmpColor = getTmpColor(y, x, WLocs, BLocs); 
 
-    if(tmpColor == 'e') 
+    if(TmpColor == 'e') 
         return true; 
     else 
         return false; 
 }
 
-void Bishop::ValidMoves(int cp_y, int cp_x, &vector<coord> captureable, &vector<coord>validPos, vector<coord> WLocs, vector<coord> BLocs)
+void Bishop::ValidMoves(int cp_y, int cp_x, char myColor, vector<coord> &captureable, vector<coord> &validPos, vector<coord> WLocs, vector<coord> BLocs)
 {
     coord cap, valid, temp;
     temp.y = cp_y-1; 
@@ -113,12 +113,12 @@ void Bishop::ValidMoves(int cp_y, int cp_x, &vector<coord> captureable, &vector<
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEnemy(temp.y, temp.x. myColor, WLocs, BLocs))
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
             captureable.push_back(cap);
-            valid.push_back(cap); 
+            validPos.push_back(cap); 
             break; 
         }
 
@@ -145,7 +145,7 @@ void Bishop::ValidMoves(int cp_y, int cp_x, &vector<coord> captureable, &vector<
             cap.y = temp.y; 
             cap.x = temp.x; 
             captureable.push_back(cap);
-            valid.push_back(cap); 
+            validPos.push_back(cap); 
             break; 
         }
 
@@ -172,7 +172,7 @@ void Bishop::ValidMoves(int cp_y, int cp_x, &vector<coord> captureable, &vector<
             cap.y = temp.y; 
             cap.x = temp.x; 
             captureable.push_back(cap);
-            valid.push_back(cap); 
+            validPos.push_back(cap); 
             break; 
         }
 

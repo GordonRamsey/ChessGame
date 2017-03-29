@@ -1,7 +1,7 @@
 #include "rook.h"
 using namespace std;
 
-Rook::Rook()
+Rook::Rook(int x, int y) : Piece(x, y)
 {
     m_name = "Rook"; 
 }
@@ -9,7 +9,7 @@ Rook::Rook()
 Rook::~Rook()
 {}
 
-char Rook::getTmpcolor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
+char Rook::getTmpColor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
 {
     coord tmp; 
     char b, w, e; 
@@ -29,7 +29,7 @@ char Rook::getTmpcolor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
 
 bool Rook::isAlly(int y, int x, char myColor, vector<coord> WLocs, vector<coord> BLocs)
 {
-    char TmpColor = getTmpColor(int y, int x, WLocs, BLocs);
+    char TmpColor = getTmpColor(y, x, WLocs, BLocs);
 
     if(myColor == TmpColor)
         return true;
@@ -39,7 +39,7 @@ bool Rook::isAlly(int y, int x, char myColor, vector<coord> WLocs, vector<coord>
 
 bool Rook::isEnemy(int y, int x, char myColor, vector<coord> WLocs, vector<coord> BLocs)
 {
-    char TmpColor = getTmpColor(int y, int x, WLocs, BLocs);
+    char TmpColor = getTmpColor(y, x, WLocs, BLocs);
 
     if(TmpColor != myColor)
         return true; 
@@ -49,15 +49,15 @@ bool Rook::isEnemy(int y, int x, char myColor, vector<coord> WLocs, vector<coord
 
 bool Rook::isEmpty(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
 {
-    char TmpColor = getTmpcolor(int y, int x, WLocs, BLocs);
+    char TmpColor = getTmpColor(y, x, WLocs, BLocs);
     
-    if(tmpColor == 'e')
+    if(TmpColor == 'e')
         return true; 
     else
         return false; 
 }
 
-void Rook::ValidMoves(int cp_y, int cp_x, char myColor, &vector<coord> captureable, &vector<coord> validPos, vector<coord>WLocs, vector<coord> BLocs)
+void Rook::ValidMoves(int cp_y, int cp_x, char myColor, vector<coord> &captureable, vector<coord> &validPos, vector<coord>WLocs, vector<coord> BLocs)
 {
     coord temp, cap, valid; 
     temp.y = cp_y-1; 
@@ -78,7 +78,7 @@ void Rook::ValidMoves(int cp_y, int cp_x, char myColor, &vector<coord> captureab
             cap.y = temp.y; 
             cap.x = temp.x; 
             captureable.push_back(cap); 
-            valid.push_back(cap); 
+            validPos.push_back(cap); 
             break; 
         }
 
@@ -97,12 +97,12 @@ void Rook::ValidMoves(int cp_y, int cp_x, char myColor, &vector<coord> captureab
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if((isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
+        if(isEnemy(temp.y, temp.x, myColor, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
             captureable.push_back(cap); 
-            valid.push_back(cap); 
+            validPos.push_back(cap); 
             break; 
         }
 
@@ -122,12 +122,12 @@ void Rook::ValidMoves(int cp_y, int cp_x, char myColor, &vector<coord> captureab
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEmpty(temp.y, temp.x, myColor, WLocs, BLocs))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
             captureable.push_back(cap); 
-            valid.push_back(cap); 
+            validPos.push_back(cap); 
             break; 
         }
 
@@ -146,16 +146,17 @@ void Rook::ValidMoves(int cp_y, int cp_x, char myColor, &vector<coord> captureab
             valid.x = temp.x; 
             validPos.push_back(valid); 
         }
-        if(isEmpty(temp.y, temp.x, myColor, WLocs, BLocs))
+        if(isEmpty(temp.y, temp.x, WLocs, BLocs))
         {
             cap.y = temp.y; 
             cap.x = temp.x; 
             captureable.push_back(cap); 
-            valid.push_back(cap); 
+            validPos.push_back(cap); 
             break; 
         }
 
         temp.x+=1; 
+    }
 }
 /*
 vector<coord> Rook::ValidMoves(Piece* board[8][8])
@@ -263,7 +264,7 @@ string Rook::getName() const
     return m_name; 
 }
 
-string Rook::setName(const string name)
+void Rook::setName(const string name)
 {
     m_name = name; 
 }

@@ -1,6 +1,11 @@
 #ifndef CHESS_H
 #define CHESS_H
-#include "piece.h"
+#include "king.h"
+#include "queen.h"
+#include "pawn.h"
+#include "bishop.h"
+#include "knight.h"
+#include "rook.h"
 #include <vector>
 
 
@@ -16,7 +21,7 @@ class Chess{
 
         Chess();
         ~Chess();
-        vector<coord> PotentialMoves(const cord position);
+        vector<coord> PotentialMoves(const coord position);
         vector<coord> CaptureableMoves() const;
         bool Move(const coord place);
 

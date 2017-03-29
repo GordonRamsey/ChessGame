@@ -1,7 +1,7 @@
 #include "queen.h"
 using namespace std;
 
-Queen::Queen()
+Queen::Queen(int x, int y) : Piece(x, y)
 {
     m_name = "Queen";
 }
@@ -9,7 +9,7 @@ Queen::Queen()
 Queen::~Queen()
 {}
 
-string Queen:getName() const
+string Queen::getName() const
 {
     return m_name;
 }
@@ -27,7 +27,7 @@ char Queen::getTmpColor(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
     tmp.x = x;
     for(int w = 0; w < WLocs.size(); ++w)
     {
-        if((tmp.y == YLocs[w].y) && (tmp.x == YLocs[w].x))
+        if((tmp.y == WLocs[w].y) && (tmp.x == WLocs[w].x))
             return 'w';
     }
     for(int b = 0; b < BLocs.size(); ++b)
@@ -44,7 +44,6 @@ bool Queen::isAlly(int y, int x, char myColor, vector<coord> WLocs, vector<coord
 
     if(TmpColor = myColor); 
         return true;
-    else
         return false; 
 }
 
@@ -54,21 +53,20 @@ bool Queen::isEnemy(int y, int x, char myColor, vector<coord> WLocs, vector<coor
 
     if(TmpColor != myColor) 
         return true; 
-    else 
-        return false; 
+    return false; 
 }
 
 bool Queen::isEmpty(int y, int x, vector<coord> WLocs, vector<coord> BLocs)
 {
     char TmpColor = getTmpColor(y, x, WLocs, BLocs); 
 
-    if(tmpColor = 'e')
+    if(TmpColor = 'e')
         return true; 
     else 
         return false; 
 }
 
-void Queen::ValidMoves(int cp_y, int cp_x, char myColor, &vector<coord>captureable, &vector<coord>validPos, vector<coord> WLocs, vector<coord> BLocs)
+void Queen::ValidMoves(int cp_y, int cp_x, char myColor, vector<coord> &captureable, vector<coord> &validPos, vector<coord> WLocs, vector<coord> BLocs)
 {
     coord temp, cap, valid; 
     temp.y = cp_y-1; 
@@ -76,7 +74,7 @@ void Queen::ValidMoves(int cp_y, int cp_x, char myColor, &vector<coord>captureab
     vector<coord> set; 
 
     //Moving vertically towards "top" of the board: 
-    while((temp.y >= 0)
+    while(temp.y >= 0)
     {
          
         if(isAlly(temp.y, temp.x, myColor, WLocs, BLocs))
