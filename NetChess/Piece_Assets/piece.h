@@ -32,7 +32,9 @@ class Piece {
         
         coord getPos() const;
         void setPos(int x, int y);
-        
+       
+        string Move(coord original, coord newpos);
+
 	//SDL Functions
 	void handle_events();
 	void show();
@@ -51,10 +53,7 @@ class Piece {
 
 	void setAlpha(int x);
 
-	//Used with children
-        //virtual vector<coord> validSpots(Chess* c) = 0;
         virtual vector<coord> validSpots(Chess* c) { };
-	//vector<coord> validSpots(Chess c){ return 0; }
 
 };
 #endif

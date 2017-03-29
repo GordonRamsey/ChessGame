@@ -366,7 +366,7 @@ bool load_files()
   font = TTF_OpenFont("Graphic_Assets/edosz.ttf",28);
   if(font == NULL)
   {  
-    cerr << "Fuck me no font" << endl;
+    cerr << "no font" << endl;
     return false;
   }
 
@@ -628,7 +628,7 @@ string snip_to_end(string msg, int &cursor)
   cursor = msg.find("~",cursor);
   string ret;
   ret = msg.substr(last,cursor-last);
-  cursor++;
+  //cursor++;
   return ret;
 
 }
@@ -776,7 +776,7 @@ void netProcess(string msg)
   else if(cmd == "GMSG")//GMSG <player> <msg>
   {
     string s_player = snip(msg,index);
-    string player_message = snip(msg,index);
+    string player_message = snip_to_end(msg,index);
     ss.str("");
     ss << s_player << " @ " << player_message;
     addChat(ss.str());
@@ -860,11 +860,9 @@ int main ( int argc, char* argv[] )
 	    
 	    x = event.button.x;
 	    y = event.button.y;
-
 	    //Snap location to grid
 	    x = x - x%SPRITE_SIZE;
 	    y = y - y%SPRITE_SIZE;
-	    
 
 	    //Send command
 	    stringstream ss;
