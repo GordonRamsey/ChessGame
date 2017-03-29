@@ -1011,6 +1011,9 @@ int main ( int argc, char* argv[] )
     //Apply the board to the screen
     apply_surface(0, 0, board, screen, NULL);
 
+    for(unsigned int i=0;i<lastMove.size();i++){
+      apply_surface(lastMove[i].x*64, lastMove[i].y*64, lastHighlight, screen);
+    }
     //Show() pieces
     for(unsigned int i=0;i<pieces.size();i++)
       pieces[i]->show();
@@ -1028,9 +1031,6 @@ int main ( int argc, char* argv[] )
     //Show the highlights
     for(unsigned int i=0;i<spots.size();i++){
       apply_surface(spots[i].x*64, spots[i].y*64, highlight, screen);
-    }
-    for(unsigned int i=0;i<lastMove.size();i++){
-      apply_surface(lastMove[i].x*64, lastMove[i].y*64, lastHighlight, screen);
     }
 
     //Update screen
