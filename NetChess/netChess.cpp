@@ -675,14 +675,14 @@ void netProcess(string msg)
     for(unsigned int i=0;i<pieces.size();i++){
       if(pieces[i]->getNum() == i_num){
 	//Make old space empty
-	//lastMove.push_back(c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y]);
 	lastMove.push_back(pieces[i]->getSpot());
 	c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y] = NULL;
 	pieces[i]->setPos(atoi(s_x.c_str()), atoi(s_y.c_str()));
 	//Make new space filled with piece
 	c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y] = pieces[i];
 	lastMove.push_back(pieces[i]->getSpot());
-	//lastMove.push_back(c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y]);
+	if(lastMove.size()>2)
+	  cerr << "Too many lastMove coords"<<endl;
 	break;
       }
     }
