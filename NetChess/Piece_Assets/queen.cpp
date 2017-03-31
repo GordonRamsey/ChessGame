@@ -1,8 +1,7 @@
 #include "piece.h"
 
 Queen::Queen(int x, int y, int it) : Piece(x, y, it)
-{
-}
+{}
 
 Queen::~Queen()
 {}
@@ -19,6 +18,7 @@ vector<coord> Queen::validSpots(Chess* c)
   //c->board
   coord seek;
   vector<coord> spots;
+  stringstream ss;
 
   //Check North
   seek = getSpot();
@@ -31,6 +31,9 @@ vector<coord> Queen::validSpots(Chess* c)
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
         break;
       }
       else
@@ -51,6 +54,9 @@ vector<coord> Queen::validSpots(Chess* c)
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
         break;
       }
       else
@@ -70,6 +76,9 @@ vector<coord> Queen::validSpots(Chess* c)
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
         break;
       }
       else
@@ -90,6 +99,9 @@ vector<coord> Queen::validSpots(Chess* c)
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
         break;
       }
       else
@@ -109,6 +121,9 @@ vector<coord> Queen::validSpots(Chess* c)
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
         break;
       }
       else
@@ -129,6 +144,9 @@ vector<coord> Queen::validSpots(Chess* c)
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
         break;
       }
       else
@@ -148,6 +166,9 @@ vector<coord> Queen::validSpots(Chess* c)
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
         break;
       }
       else
@@ -168,6 +189,9 @@ vector<coord> Queen::validSpots(Chess* c)
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
         break;
       }
       else

@@ -4,16 +4,12 @@
 #include "chess.h"
 #include <sstream>
 #include <iostream>
+#include <map>
 
 #ifndef PIECE_H
 #define PIECE_H
 
 using namespace std;
-
-struct coord {
-    int x;
-    int y;
-};
 
 class Piece {
 
@@ -33,6 +29,7 @@ class Piece {
         Piece& operator=(const Piece& other);
         
 	string debug_name;
+	map <coord,string> captureMap;//postions that we can capture
         
 	coord getPos() const;
         void setPos(int x, int y);
@@ -59,6 +56,7 @@ class Piece {
 	void setAlpha(int x);
 
         virtual vector<coord> validSpots(Chess* c) { };
+	string getCaptCmd(coord spot);
 
 };
 #endif

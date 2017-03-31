@@ -1,5 +1,6 @@
 #include "chess.h"
 
+
 Chess::Chess()
 {
 
@@ -22,4 +23,38 @@ bool Chess::isValid(int x, int y)
   return true;
 }
 
+bool Chess::isCapturable(coord a_spot, coord d_spot)
+{
+  //A_spot = spot of attacking piece, d is defense
+  Piece* attacking = board[a_spot.x][a_spot.y];
+  Piece* defending = board[d_spot.x][d_spot.y];
 
+  //Run checks o3o
+
+  //Cannot capture walls!
+  //if(defending->debug_name == "wall")
+  //  return false;
+
+  return true;
+}
+
+void Chess::spawn(string name, int x, int y)
+{
+  Piece* newPiece = NULL;
+  //Just an example
+  if(name == "pawn"){
+   // newPiece = new Pawn(x,y,it);
+    board[x][y] = newPiece;
+  }
+  else if(name == "wall"){
+   // newPiece = new Wall(x,y,it);
+    terrain[x][y] = newPiece;
+  }
+  else{
+    cerr << "Invalid spawn object:" << name << endl;
+    return;
+  }
+
+  //Update our local chess iterator
+  it++;
+}

@@ -1,11 +1,29 @@
 #ifndef CHESS_H
 #define CHESS_H
-//#include "piece.h"
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
+struct coord {
+  int x;
+  int y;
+  bool operator>(const coord& other) const{
+    if(x > other.x)
+      return true;
+    else 
+      return false;
+  }
+  bool operator<(const coord& other) const{
+    if(x < other.x)
+      return true;
+    else 
+      return false;
+  }
+};
+
 class Piece;
+
 
 class Chess
 {
@@ -27,7 +45,10 @@ class Chess
      {0,0,0,1,1,1,1,1,1,1,1,0,0,0}};
     
     Piece* board [14][14];
+    Piece* terrain[14][14];
     vector<Piece*> pieces;
+
+    int it;
 
     Chess();
     ~Chess();
@@ -37,6 +58,8 @@ class Chess
     //remove piece from board
     void removePiece(int num);
     bool isValid(int x, int y);
+    bool isCapturable(coord a_spot, coord d_spot);
+    void spawn(string name, int x, int y);
 
 
 };
