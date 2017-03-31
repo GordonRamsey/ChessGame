@@ -420,12 +420,10 @@ void generatePieces()
   //Player 1 gen 
   for(int j=0;j<2;j++){
     for(int i=0;i<8;i++){
-      cerr << "[NEW PIECE GEN]" << endl;
-      Piece* newPiece = NULL;;
+      Piece* newPiece = NULL;
       it++;
       x = i*SPRITE_SIZE+BORDER_SIZE+SPRITE_SIZE*3;
       y = j*SPRITE_SIZE+BORDER_SIZE;
-      cerr << "Spot X:" << x << " Spot Y:" << y << endl;
       int num = it;
       if(j == 1)
       {
@@ -583,7 +581,8 @@ void generatePieces()
       pieces.push_back(newPiece);
     }
   }
-
+  
+  c->it = 65;
   cerr << "[DEBUG] Done generating boards" << endl;
 }
 
@@ -801,7 +800,7 @@ void netProcess(string msg)
   }
   if(msg.size() > (unsigned)index)//If message is greater than ending char ~
   {
-    cerr << "[LONG STRING] Recursing with string:" << msg.substr(index,msg.size()-index) << endl;;
+    //cerr << "[LONG STRING] Recursing with string:" << msg.substr(index,msg.size()-index) << endl;;
     netProcess(msg.substr(index,msg.size()-index));
   }
 
@@ -871,16 +870,17 @@ int main ( int argc, char* argv[] )
 	    //Check if space is already occupied
 	    bool capture = false;
 	    for(unsigned int i=0;i<pieces.size();i++){
-	      if(pieces[i]->getPos().x == x && pieces[i]->getPos().y == y){
-		//It is! lets kill it!
-		ss << "CAPT " << selected->getNum() << " " << pieces[i]->getNum() << " ~";
-
+	      if(pieces[i]->getPos().x == x && pieces[i]->getPos().y == y){//If mouse spot is occupied
+		//ss << "CAPT " << selected->getNum() << " " << pieces[i]->getNum() << " ~";
+		ss.str(selected->getCaptCmd(pieces[i]->getSpot()));
 		//If we find our own selected piece, ignore it	
 		if(pieces[i]->getSpot().x == selected->getSpot().x && 
 		    pieces[i]->getSpot().y == selected->getSpot().y){
 		  failure = true;
 		  break;
 		}
+		//check if the piece is allowed to be captured at all (For the sake of golems and such
+		failure = !(c->isCapturable(selected->getSpot(), pieces[i]->getSpot()));//IsCapturable returns true if its a good case, we dont want failure to be true if its a good case
 		capture = true;
 		break;
 	      }
@@ -921,7 +921,9 @@ int main ( int argc, char* argv[] )
 	    cerr << "Testing polymprphism:" << endl;
 	    cerr << "Move message:" << selected->Move(spot) << "Piece name:" << selected->debug_name << endl;
 	    //TODO: This is where we perform faction checks through Move and *isCapturable
-	     
+	    string icing;//Icing on the MOVE/CAPT cake
+	    icing = selected->Move(spot); 
+
 	    selected = NULL;
 	    lastMove.clear();
 

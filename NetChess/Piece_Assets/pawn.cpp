@@ -26,7 +26,8 @@ string Pawn::Move(coord newpos)
 vector<coord> Pawn::validSpots(Chess* c)
 {
   cerr << "Inside pawn valid spots" << endl;
-  
+  stringstream ss;
+
   //c->board
   vector<coord> spots;
 
@@ -47,8 +48,12 @@ vector<coord> Pawn::validSpots(Chess* c)
     seek.y--;
     seek.x--;
     if(c->board[seek.x][seek.y] != NULL){
-      if(c->board[seek.x][seek.y]->getTeam() != getTeam())
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
 	spots.push_back(seek);
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
+      }
     }
   }
   //NE - can cap
@@ -59,8 +64,12 @@ vector<coord> Pawn::validSpots(Chess* c)
     seek.y--;
     seek.x++;
     if(c->board[seek.x][seek.y] != NULL){
-      if(c->board[seek.x][seek.y]->getTeam() != getTeam())
-	spots.push_back(seek); 
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam()){	
+	spots.push_back(seek);
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
+      }
     }
   }
   //S - cant cap
@@ -80,8 +89,12 @@ vector<coord> Pawn::validSpots(Chess* c)
     seek.y++;
     seek.x++;
     if(c->board[seek.x][seek.y] != NULL){
-      if(c->board[seek.x][seek.y]->getTeam() != getTeam())
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam()){	
 	spots.push_back(seek); 
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
+      }
     }
   }
   //SW - can cap
@@ -92,8 +105,12 @@ vector<coord> Pawn::validSpots(Chess* c)
     seek.y++;
     seek.x--;
     if(c->board[seek.x][seek.y] != NULL){
-      if(c->board[seek.x][seek.y]->getTeam() != getTeam())
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam()){	
 	spots.push_back(seek); 
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
+      }
     }
   } 
   //E - cant cap

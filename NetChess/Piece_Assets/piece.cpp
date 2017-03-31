@@ -92,10 +92,10 @@ void Piece::setAlpha(int x)
   SDL_SetAlpha(sheet, SDL_SRCALPHA, x); 
 }
 
-/*
-vector<coord> validSpots(Chess c)
+string Piece::getCaptCmd(coord spot)
 {
-  vector<coord> asdf;
-  return asdf;
+  //cerr <<  captureMap.find(spot)->second << endl;
+  //return captureMap.find(spot).second;
+  //return "FUCK";
+  return captureMap[spot];
 }
-*/

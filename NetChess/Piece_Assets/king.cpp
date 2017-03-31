@@ -3,6 +3,7 @@
 King::King(int x, int y, int it) : Piece(x, y, it)
 {
   // :)
+  debug_name = "king";
 }
 
 King::~King()
@@ -20,15 +21,19 @@ vector<coord> King::validSpots(Chess* c)
 {
   //c->board
   vector<coord> spots;
-
+  stringstream ss;
   //North
   coord seek = getSpot();
   if(c->isValid(seek.x,seek.y-1))
   {
     seek.y--;
     if(c->board[seek.x][seek.y] != NULL){
-      if(c->board[seek.x][seek.y]->getTeam() != getTeam())
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam()){	
 	spots.push_back(seek);
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
+      }
     }
     else	
       spots.push_back(seek); 
@@ -41,8 +46,12 @@ vector<coord> King::validSpots(Chess* c)
     seek.y--;
     seek.x++;
     if(c->board[seek.x][seek.y] != NULL){
-      if(c->board[seek.x][seek.y]->getTeam() != getTeam())
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam())      {
 	spots.push_back(seek);
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
+      }
     }
     else
       spots.push_back(seek); 
@@ -55,8 +64,12 @@ vector<coord> King::validSpots(Chess* c)
   {
     seek.x++;
     if(c->board[seek.x][seek.y] != NULL){
-      if(c->board[seek.x][seek.y]->getTeam() != getTeam())
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
 	spots.push_back(seek); 
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
+      }
     }
     else
       spots.push_back(seek); 
@@ -69,8 +82,12 @@ vector<coord> King::validSpots(Chess* c)
     seek.x++;
     seek.y++;
     if(c->board[seek.x][seek.y] != NULL){
-      if(c->board[seek.x][seek.y]->getTeam() != getTeam())
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
 	spots.push_back(seek);
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
+      }
     }
     else
       spots.push_back(seek); 
@@ -82,8 +99,12 @@ vector<coord> King::validSpots(Chess* c)
   {
     seek.y++;
     if(c->board[seek.x][seek.y] != NULL){
-      if(c->board[seek.x][seek.y]->getTeam() != getTeam())
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
 	spots.push_back(seek); 
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
+      }
     }
     else
       spots.push_back(seek); 
@@ -96,8 +117,12 @@ vector<coord> King::validSpots(Chess* c)
     seek.y++;
     seek.x--;
     if(c->board[seek.x][seek.y] != NULL){
-      if(c->board[seek.x][seek.y]->getTeam() != getTeam())
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
 	spots.push_back(seek); 
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
+      }
     }
     else
       spots.push_back(seek); 
@@ -109,8 +134,12 @@ vector<coord> King::validSpots(Chess* c)
   {
     seek.x--;
     if(c->board[seek.x][seek.y] != NULL){
-      if(c->board[seek.x][seek.y]->getTeam() != getTeam())
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
 	spots.push_back(seek);
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
+      }
     }
     else
       spots.push_back(seek); 
@@ -123,8 +152,12 @@ vector<coord> King::validSpots(Chess* c)
     seek.x--;
     seek.y--;
     if(c->board[seek.x][seek.y] != NULL){
-      if(c->board[seek.x][seek.y]->getTeam() != getTeam())
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
 	spots.push_back(seek);
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
+      }
     }
     else
       spots.push_back(seek); 

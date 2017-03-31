@@ -3,6 +3,7 @@
 Rook::Rook(int x, int y, int it) : Piece(x, y, it)
 {
   // :)
+  debug_name = "rook";
 }
 
 Rook::~Rook()
@@ -20,6 +21,7 @@ string Rook::Move(coord newpos)
 vector<coord> Rook::validSpots(Chess* c)
 {
   //c->board
+  stringstream ss;
   coord seek;
   vector<coord> spots;
   //Check north
@@ -35,6 +37,9 @@ vector<coord> Rook::validSpots(Chess* c)
       if(c->board[seek.x][seek.y]->getTeam() != getTeam())//Check if enemy 
       {
 	spots.push_back(seek);
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
 	break;
       }
       else
@@ -56,6 +61,9 @@ vector<coord> Rook::validSpots(Chess* c)
       if(c->board[seek.x][seek.y]->getTeam() != getTeam())//Check if enemy 
       {
 	spots.push_back(seek);
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
 	break;
       }
       else
@@ -77,6 +85,9 @@ vector<coord> Rook::validSpots(Chess* c)
       if(c->board[seek.x][seek.y]->getTeam() != getTeam())//Check if enemy 
       {
 	spots.push_back(seek);
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
 	break;
       }
       else
@@ -98,6 +109,9 @@ vector<coord> Rook::validSpots(Chess* c)
       if(c->board[seek.x][seek.y]->getTeam() != getTeam())//Check if enemy 
       {
 	spots.push_back(seek);
+	ss.str("");
+        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	captureMap[seek] = ss.str();
 	break;
       }
       else
