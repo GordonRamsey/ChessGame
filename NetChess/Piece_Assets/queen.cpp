@@ -1,14 +1,11 @@
-#include "queen.h"
+#include "piece.h"
 
 Queen::Queen(int x, int y, int it) : Piece(x, y, it)
 {
-  // :)
 }
 
 Queen::~Queen()
-{
-
-}
+{}
 
 string Queen::Move(coord newpos)
 {
