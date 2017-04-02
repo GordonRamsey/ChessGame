@@ -6,6 +6,7 @@ class Queen : public Piece
 {
   private:
     bool m_level;
+
   public:
     Queen(int x, int y, int it);
     ~Queen();

@@ -4,6 +4,7 @@
 class FKing : public King
 {
   private:
+	bool m_level;
 
   public:
     FKing(int x, int y, int it);
