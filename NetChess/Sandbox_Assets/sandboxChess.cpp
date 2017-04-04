@@ -3,12 +3,12 @@
 #include <vector>
 #include <queue>
 #include <sstream>
-#include "bridge.h"
+#include "../bridge.h"
 
 using namespace std;
 
 
-const int SCREEN_WIDTH = 1216;
+const int SCREEN_WIDTH = 896;
 const int SCREEN_HEIGHT = 896;
 const int SCREEN_BPP = 32;
 
@@ -43,11 +43,11 @@ int CLIP_BISHOP_UPGRADE_SELECT = 20;
 int CLIP_KNIGHT_UPGRADE_SELECT = 21;
 int CLIP_QUEEN_UPGRADE_SELECT = 22;
 int CLIP_KING_UPGRADE_SELECT = 23;
-
+/*
 //Our connection to the server
 Socket s_socket;
 SocketSet socketSet;
-
+ */
 //The surfaces
 SDL_Surface *board = NULL;
 SDL_Surface *pieceSheet1 = NULL; //Player1s sprite sheet
@@ -59,10 +59,10 @@ SDL_Surface *highlight = NULL;
 SDL_Surface *screen = NULL;
 
 //Text input
-SDL_Surface *text = NULL;
+//SDL_Surface *text = NULL;
 //side bar chat
-SDL_Surface *sideBar = NULL;
-SDL_Surface *textBack = NULL;
+//SDL_Surface *sideBar = NULL;
+//SDL_Surface *textBack = NULL;
 //The event structure
 SDL_Event event;
 
@@ -79,10 +79,10 @@ int player_num; //Our player num relevent to the current game
 bool game_start = false;
 
 //Chat Variables
-StringInput chat;
-TTF_Font *font = NULL;
-SDL_Color textColor = {0, 0, 0};
-vector<string> history;
+//StringInput chat;
+//TTF_Font *font = NULL;
+//SDL_Color textColor = {0, 0, 0};
+//vector<string> history;
 
 //Our chess overhead object
 Chess* c = new Chess();
@@ -108,7 +108,7 @@ void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination,
   //blit the surface
   SDL_BlitSurface( source, clip, destination, &offset );
 }
-
+/*
 void StringInput::show_centered()
 {
   if(text != NULL)
@@ -116,7 +116,7 @@ void StringInput::show_centered()
     apply_surface(896, SCREEN_HEIGHT - text->h, text, screen);
   }
 }
-
+*/
 void Piece::setClip(int x)
 {
   clip = &clips[x];
@@ -132,26 +132,23 @@ void Piece::handle_events()
   {
     if(event.button.button == SDL_BUTTON_LEFT)
     {
+
       x = event.button.x;
       y = event.button.y;
-
       if ((x > box.x) && (x < box.x + box.w) && (y > box.y) && (y < box.y + box.h))
       {
 	//Make sure its our piece
-	if(player_num == owner){
-	  if(selected == NULL){
-	    this->setClip(this->getClip()+6);
-	    selected = this;
-	    cerr << "Its our piece" << endl;
-	    cerr << "Selected:" << selected->debug_name << endl;
-	    spots = validSpots(c);
-	    cerr << "[DEBUG] Piece clicekd on, valid spots:" << endl;
-	    for(unsigned int i=0;i<spots.size();i++)
-	    {
-	      cerr << "(" << spots[i].x << "," << spots[i].y << ")" << endl;
-	    }
+	//	if(player_num == owner)
+	if(selected == NULL){
+	  this->setClip(this->getClip()+6);
+	  selected = this;
+	  spots = validSpots(c);
+	  cerr << "[DEBUG] Piece clicekd on, valid spots:" << endl;
+	  for(unsigned int i=0;i<spots.size();i++)
+	  {
+	    cerr << "(" << spots[i].x << "," << spots[i].y << ")" << endl;
 	  }
-	}//if its our piece
+	}
       }//if its really us
     }
   }
@@ -354,22 +351,22 @@ bool init()
 bool load_files()
 {
   //Load the image
-  board = load_image("Graphic_Assets/fourPlayerBoard64.png");
-  pieceSheet1 = load_image("Graphic_Assets/basicPieces64.png");
-  pieceSheet2 = load_image("Graphic_Assets/basicPieces642.png");
-  pieceSheet3 = load_image("Graphic_Assets/basicPieces643.png");
-  pieceSheet4 = load_image("Graphic_Assets/basicPieces644.png");
-  ghostSheet = load_image("Graphic_Assets/ghostPieces64.png");
-  textBack = load_image("Graphic_Assets/textBackground.png");
+  board = load_image("../Graphic_Assets/fourPlayerBoard64.png");
+  pieceSheet1 = load_image("../Graphic_Assets/basicPieces64.png");
+  pieceSheet2 = load_image("../Graphic_Assets/basicPieces642.png");
+  pieceSheet3 = load_image("../Graphic_Assets/basicPieces643.png");
+  pieceSheet4 = load_image("../Graphic_Assets/basicPieces644.png");
+  ghostSheet = load_image("../Graphic_Assets/ghostPieces64.png");
+  //textBack = load_image("Graphic_Assets/textBackground.png");
 
-  highlight = load_image("Graphic_Assets/highlight.png");
+  highlight = load_image("../Graphic_Assets/highlight.png");
 
-  font = TTF_OpenFont("Graphic_Assets/edosz.ttf",28);
-  if(font == NULL)
-  {  
-    cerr << "no font" << endl;
-    return false;
-  }
+  //font = TTF_OpenFont("Graphic_Assets/edosz.ttf",28);
+  //if(font == NULL)
+  //{  
+  //  cerr << "no font" << endl;
+  //  return false;
+  //}
 
   if(board == NULL)
   {
@@ -402,6 +399,7 @@ void clean_up()
   SDL_FreeSurface(pieceSheet4);
   SDL_FreeSurface(ghostSheet);
   SDL_FreeSurface(highlight);
+  //TTF_CloseFont(font);
   SDL_Quit();
 }
 
@@ -420,10 +418,12 @@ void generatePieces()
   //Player 1 gen 
   for(int j=0;j<2;j++){
     for(int i=0;i<8;i++){
-      Piece* newPiece = NULL;
+      cerr << "[NEW PIECE GEN]" << endl;
+      Piece* newPiece = NULL;;
       it++;
       x = i*SPRITE_SIZE+BORDER_SIZE+SPRITE_SIZE*3;
       y = j*SPRITE_SIZE+BORDER_SIZE;
+      cerr << "Spot X:" << x << " Spot Y:" << y << endl;
       int num = it;
       if(j == 1)
       {
@@ -581,11 +581,10 @@ void generatePieces()
       pieces.push_back(newPiece);
     }
   }
-  
-  c->it = 65;
+
   cerr << "[DEBUG] Done generating boards" << endl;
 }
-
+/*
 void printChat()
 {
   for(unsigned int i=0;i<history.size();i++){
@@ -599,9 +598,9 @@ void printChat()
   }
 
 }
-
+*/
 //Add a message to the chat history
-void addChat(string msg)
+/*void addChat(string msg)
 {
   history.insert(history.begin(),msg);
   if(history.size() > 28)
@@ -609,19 +608,20 @@ void addChat(string msg)
     history.pop_back();
   }
 }
-
+*/
+/*
 //Connect to the server Whoaaaa!
 int connectServer(int argc, char* argv[])
 {
-  s_socket.open(argv[1], argv[2]);
-  s_socket.joinGroup(&socketSet);
+s_socket.open(argv[1], argv[2]);
+s_socket.joinGroup(&socketSet);
 
-  if(!s_socket.isClosed())
-    return 0;
-  printf("Cannot establish connection to server\n");
-  return -1;
+if(!s_socket.isClosed())
+return 0;
+printf("Cannot establish connection to server\n");
+return -1;
 }
-
+ */
 string snip_to_end(string msg, int &cursor)
 {
   int last = cursor;
@@ -683,6 +683,8 @@ void netProcess(string msg)
 	//Make new space filled with piece
 	c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y] = pieces[i];
 	lastMove.push_back(pieces[i]->getSpot());
+	if(lastMove.size()>2)
+	  cerr << "Too many lastMove coords"<<endl;
 	break;
       }
     }
@@ -743,8 +745,6 @@ void netProcess(string msg)
     c->board[pieces[a_index]->getSpot().x][pieces[a_index]->getSpot().y] = pieces[a_index];
     lastMove.push_back(pieces[a_index]->getSpot());
 
-    //Level up the piece
-    piece[a_index]->levelUp();
 
     //Remove ghost image
     ghostPiece.setPos(-64,-64);
@@ -779,7 +779,7 @@ void netProcess(string msg)
     string player_message = snip_to_end(msg,index);
     ss.str("");
     ss << s_player << " @ " << player_message;
-    addChat(ss.str());
+    //addChat(ss.str());
 
   }//If- GMSG
   else if(cmd == "STAT")//STAT <code>
@@ -802,7 +802,7 @@ void netProcess(string msg)
   }
   if(msg.size() > (unsigned)index)//If message is greater than ending char ~
   {
-    //cerr << "[LONG STRING] Recursing with string:" << msg.substr(index,msg.size()-index) << endl;;
+    cerr << "[LONG STRING] Recursing with string:" << msg.substr(index,msg.size()-index) << endl;;
     netProcess(msg.substr(index,msg.size()-index));
   }
 
@@ -811,22 +811,22 @@ void netProcess(string msg)
 int main ( int argc, char* argv[] )
 {
   bool quit = false;
-  bool chat_mode = false;
+  //bool chat_mode = false;
   int x,y;
-
+  /*
   // Error check
   if (argc < 3 || argc >= 4)
   {
-    cerr << "Please retry and enter the ip address"
-      << " and a port number." << endl
-      << "Example: Frodo 8000" << endl
-      << "Shutting Down." << endl;
-    return 1;
+  cerr << "Please retry and enter the ip address"
+  << " and a port number." << endl
+  << "Example: Frodo 8000" << endl
+  << "Shutting Down." << endl;
+  return 1;
   }
-
+   */
   //Attempt connection to server. s_socket will be connection socket.
-  if(connectServer(argc, argv) == -1)
-    return 1;
+  //if(connectServer(argc, argv) == -1)
+   // return 1;
 
   //run initialiation and asset loading
   if(init() == false)
@@ -836,22 +836,22 @@ int main ( int argc, char* argv[] )
   set_clips();
   generatePieces();
 
-//// --------------
-//// MAIN GAME LOOP
-//// --------------
+  //// --------------
+  //// MAIN GAME LOOP
+  //// --------------
   //While the user hasn't quit
   while(quit == false)
   {
 
-//// ----------
-//// SDL EVENTS
-//// ----------
+    //// ----------
+    //// SDL EVENTS
+    //// ----------
     //While theres an event to handle
     while(SDL_PollEvent(&event))
     {
       Uint8 *keystates = SDL_GetKeyState(NULL);
       //This wont let us do anything until the game starts
-      if(game_start){ 
+     // if(game_start){ 
 	if(event.type == SDL_MOUSEBUTTONDOWN)
 	{
 
@@ -872,17 +872,17 @@ int main ( int argc, char* argv[] )
 	    //Check if space is already occupied
 	    bool capture = false;
 	    for(unsigned int i=0;i<pieces.size();i++){
-	      if(pieces[i]->getPos().x == x && pieces[i]->getPos().y == y){//If mouse spot is occupied
+	      if(pieces[i]->getPos().x == x && pieces[i]->getPos().y == y){
+		//It is! lets kill it!
 		//ss << "CAPT " << selected->getNum() << " " << pieces[i]->getNum() << " ~";
 		ss.str(selected->getCaptCmd(pieces[i]->getSpot()));
+
 		//If we find our own selected piece, ignore it	
 		if(pieces[i]->getSpot().x == selected->getSpot().x && 
 		    pieces[i]->getSpot().y == selected->getSpot().y){
 		  failure = true;
 		  break;
 		}
-		//check if the piece is allowed to be captured at all (For the sake of golems and such
-		failure = !(c->isCapturable(selected->getSpot(), pieces[i]->getSpot()));//IsCapturable returns true if its a good case, we dont want failure to be true if its a good case
 		capture = true;
 		break;
 	      }
@@ -894,15 +894,18 @@ int main ( int argc, char* argv[] )
 	      ss << "MOVE " << selected->getNum() << " " << x << " " << y << " ~";
 	    }
 
-	    //[Engine] Translate to grid coords
+	    //XXX: [Engine] Translate to grid coords
 	    coord spot;
 	    spot.x = x / 64;
 	    spot.y = y / 64;
 	    cerr << "Spot:" << spot.x << "," << spot.y << endl;
 
-	    //[Engine] Perform check 
+	    //XXX: [Engine] Perform check 
 	    //Acquire valid spots
+	    //spots.clear(); 
+	    //spots = selected->validSpots(c);
 	    bool valid = false;
+	    cerr << "size of spots:" << spots.size() << endl;
 	    for(unsigned int i=0;i<spots.size();i++){//check if our spot is valid
 	      cerr << "(" << spots[i].x << "," << spots[i].y << ")" << endl;
 	      if(spots[i].x == spot.x && spots[i].y == spot.y)
@@ -911,31 +914,24 @@ int main ( int argc, char* argv[] )
 
 	    //Ghost and highlight cleanup
 	    selected->setClip(selected->getClip()-6);
+	    selected = NULL;
 	    ghostPiece.setPos(-64,-64);
 	    spots.clear();
-
-	    if(failure || !valid){//If we try to capture a friendly pieceor try to click on an invalid spot
-	      selected = NULL;
-	      continue;
-	    }
-	    
-	    //FINALLY- We know our move is valid, perform faction checks
-	    cerr << "Testing polymprphism:" << endl;
-	    cerr << "Move message:" << selected->Move(spot) << "Piece name:" << selected->debug_name << endl;
-	    //TODO: This is where we perform faction checks through Move and *isCapturable
-	    string icing;//Icing on the MOVE/CAPT cake
-	    icing = selected->Move(spot); 
-
-	    selected = NULL;
 	    lastMove.clear();
 
-	    s_socket.writeString(ss.str());
+	    if(failure)//If we try to capture a friendly piece
+	      continue;
 
+	    if(!valid)//If we click on an invalid spot
+	      continue;
+
+	    // s_socket.writeString(ss.str());
+	    netProcess(ss.str());
 	    continue;
 	  }//If- Selected != null
 	}//If- event type = mouseleft
 	//If enter key is pressed, enter chat mode
-	else if(keystates[SDLK_RETURN])
+/*	else if(keystates[SDLK_RETURN])
 	{
 	  cerr << "Enter registered- current chat:" << chat.getText() << endl;
 	  if(!chat_mode)
@@ -951,12 +947,13 @@ int main ( int argc, char* argv[] )
 	      ss.str("");
 	      ss << "GMSG " << player_num << " " << chat.getText() << " ~";
 	      //socketSet.wait(0);
-	      s_socket.writeString(ss.str());
+	      // s_socket.writeString(ss.str());
+	      netProcess(ss.str());
 	    }
 	    chat.reset();
 	  }
 	}
-	//HOLD MOUSE MOTION
+*/	//HOLD MOUSE MOTION
 	else if(event.type == SDL_MOUSEMOTION && selected != NULL)
 	{
 	  int x = event.motion.x-32;
@@ -966,8 +963,8 @@ int main ( int argc, char* argv[] )
 	  ss.str("");
 	  ss << "HOLD " << selected->getClip() << " " << x << " " << y << " ~";
 	  //socketSet.wait(0);
-	  s_socket.writeString(ss.str());
-
+	  // s_socket.writeString(ss.str());
+	  netProcess(ss.str());
 	}
 
 	//Perform local piece event handling (get clicked on)
@@ -975,11 +972,11 @@ int main ( int argc, char* argv[] )
 	  pieces[i]->handle_events();
 
 	//If chatmode is on, do chat things (get chatted in)
-	if(chat_mode){
-	  chat.handle_input(event,font,textColor);
-	}
+	//if(chat_mode){
+	 // chat.handle_input(event,font,textColor);
+	//}
 
-      }//If- game start
+      //}//If- game start
 
       if(event.type == SDL_QUIT)
       {
@@ -988,28 +985,28 @@ int main ( int argc, char* argv[] )
 
     }//While- SDL_PollEvent
 
-//// ------------------
-//// NETWORK CONNECTION
-//// ------------------
-    if(s_socket.isClosed()){
-      printf("Lost connection with server\n");
-      return 1;
-    }
+    //// ------------------
+    //// NETWORK CONNECTION
+    //// ------------------
+    /*    if(s_socket.isClosed()){
+	  printf("Lost connection with server\n");
+	  return 1;
+	  }
+     */
+    //  socketSet.wait(0);
+    // if(s_socket.hasEvent())
+    // {
+    //Do appropriate things with server message
+    //    string msg = "DEFAULT";
+    //    int bytes = s_socket.readString(msg,256);
+    //    cerr << "Message Received:" << msg << " | " << bytes << endl;
 
-    socketSet.wait(0);
-    if(s_socket.hasEvent())
-    {
-      //Do appropriate things with server message
-      string msg = "DEFAULT";
-      int bytes = s_socket.readString(msg,256);
-      cerr << "Message Received:" << msg << " | " << bytes << endl;
+    //   netProcess(msg);
+    //  }//if- socket has event
 
-      netProcess(msg);
-    }//if- socket has event
-
-//// -------
-//// DRAWING
-//// -------
+    //// -------
+    //// DRAWING
+    //// -------
     //Make window white instead of black - obselete
     SDL_FillRect(screen, &screen->clip_rect, SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF));
 
@@ -1025,14 +1022,14 @@ int main ( int argc, char* argv[] )
       pieces[i]->show();
 
     ghostPiece.show();
-
+/*
     apply_surface(896, 0, textBack, screen, NULL);
     //Show the chat input
     chat.setSurface(TTF_RenderText_Solid(font, chat.getText().c_str(), textColor));
     chat.show_centered();
-
+*/
     //print side chat bar
-    printChat();
+  //  printChat();
 
     //Show the highlights
     for(unsigned int i=0;i<spots.size();i++){
