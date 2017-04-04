@@ -678,6 +678,8 @@ void pieceSpawn(string name, int x, int y, int team)
   c->board[x][y] = newPiece;
   c->it++;
 
+  cerr << "[DEBUG] Piece spawned:" << name << " " << x << " " << y << " " << team << endl;
+
 }
 
 
@@ -766,6 +768,16 @@ void netProcess(string msg)
   }//If- MOVE
   else if(cmd == "PLAC")//PLAC <piece> <piece id> <x> <y> <owner>
   {
+    string name = snip(msg,index);
+    string s_x = snip(msg,index);
+    string s_y = snip(msg,index);
+    string s_team = snip(msg,index);
+
+    int x = atoi(s_x.c_str());
+    int y = atoi(s_y.c_str());
+    int team = atoi(s_team.c_str());
+
+    pieceSpawn(name, x, y, team);
 
   }//If- PLAC
   else if(cmd == "REMV")//REMV <x> <y>
