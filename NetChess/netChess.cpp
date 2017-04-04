@@ -743,6 +743,8 @@ void netProcess(string msg)
     c->board[pieces[a_index]->getSpot().x][pieces[a_index]->getSpot().y] = pieces[a_index];
     lastMove.push_back(pieces[a_index]->getSpot());
 
+    //Level up the piece
+    piece[a_index]->levelUp();
 
     //Remove ghost image
     ghostPiece.setPos(-64,-64);
