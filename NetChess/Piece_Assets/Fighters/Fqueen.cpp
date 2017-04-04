@@ -3,7 +3,7 @@
 FQueen::FQueen(int x, int y, int it) : Queen(x, y, it)
 {
     m_level = false;
-    degub_name = "fqueen";
+    debug_name = "fqueen";
 }
 
 FQueen::~FQueen()
