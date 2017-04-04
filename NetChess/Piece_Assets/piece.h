@@ -22,6 +22,8 @@ class Piece {
 	SDL_Surface* sheet;
 	int owner;
 
+	bool m_level = false;
+
     public:
         
         Piece(int x, int y, int num); //Constructor
@@ -57,6 +59,8 @@ class Piece {
 
         virtual vector<coord> validSpots(Chess* c) { };
 	string getCaptCmd(coord spot);
+
+	void levelUp() { m_level = true; }
 
 };
 #endif
