@@ -586,6 +586,10 @@ void generatePieces()
   cerr << "[DEBUG] Done generating boards" << endl;
 }
 
+//----------------------
+//   Chat functions
+//----------------------
+
 void printChat()
 {
   for(unsigned int i=0;i<history.size();i++){
@@ -609,6 +613,75 @@ void addChat(string msg)
     history.pop_back();
   }
 }
+
+//----------------------
+// Networking functions
+//----------------------
+
+//Im so sorry this is in here.
+void pieceSpawn(string name, int x, int y, int team)
+{
+  //PLAC <name> <x> <y> <team>
+  int coordx = x*64;
+  int coordy = y*64;
+  Piece* newPiece = NULL;
+  if(name == "pawn")
+  {
+    char dir; //S-N-E-W | 0-1-2-3
+    if(team == 0)
+      dir = 'S';
+    else if(team == 1)
+      dir = 'N';
+    else if(team == 2)
+      dir = 'E';
+    else if(team == 3)
+      dir = 'W';
+    newPiece = new Pawn(coordx, coordy, c->it, dir);
+    newPiece->setClip(CLIP_PAWN);
+  }
+  else if(name == "rook")
+  {
+    newPiece = new Rook(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_ROOK);
+  }
+  else if(name == "bishop")
+  {
+    newPiece = new Bishop(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_BISHOP);
+  }
+  else if(name == "knight")
+  {
+    newPiece = new Knight(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_KNIGHT);
+  }
+  else if(name == "king")
+  {
+    newPiece = new King(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_KING);
+  }
+  else if(name == "queen")
+  {
+    newPiece = new Queen(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_QUEEN);
+  }
+  else if(name == "")
+  {
+
+  }
+  else
+  {
+    cerr << "Invalid spawning parameters:" << name << x << y << team << endl;
+    return;
+  }
+  newPiece->setTeam(team);
+  pieces.push_back(newPiece);
+  c->board[x][y] = newPiece;
+  c->it++;
+
+}
+
+
+
 
 //Connect to the server Whoaaaa!
 int connectServer(int argc, char* argv[])
@@ -649,7 +722,7 @@ string snip(string msg, int &cursor)
   return ret;
 }
 
-//Processes messages from the server
+//Processes messages from the server, necessary for game to work
 void netProcess(string msg)
 {
   stringstream ss;
@@ -697,20 +770,14 @@ void netProcess(string msg)
   }//If- PLAC
   else if(cmd == "REMV")//REMV <x> <y>
   {
-    int x, y;
+    int number;
 
-    string s_x = snip(msg,index);
-    string s_y = snip(msg,index);
-    x = atoi(s_x.c_str());
-    y = atoi(s_y.c_str());
+    string s_num = snip(msg,index);
+    number = atoi(s_num.c_str());
 
     //Find and remove piece
     for(unsigned int i=0;i<pieces.size();i++){
-      int px, py;
-      Piece* dummy = pieces[i];
-      px = dummy->getSpot().x;
-      py = dummy->getSpot().y;
-      if(x == px && y == py){
+      if(pieces[i]->getNum() == number){
 	pieces[i] = pieces[pieces.size()-1];
 	pieces.pop_back();
 	break;
@@ -744,7 +811,7 @@ void netProcess(string msg)
     lastMove.push_back(pieces[a_index]->getSpot());
 
     //Level up the piece
-    piece[a_index]->levelUp();
+    pieces[a_index]->levelUp();
 
     //Remove ghost image
     ghostPiece.setPos(-64,-64);
