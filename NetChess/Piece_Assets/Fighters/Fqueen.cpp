@@ -12,7 +12,7 @@ FQueen::~FQueen()
 string FQueen::Move(coord newpos)
 {
   stringstream ss;
-  ss << "[MOVE-Queen]" << newpos.x << "," << newpos.y << endl;
+  ss << "MOVE " getNum() << " " << newpos.x*64 << " " << newpos.y*64 << " ~";
   return ss.str();
 }
 
