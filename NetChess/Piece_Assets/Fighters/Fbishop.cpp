@@ -32,7 +32,7 @@ vector<coord> FBishop::validSpots(Chess* c)
 	    seek.x++;
 	  	if(seek.y < 0 or seek.x > 13)//Out of bounds
 		    break;
-		if(c->validspots[seek.x][seek.y] == 0)//valid spot
+		if(c->validspots[seek.x][seek.y] == 0)//invalid spot
 			break;
 		if(c->board[seek.x][seek.y] != NULL){
 		    if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
@@ -41,10 +41,34 @@ vector<coord> FBishop::validSpots(Chess* c)
 		      	ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 		  		captureMap[seek] = ss.str();
 		      	break;
+			
 		    }
 		    else
 		   	  break;
 		  }
+		if(c->board[seek.x+1][seek.y+1] != NULL)//check diagonally South/East one spot.
+		{
+			if(c->board[seek.x+1][seek.y+1]->getTeam() != getTeam())
+			{
+				spots.push_back(seek);
+				ss.str("");
+				ss << "CAPT " << getNum() << " " << c->board[seek.x+1][seek.y+1]->getNum() << " ~";
+				captureMap[seek] = ss.str();
+				break;	
+			}		
+		}
+
+		if(c->board[seek.x-1][seek.y-1] != NULL)//Check diagonally North/West one spot.
+		{
+			if(c->board[seek.x-1][seek.y-1]->getTeam() != getTeam())
+			{
+				spots.push_back(seek);
+				ss.str("");
+				ss << "CAPT " << getNum() << " " << c->board[seek.x-1][seek.y-1]->getNum() << " ~";
+				captureMap[seek] = ss.str();
+				break;
+			}
+		}
 		  spots.push_back(seek);
 		}
 
@@ -56,18 +80,43 @@ vector<coord> FBishop::validSpots(Chess* c)
     if(seek.y < 0 or seek.x > 13)//Out of bounds
       break;
     if(c->validspots[seek.x][seek.y] == 0)//valid spot
-      break;
+    	break;
     if(c->board[seek.x][seek.y] != NULL){
-      if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
-        spots.push_back(seek);
-    ss.str("");
-        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-    captureMap[seek] = ss.str();
-        break;
+      	if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
+       	 	spots.push_back(seek);
+		    ss.str("");
+        	ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+		    captureMap[seek] = ss.str();
+        	break;
       }
-      else
-    break;
+     	else
+		    break;
     }
+
+	if(c->board[seek.x+1][seek.y-1] != NULL)//Check diagonally North/East one spot
+	{
+		if(c->board[seek.x+1][seek.y-1]->getTeam() != getTeam()
+		{
+			spots.push_back(seek);
+			ss.str("");
+			ss << "CAPT " << getNum() << " " << c->board[seek.x+1][seek.y-1]->getNum() << " ~";
+			captureMap[seek] = ss.str();
+			break; 
+		}
+	}
+
+	if(c->board[seek.x-1][seek.y+1] != NULL)//Check diagonally South/West one spot
+	{
+		if(c->board[seek.x-1][seek.y+1]->getTeam() != getTeam()
+		{
+			spots.push_back(seek);
+			ss.str("");
+			ss << "CAPT " << getNum() << " " << c->board[seek.x-1][seek.y+1]->getNum() << " ~";
+			capturemap[seek] = ss.str();
+			break;
+		}
+	}
+
     spots.push_back(seek);
   }
 
@@ -83,16 +132,41 @@ vector<coord> FBishop::validSpots(Chess* c)
     if(c->validspots[seek.x][seek.y] == 0)//valid spot
       break;
     if(c->board[seek.x][seek.y] != NULL){
-      if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
-        spots.push_back(seek);
-    ss.str("");
-        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-    captureMap[seek] = ss.str();
-        break;
-      }
-      else
-    break;
+    	if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
+        	spots.push_back(seek);
+		    ss.str("");
+   			ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+		    captureMap[seek] = ss.str();
+        	break;
+      	}
+      	else
+		    break;
     }
+
+	if(c->board[seek.x-1][seek.y+1] != NULL)//Check diagonally South/West one spot
+	{
+		if(c->board[seek.x-1][seek.y+1]->getTeam() != getTeam())
+		{
+			spots.push_back(seek);
+			ss.str("");
+			ss << "CAPT " << getNum() << " " << c->board[seek.x-1][seek.y=1]->getNum() << " ~";
+			captureMap[seek] = ss.str();
+			break;
+		}
+	}
+
+	if(c->board[seek.x+1][seek.y-1] != NULL)//Check diagonally North/West one spot
+	{
+		if(c->board[seek.x+1][seek.y-1]->getTeam() != getTeam())
+		{
+			spots.push_back(seek);
+			ss.str("");
+			ss << "CAPT " << getNum() << " " << c->board[seek.x+1][seek.y-1]->getNum() << " ~";
+			captureMap[seek] = ss.str();
+			break;
+		}
+	}
+
     spots.push_back(seek);
   }
 
@@ -102,20 +176,45 @@ vector<coord> FBishop::validSpots(Chess* c)
     seek.y++;
     seek.x--;
     if(seek.y < 0 or seek.x > 13)//Out of bounds
-      break;
+      	break;
     if(c->validspots[seek.x][seek.y] == 0)//valid spot
-      break;
+      	break;
     if(c->board[seek.x][seek.y] != NULL){
-      if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
-        spots.push_back(seek);
-    ss.str("");
-        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-    captureMap[seek] = ss.str();
-        break;
-      }
-      else
-    break;
+      	if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
+        	spots.push_back(seek);
+		    ss.str("");
+	        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+    		captureMap[seek] = ss.str();
+        	break;
+      	}
+      	else
+		    break;
     }
+
+	if(c->board[seek.x+1][seek.y+1] != NULL)//Checking diagonally South/East one spot.
+	{
+		if(c->board[seek.x+1][seek.y+1]->getTeam() != getTeam())
+		{
+			spots.push_back(seek);
+			ss.str("");
+			ss << "CAPT " << getNum() << " " << c->board[seek.x+1][seek.y+1]->getNum() << " ~";
+			captureMap[seek] = ss.str();
+			break;
+		}
+	}	
+	
+	if(c->board[seek.x-1][seek.y-1] != NULL)//Checking diagonally North/West one spot.
+	{
+		if(c->board[seek.x-1][seek.y-1]->getTeam() != getTeam())
+		{
+			spots.push_back(seek);			
+			ss.str("");
+			ss << "CAPT " << getNum() << " " << c->board[seek.x-1][seek.y]->getNum() << " ~";
+			captureMap[seek] = ss.str();
+			break;
+		}
+	}
+
     spots.push_back(seek);
   }
   return spots;
