@@ -101,6 +101,7 @@ vector<coord> Queen::validSpots(Chess* c)
         spots.push_back(seek);
 	ss.str("");
         ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	ss << "PLAC " << "queen " << getSpot().x << " " << getSpot().y << " " << getTeam()-1 << " ~";
 	captureMap[seek] = ss.str();
         break;
       }
