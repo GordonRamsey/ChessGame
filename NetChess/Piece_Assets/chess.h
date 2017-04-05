@@ -59,7 +59,6 @@ class Chess
     void removePiece(int num);
     bool isValid(int x, int y);
     bool isCapturable(coord a_spot, coord d_spot);
-    void spawn(string name, int x, int y);
 
 
 };

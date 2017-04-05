@@ -37,24 +37,3 @@ bool Chess::isCapturable(coord a_spot, coord d_spot)
 
   return true;
 }
-
-void Chess::spawn(string name, int x, int y)
-{
-  Piece* newPiece = NULL;
-  //Just an example
-  if(name == "pawn"){
-   // newPiece = new Pawn(x,y,it);
-    board[x][y] = newPiece;
-  }
-  else if(name == "wall"){
-   // newPiece = new Wall(x,y,it);
-    terrain[x][y] = newPiece;
-  }
-  else{
-    cerr << "Invalid spawn object:" << name << endl;
-    return;
-  }
-
-  //Update our local chess iterator
-  it++;
-}
