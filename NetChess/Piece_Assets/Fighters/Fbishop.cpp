@@ -12,7 +12,7 @@ FBishop::~FBishop()
 string FBishop::Move(coord newpos)
 {
 	stringstream ss;
-	ss << "MOVE " << newpos.x << "," << newpos.y << endl;
+	ss << "MOVE " << getNum() << " " <<newpos.x*64 << " " << newpos.y*64 << " ~" ;
 	return ss.str();
 }
 
