@@ -3,7 +3,7 @@
 FQueen::FQueen(int x, int y, int it) : Queen(x, y, it)
 {
     m_level = false;
-    degub_name = "fqueen";
+    debug_name = "fqueen";
 }
 
 FQueen::~FQueen()
@@ -12,7 +12,7 @@ FQueen::~FQueen()
 string FQueen::Move(coord newpos)
 {
   stringstream ss;
-  ss << "[MOVE-Queen]" << newpos.x << "," << newpos.y << endl;
+  ss << "MOVE " getNum() << " " << newpos.x*64 << " " << newpos.y*64 << " ~";
   return ss.str();
 }
 

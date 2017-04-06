@@ -135,6 +135,12 @@ int main(int argc, char* argv[])
 	      for(int j=0;j<sockets.size(); ++j)
 		sockets[j].writeString(msg);
 	    }
+	    else if(strncmp(msg.c_str(), "PLAC", 4) == 0)
+	    {//This shouldnt be coming in on its own, assume a move or capt has been sent already
+	      cerr << "PLAC Command recognized" << endl;
+	      for(int j=0;j<sockets.size(); ++j)
+		sockets[j].writeString(msg);
+	    }
 	    else //Anything that isnt a command
 	    {
 	      cerr << "Sending unknown message to clients:" << msg << endl;
