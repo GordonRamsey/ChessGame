@@ -94,8 +94,6 @@ void Piece::setAlpha(int x)
 
 string Piece::getCaptCmd(coord spot)
 {
-  //cerr <<  captureMap.find(spot)->second << endl;
-  //return captureMap.find(spot).second;
-  //return "FUCK";
   return captureMap[spot];
 }
+

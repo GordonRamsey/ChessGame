@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS= -c -Wall
+CFLAGS= -c -Wall -g
 LDFLAGS= -lSDL -lSDL_image -lSDL_ttf -g
 COMMON_SOURCES=./Net_Assets/Socket.cpp ./Net_Assets/SocketSet.cpp  ./Text_Assets/StringInput.cpp
 PIECE_SOURCES = ./Piece_Assets/piece.cpp ./Piece_Assets/rook.cpp ./Piece_Assets/knight.cpp ./Piece_Assets/bishop.cpp ./Piece_Assets/queen.cpp ./Piece_Assets/king.cpp ./Piece_Assets/pawn.cpp ./Piece_Assets/chess.cpp 

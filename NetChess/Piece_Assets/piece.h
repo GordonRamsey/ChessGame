@@ -59,7 +59,14 @@ class Piece {
     virtual vector<coord> validSpots(Chess* c) { };
 	string getCaptCmd(coord spot);
 
+	//Used for special unit commands
+	int clicks = 0;
+	int getClicks() { return clicks; }
+    virtual string processClicks(vector<coord> clickedOn, Chess* c) 
+      { return "DEFAULT"; }
+
 	void levelUp() { m_level = true; }
+	int isLevel() { return m_level; }
 
 };
 #endif

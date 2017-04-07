@@ -11,5 +11,7 @@ class Knight : public Piece
     ~Knight();
     virtual string Move(coord newpos);
     virtual vector<coord> validSpots(Chess* c);
+    virtual string processClicks(vector<coord> clickedOn, Chess* c) 
+      { return "DEFAULT"; }
 };
 #endif

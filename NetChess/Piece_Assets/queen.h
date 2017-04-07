@@ -11,5 +11,7 @@ class Queen : public Piece
     ~Queen();
     virtual string Move(coord newpos);
     virtual vector<coord> validSpots(Chess* c);
+
+    virtual string processClicks(vector<coord> clickedOn, Chess* c);
 };
 #endif

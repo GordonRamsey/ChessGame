@@ -71,6 +71,12 @@ SDL_Rect clips[24];
 //Our "held" piece
 Piece* selected = NULL;
 
+//Rightclicking for faction specials
+bool click_mode = false;
+int click_count = 0;
+int click_cap = 0;
+vector<coord> clicked_spots;
+
 //All of the game board pieces
 vector<Piece*> pieces;
 
@@ -130,16 +136,17 @@ void Piece::handle_events()
   //If were clicked on
   if(event.type == SDL_MOUSEBUTTONDOWN)
   {
-    if(event.button.button == SDL_BUTTON_LEFT)
-    {
-      x = event.button.x;
-      y = event.button.y;
+    x = event.button.x;
+    y = event.button.y;
 
-      if ((x > box.x) && (x < box.x + box.w) && (y > box.y) && (y < box.y + box.h))
-      {
-	//Make sure its our piece
-	if(player_num == owner){
-	  if(selected == NULL){
+    if ((x > box.x) && (x < box.x + box.w) && (y > box.y) && (y < box.y + box.h))
+    {
+      if(player_num == owner){
+	if(selected == NULL){
+	  if(event.button.button == SDL_BUTTON_LEFT)
+	  {
+
+	    //Make sure its our piece
 	    this->setClip(this->getClip()+6);
 	    selected = this;
 	    cerr << "Its our piece" << endl;
@@ -150,10 +157,22 @@ void Piece::handle_events()
 	    {
 	      cerr << "(" << spots[i].x << "," << spots[i].y << ")" << endl;
 	    }
-	  }
-	}//if its our piece
-      }//if its really us
-    }
+	  }//If left click
+	  else if(event.button.button == SDL_BUTTON_RIGHT)
+	  {
+	    if(this->clicks == 0)
+	      return;
+
+	    click_cap = this->clicks;
+	    click_count = 0;
+	    click_mode = true;
+	    selected = this;
+	    cerr << "[DEBUG] Entered Altclick mode for piece:" << click_cap << ":" << this->debug_name << endl;
+
+	  }//if right click
+	}//if its a piece we own
+      }//if theres no piece already selected
+    }//If we clicked on this actual piece
   }
 }
 
@@ -933,8 +952,48 @@ int main ( int argc, char* argv[] )
       if(game_start){ 
 	if(event.type == SDL_MOUSEBUTTONDOWN)
 	{
+	  if(event.button.button == SDL_BUTTON_RIGHT && click_mode)
+	  {//Elegant exit for alt-click mode
+	    selected = NULL;
+	    clicked_spots.clear();
+	    click_mode = false;
+	    cerr << "[DEBUG] Click mode exited" << endl;
+	    continue;
+	  }
+	  else if(click_mode)//If we are clicking for an ability
+	  {
+	    x = event.button.x - event.button.x%SPRITE_SIZE;
+	    y = event.button.y - event.button.y%SPRITE_SIZE;
+	    coord newCoord;
+	    newCoord.x = x;
+	    newCoord.y = y;
 
-	  if(selected != NULL){//If we are trying to move a piece
+	    clicked_spots.push_back(newCoord);
+	    click_count++;
+
+	    if(click_count == click_cap){
+	      click_cap = 0;
+	      click_count = 0;
+	      click_mode = false;
+
+	      string result = selected->processClicks(clicked_spots, c);
+	      selected = NULL;
+	      clicked_spots.clear();
+	      
+	      if(result == "ERROR"){
+		cerr << "[ERROR] Something was clicked incorrectly" << endl;
+		continue;
+	      }
+	      if(result == "DEFAULT"){
+		cerr << "[ERROR] DEFAULT return value" << endl;
+		continue;
+	      }
+
+	      s_socket.writeString(result);
+	      continue;
+	    }
+	  }
+	  else if(selected != NULL){//If we are trying to move a piece
 	    bool failure = false; //set to true if the move is invalid
 
 	    x = event.button.x;
@@ -1036,7 +1095,7 @@ int main ( int argc, char* argv[] )
 	  }
 	}
 	//HOLD MOUSE MOTION
-	else if(event.type == SDL_MOUSEMOTION && selected != NULL)
+	else if(event.type == SDL_MOUSEMOTION && selected != NULL && !click_mode)
 	{
 	  int x = event.motion.x-32;
 	  int y = event.motion.y-32;
@@ -1114,12 +1173,20 @@ int main ( int argc, char* argv[] )
     printChat();
 
     //Show the highlights
-    for(unsigned int i=0;i<spots.size();i++){
+    for(unsigned int i=0;i<spots.size();i++){//Show blue spots
       apply_surface(spots[i].x*64, spots[i].y*64, highlight, screen, &clips[0]);
-      for(unsigned int j=0; j<pieces.size(); j++){
+      for(unsigned int j=0; j<pieces.size(); j++){//Show red spots
 	if((pieces[j]->getSpot().x == spots[i].x) and (pieces[j]->getSpot().y == spots[i].y))
 	  apply_surface(spots[i].x*64, spots[i].y*64, highlight, screen, &clips[1]);
       }
+    }
+
+    //Show highlight for click mode
+    if(click_mode){
+      int m_x, m_y;
+      m_x = event.motion.x - event.motion.x%SPRITE_SIZE;
+      m_y = event.motion.y - event.motion.y%SPRITE_SIZE;
+      apply_surface(m_x, m_y, highlight, screen, &clips[3]);
     }
 
     //Update screen

@@ -1,15 +1,35 @@
 #include "queen.h"
 
 Queen::Queen(int x, int y, int it) : Piece(x, y, it)
-{}
+{
+  debug_name = "queen";
+  clicks = 1;
+}
 
 Queen::~Queen()
-{}
+{
+
+}
 
 string Queen::Move(coord newpos)
 {
+  return "DEFAULT";
+}
+
+string Queen::processClicks(vector<coord> clickedOn, Chess* c)
+{
   stringstream ss;
-  ss << "[MOVE-Queen]" << newpos.x << "," << newpos.y << endl;
+  ss.str("");
+  
+  if(clickedOn.size() != 1)
+    return "ERROR";
+
+  int num = c->board[clickedOn[0].x/64][clickedOn[0].y/64]->getNum();
+  if(num == getNum())
+    return "ERROR";
+  ss << "MOVE " << c->board[getSpot().x][getSpot().y]->getNum() << " " << clickedOn[0].x << " " << clickedOn[0].y << " ~";
+  ss << "REMV " << num << " ~";
+
   return ss.str();
 }
 
