@@ -4,8 +4,7 @@
 class FBishop : public Bishop
 {
 	private:
-		bool m_level;
-
+        string debug_name;
 	public:
 		FBishop(int x, int y, int it);
 		~FBishop();

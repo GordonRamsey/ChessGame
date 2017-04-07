@@ -2,8 +2,7 @@
 
 FKnight::FKnight(int x, int y, int it) : Knight(x, y, it)
 {
-    m_level = false;
-    debug_name = "fknight";
+    debug_name = "Fknight";
 }
 
 FKnight::~FKnight()
@@ -12,13 +11,13 @@ FKnight::~FKnight()
 string FKnight::Move(coord newpos)
 {
     stringstream ss;
-    ss << "MOVE " << getNum() << " " << newpos.x*64 << " " << newpos.y*64 << " ~";
+    ss << "MOVE " << getNum() << " " << newpos.x*64 << " " << newpos.y*64 << " ~"; //Puts the MOVE protocol into a string stream and returns it
     return ss.str();
 }
 
 vector<coord> FKnight::validSpots(Chess* c)
 {   
-  if(!m_level)
+  if(!m_level) //If we are still a basic piece, use the basic knight move validation
     return Knight::validSpots(c);
   //c->board
   coord seek;
@@ -29,42 +28,42 @@ vector<coord> FKnight::validSpots(Chess* c)
   seek = getSpot();
   seek.y-=2;
   seek.x-=1;
-  if(seek.x >= 0 && seek.y >= 0)
+  if(seek.x >= 0 && seek.y >= 0) //Checks boundaries
   {
-    if(c->validspots[seek.x][seek.y] != 0)//valid spot
+    if(c->validspots[seek.x][seek.y] != 0) //Checks if valid spot
     {
-      if(c->board[seek.x][seek.y] != NULL)
+      if(c->board[seek.x][seek.y] != NULL) //Checks for a piece
       {
-        if(c->board[seek.x][seek.y]->getTeam() != getTeam())
+        if(c->board[seek.x][seek.y]->getTeam() != getTeam()) //Checks for enemy piece
         {
-          spots.push_back(seek);
+          spots.push_back(seek); //Add as a valid spot
 	      ss.str("");
-          ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-          if((c->validspots[(seek.x)-1][seek.y] != 0) && (c->board[(seek.x)-1][seek.y] != NULL))
+          ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~"; //Add the capture protocol to the capture map
+          if((c->validspots[(seek.x)-1][seek.y] != 0) && (c->board[(seek.x)-1][seek.y] != NULL)) //Checks if the NEXT spot over in the attacking cardinal direction is valid and if there's a piece there
           {
-            if(c->board[(seek.x)-1][seek.y]->getTeam != getTeam())
+            if(c->board[(seek.x)-1][seek.y]->getTeam != getTeam()) //If it's an enemy piece add the REMV protocol to 'ss' which already has the CAPT protocol
               ss << "REMV " << c->board[(seek.x)-1][seek.y]->getNum() << " ~";
           }
-	      captureMap[seek] = ss.str();
+	      captureMap[seek] = ss.str(); //Put the CAPT and REMV protocol into the captureMap
         }
       }
       else
       {
-        spots.push_back(seek);
-        if((c->validspots[(seek.x)-1][seek.y] != 0) && (c->board[(seek.x)-1][seek.y] != NULL))
+        spots.push_back(seek); //Empty spot, add it
+        if((c->validspots[(seek.x)-1][seek.y] != 0) && (c->board[(seek.x)-1][seek.y] != NULL)) //Checks if the NEXT spot over in the moving cardinal direction is valid and if there's a piece there
         {
-            if(c->board[(seek.x)-1][seek.y]->getTeam != getTeam())
+            if(c->board[(seek.x)-1][seek.y]->getTeam != getTeam()) //If it's an enemy piece, add the MOVE protocol and the REMV protocol to a stringstream
             {
                 seek.x -= 1;
                 ss.str("");
-                ss << "MOVE " << getNum() << " " << ((seek.x)+1)*64 << " " << seek.y*64 << " ~";
+                ss << "MOVE " << getNum() << " " << ((seek.x)+1)*64 << " " << seek.y*64 << " ~"; //Always multiply the X and Y MOVE protocol coordinates by 64.
                 ss << "REMV " << c->board[seek.x][seek.y]->getNum() << " ~";
-                captureMap[seek] = ss.str();
+                captureMap[seek] = ss.str(); //Put the MOVE and REMV protolcol into the captureMap
             }
         }
       }
     }
-  }
+  } //This process is repeated 7 more times following this section, each in a unique direction
 
     //Check North/East
     seek = getSpot();

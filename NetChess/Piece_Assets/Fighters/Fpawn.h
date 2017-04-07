@@ -4,8 +4,7 @@
 class FPawn : public Pawn
 {
 	private:
-		bool m_level;
-
+        string debug_name;
 	publice:
 		FPawn(int x, int y, int it);
 		~FPawn();

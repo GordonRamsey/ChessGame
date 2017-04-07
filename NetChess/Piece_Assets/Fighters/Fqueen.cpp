@@ -2,8 +2,7 @@
 
 FQueen::FQueen(int x, int y, int it) : Queen(x, y, it)
 {
-    m_level = false;
-    debug_name = "fqueen";
+    debug_name = "Fqueen";
 }
 
 FQueen::~FQueen()

@@ -2,7 +2,7 @@
 
 FRook::FRook(int x, int y, int it) : Rook(x, y, it)
 {
-	m_level = false;
+    debug_name = "Frook";
 }
 
 FRook::~FRook()

@@ -5,8 +5,7 @@
 class FKnight : public Knight 
 {
   private:
-    bool m_level;
-
+        string debug_name
   public:
     FKnight(int x, int y, int it);
     ~FKnight();

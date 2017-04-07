@@ -2,8 +2,7 @@
 
 FPawn::FPawn(int x, int y, int it) : Pawn(x, y, it)
 {
-	m_level = false;
-	debug_name = "fpawn";
+	debug_name = "Fpawn";
 }
 
 FPawn::~FPawn()

@@ -5,13 +5,12 @@
 class FKing : public King
 {
   private:
-	bool m_level;
 	string debug_name;
   public:
     FKing(int x, int y, int it);
     ~FKing();
     string Move(coord newpos);
     vector<coord> validSpots(Chess* c);
-	void MoraleBoost(Chess* c);
+	void Morale(Chess* c);
 };
 #endif

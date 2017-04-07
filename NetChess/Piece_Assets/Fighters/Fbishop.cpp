@@ -2,8 +2,7 @@
 
 FBishop::FBishop(int x, int y, int it) : Bishop(x, y, it)
 {
-	m_level = false;
-	debug_name = "fbishop";
+	debug_name = "Fbishop";
 }
 
 FBishop::~FBishop()
