@@ -7,13 +7,11 @@
 
 using namespace std;
 
-
 const int SCREEN_WIDTH = 1216;
 const int SCREEN_HEIGHT = 896;
 const int SCREEN_BPP = 32;
-
-int SPRITE_SIZE = 64;
-int BORDER_SIZE = 0;
+const int SPRITE_SIZE = 64;
+const int BORDER_SIZE = 0;
 
 //Slices for our sprite sheet
 int CLIP_PAWN = 0;
@@ -31,11 +29,11 @@ int CLIP_QUEEN_SELECT = 10;
 int CLIP_KING_SELECT = 11;
 
 int CLIP_PAWN_UPGRADE = 12;
-int CLIP_ROOK_UPGRAD = 13;
-int CLIP_BISHOP_UPGRAD = 14;
-int CLIP_KNIGHT_UPGRAD = 15;
-int CLIP_QUEEN_UPGRAD = 16;
-int CLIP_KING_UPGRAD = 17;
+int CLIP_ROOK_UPGRADE = 13;
+int CLIP_BISHOP_UPGRADE= 14;
+int CLIP_KNIGHT_UPGRADE = 15;
+int CLIP_QUEEN_UPGRADE = 16;
+int CLIP_KING_UPGRADE = 17;
 
 int CLIP_PAWN_UPGRADE_SELECT = 18;
 int CLIP_ROOK_UPGRADE_SELECT = 19;
@@ -50,7 +48,7 @@ SocketSet socketSet;
 
 //The surfaces
 SDL_Surface *board = NULL;
-SDL_Surface *pieceSheet1 = NULL; //Player1s sprite sheet
+SDL_Surface *pieceSheet1 = NULL; //Player 1
 SDL_Surface *pieceSheet2 = NULL; //Player 2
 SDL_Surface *pieceSheet3 = NULL; //Player 3
 SDL_Surface *pieceSheet4 = NULL; //Player 4
@@ -60,9 +58,9 @@ SDL_Surface *screen = NULL;
 
 //Text input
 SDL_Surface *text = NULL;
-//side bar chat
 SDL_Surface *sideBar = NULL;
 SDL_Surface *textBack = NULL;
+
 //The event structure
 SDL_Event event;
 
@@ -79,7 +77,6 @@ vector<coord> clicked_spots;
 
 //All of the game board pieces
 vector<Piece*> pieces;
-
 
 int player_num; //Our player num relevent to the current game
 bool game_start = false;
@@ -239,44 +236,15 @@ void set_clips()
   clips[CLIP_ROOK_SELECT].w = SPRITE_SIZE;
   clips[CLIP_ROOK_SELECT].h = SPRITE_SIZE;
 
-  //clip range for the bishop
-  clips[CLIP_BISHOP].x = SPRITE_SIZE*2;
-  clips[CLIP_BISHOP].y = 0;
-  clips[CLIP_BISHOP].w = SPRITE_SIZE;
-  clips[CLIP_BISHOP].h = SPRITE_SIZE;
+  clips[CLIP_ROOK_UPGRADE].x = SPRITE_SIZE;
+  clips[CLIP_ROOK_UPGRADE].y = SPRITE_SIZE*2;
+  clips[CLIP_ROOK_UPGRADE].w = SPRITE_SIZE;
+  clips[CLIP_ROOK_UPGRADE].h = SPRITE_SIZE;
 
-  clips[CLIP_BISHOP_SELECT].x = SPRITE_SIZE*2;
-  clips[CLIP_BISHOP_SELECT].y = SPRITE_SIZE;
-  clips[CLIP_BISHOP_SELECT].w = SPRITE_SIZE;
-  clips[CLIP_BISHOP_SELECT].h = SPRITE_SIZE;
-
-  //clip range for the knight
-  clips[CLIP_KNIGHT].x = SPRITE_SIZE*3;
-  clips[CLIP_KNIGHT].y = 0;
-  clips[CLIP_KNIGHT].w = SPRITE_SIZE;
-  clips[CLIP_KNIGHT].h = SPRITE_SIZE;
-
-  clips[CLIP_KNIGHT_SELECT].x = SPRITE_SIZE*3;
-  clips[CLIP_KNIGHT_SELECT].y = SPRITE_SIZE;
-  clips[CLIP_KNIGHT_SELECT].w = SPRITE_SIZE;
-  clips[CLIP_KNIGHT_SELECT].h = SPRITE_SIZE;
-
-  //clip range for the queen
-  clips[CLIP_QUEEN].x = SPRITE_SIZE*4;
-  clips[CLIP_QUEEN].y = 0;
-  clips[CLIP_QUEEN].w = SPRITE_SIZE;
-  clips[CLIP_QUEEN].h = SPRITE_SIZE;
-
-  //clip range for the rook
-  clips[CLIP_ROOK].x = SPRITE_SIZE;
-  clips[CLIP_ROOK].y = 0;
-  clips[CLIP_ROOK].w = SPRITE_SIZE;
-  clips[CLIP_ROOK].h = SPRITE_SIZE;
-
-  clips[CLIP_ROOK_SELECT].x = SPRITE_SIZE;
-  clips[CLIP_ROOK_SELECT].y = SPRITE_SIZE;
-  clips[CLIP_ROOK_SELECT].w = SPRITE_SIZE;
-  clips[CLIP_ROOK_SELECT].h = SPRITE_SIZE;
+  clips[CLIP_ROOK_UPGRADE_SELECT].x = SPRITE_SIZE;
+  clips[CLIP_ROOK_UPGRADE_SELECT].y = SPRITE_SIZE*3;
+  clips[CLIP_ROOK_UPGRADE_SELECT].w = SPRITE_SIZE;
+  clips[CLIP_ROOK_UPGRADE_SELECT].h = SPRITE_SIZE;
 
   //clip range for the bishop
   clips[CLIP_BISHOP].x = SPRITE_SIZE*2;
@@ -289,6 +257,16 @@ void set_clips()
   clips[CLIP_BISHOP_SELECT].w = SPRITE_SIZE;
   clips[CLIP_BISHOP_SELECT].h = SPRITE_SIZE;
 
+  clips[CLIP_BISHOP_UPGRADE].x = SPRITE_SIZE*2;
+  clips[CLIP_BISHOP_UPGRADE].y = SPRITE_SIZE*2;
+  clips[CLIP_BISHOP_UPGRADE].w = SPRITE_SIZE;
+  clips[CLIP_BISHOP_UPGRADE].h = SPRITE_SIZE;
+
+  clips[CLIP_BISHOP_UPGRADE_SELECT].x = SPRITE_SIZE*2;
+  clips[CLIP_BISHOP_UPGRADE_SELECT].y = SPRITE_SIZE*3;
+  clips[CLIP_BISHOP_UPGRADE_SELECT].w = SPRITE_SIZE;
+  clips[CLIP_BISHOP_UPGRADE_SELECT].h = SPRITE_SIZE;
+
   //clip range for the knight
   clips[CLIP_KNIGHT].x = SPRITE_SIZE*3;
   clips[CLIP_KNIGHT].y = 0;
@@ -299,6 +277,16 @@ void set_clips()
   clips[CLIP_KNIGHT_SELECT].y = SPRITE_SIZE;
   clips[CLIP_KNIGHT_SELECT].w = SPRITE_SIZE;
   clips[CLIP_KNIGHT_SELECT].h = SPRITE_SIZE;
+
+  clips[CLIP_KNIGHT_UPGRADE].x = SPRITE_SIZE*3;
+  clips[CLIP_KNIGHT_UPGRADE].y = SPRITE_SIZE*2;
+  clips[CLIP_KNIGHT_UPGRADE].w = SPRITE_SIZE;
+  clips[CLIP_KNIGHT_UPGRADE].h = SPRITE_SIZE;
+  
+  clips[CLIP_KNIGHT_UPGRADE_SELECT].x = SPRITE_SIZE*3;
+  clips[CLIP_KNIGHT_UPGRADE_SELECT].y = SPRITE_SIZE*3;
+  clips[CLIP_KNIGHT_UPGRADE_SELECT].w = SPRITE_SIZE;
+  clips[CLIP_KNIGHT_UPGRADE_SELECT].h = SPRITE_SIZE;
 
   //clip range for the queen
   clips[CLIP_QUEEN].x = SPRITE_SIZE*4;
@@ -311,6 +299,16 @@ void set_clips()
   clips[CLIP_QUEEN_SELECT].w = SPRITE_SIZE;
   clips[CLIP_QUEEN_SELECT].h = SPRITE_SIZE;
 
+  clips[CLIP_QUEEN_UPGRADE].x = SPRITE_SIZE*4;
+  clips[CLIP_QUEEN_UPGRADE].y = SPRITE_SIZE*2;
+  clips[CLIP_QUEEN_UPGRADE].w = SPRITE_SIZE;
+  clips[CLIP_QUEEN_UPGRADE].h = SPRITE_SIZE;
+
+  clips[CLIP_QUEEN_UPGRADE_SELECT].x = SPRITE_SIZE*4;
+  clips[CLIP_QUEEN_UPGRADE_SELECT].y = SPRITE_SIZE*3;
+  clips[CLIP_QUEEN_UPGRADE_SELECT].w = SPRITE_SIZE;
+  clips[CLIP_QUEEN_UPGRADE_SELECT].h = SPRITE_SIZE;
+
   //clip range for the king
   clips[CLIP_KING].x = SPRITE_SIZE*5;
   clips[CLIP_KING].y = 0;
@@ -322,6 +320,15 @@ void set_clips()
   clips[CLIP_KING_SELECT].w = SPRITE_SIZE;
   clips[CLIP_KING_SELECT].h = SPRITE_SIZE;
 
+  clips[CLIP_KING_UPGRADE].x = SPRITE_SIZE*5;
+  clips[CLIP_KING_UPGRADE].y = SPRITE_SIZE*2;
+  clips[CLIP_KING_UPGRADE].w = SPRITE_SIZE;
+  clips[CLIP_KING_UPGRADE].h = SPRITE_SIZE;
+
+  clips[CLIP_KING_UPGRADE_SELECT].x = SPRITE_SIZE*5;
+  clips[CLIP_KING_UPGRADE_SELECT].y = SPRITE_SIZE*3;
+  clips[CLIP_KING_UPGRADE_SELECT].w = SPRITE_SIZE;
+  clips[CLIP_KING_UPGRADE_SELECT].h = SPRITE_SIZE;
 }
 
 SDL_Surface *load_image( std::string filename )
@@ -379,35 +386,39 @@ bool load_files()
   pieceSheet3 = load_image("Graphic_Assets/basicPieces643.png");
   pieceSheet4 = load_image("Graphic_Assets/basicPieces644.png");
   ghostSheet = load_image("Graphic_Assets/ghostPieces64.png");
-  textBack = load_image("Graphic_Assets/textBackground.png");
-
   highlight = load_image("Graphic_Assets/highlight.png");
-
+  textBack = load_image("Graphic_Assets/textBackground.png");
   font = TTF_OpenFont("Graphic_Assets/edosz.ttf",28);
-  if(font == NULL)
-  {  
-    cerr << "no font" << endl;
-    return false;
-  }
-
-  if(board == NULL)
-  {
+  
+  if(board == NULL){
     cerr << "No board" << endl;
     return false;
   }
-  else if (pieceSheet1 == NULL || pieceSheet2 == NULL || pieceSheet3 == NULL || pieceSheet4 == NULL)
-  {
+
+  else if (pieceSheet1 == NULL || pieceSheet2 == NULL || pieceSheet3 == NULL || pieceSheet4 == NULL){
     cerr << "No piece sheets" << endl;
     return false;
   }
-  else if(ghostSheet == NULL)
+
+  else if(ghostSheet == NULL){
+    cerr << "No ghost sheet" << endl;
     return false;
+  }
+  
+  else if(highlight == NULL){
+    cerr << "No hightlight sheet" << endl;
+    return false;
+  }
+  
+  else if(textBack == NULL){
+    cerr << "No textBack sheet" << endl;
+    return false;
+  }
 
-  cerr << "Sheet1:" << pieceSheet1 << endl;
-  cerr << "Sheet2:" << pieceSheet2 << endl;
-  cerr << "Sheet3:" << pieceSheet3 << endl;
-  cerr << "Sheet4:" << pieceSheet4 << endl;
-
+  else if(font == NULL){  
+    cerr << "no font" << endl;
+    return false;
+  }
 
   return true;
 }
@@ -421,6 +432,7 @@ void clean_up()
   SDL_FreeSurface(pieceSheet4);
   SDL_FreeSurface(ghostSheet);
   SDL_FreeSurface(highlight);
+  SDL_FreeSurface(textBack);
   SDL_Quit();
 }
 
