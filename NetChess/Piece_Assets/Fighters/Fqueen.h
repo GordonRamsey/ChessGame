@@ -5,8 +5,7 @@
 class Queen : public Piece
 {
   private:
-    bool m_level;
-
+    string debug_name;
   public:
     Queen(int x, int y, int it);
     ~Queen();
