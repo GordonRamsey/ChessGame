@@ -142,18 +142,15 @@ void Piece::handle_events()
 	if(selected == NULL){
 	  if(event.button.button == SDL_BUTTON_LEFT)
 	  {
-
-	    //Make sure its our piece
 	    this->setClip(this->getClip()+6);
 	    selected = this;
-	    cerr << "Its our piece" << endl;
-	    cerr << "Selected:" << selected->debug_name << endl;
+	    cerr << "Selected:" << selected->debug_name << ":" << selected->getNum() << endl;
+	    captureMap.clear();
 	    spots = validSpots(c);
-	    cerr << "[DEBUG] Piece clicekd on, valid spots:" << endl;
-	    for(unsigned int i=0;i<spots.size();i++)
-	    {
-	      cerr << "(" << spots[i].x << "," << spots[i].y << ")" << endl;
-	    }
+	    cerr << "Capturable spots:" << captureMap.size() << endl;
+	    for (map<coord,string>::iterator it=captureMap.begin(); it!=captureMap.end(); ++it)
+	    cerr << it->first.x << "," << it->first.y << " => " << it->second << '\n';
+
 	  }//If left click
 	  else if(event.button.button == SDL_BUTTON_RIGHT)
 	  {
@@ -282,7 +279,7 @@ void set_clips()
   clips[CLIP_KNIGHT_UPGRADE].y = SPRITE_SIZE*2;
   clips[CLIP_KNIGHT_UPGRADE].w = SPRITE_SIZE;
   clips[CLIP_KNIGHT_UPGRADE].h = SPRITE_SIZE;
-  
+
   clips[CLIP_KNIGHT_UPGRADE_SELECT].x = SPRITE_SIZE*3;
   clips[CLIP_KNIGHT_UPGRADE_SELECT].y = SPRITE_SIZE*3;
   clips[CLIP_KNIGHT_UPGRADE_SELECT].w = SPRITE_SIZE;
@@ -389,7 +386,7 @@ bool load_files()
   highlight = load_image("Graphic_Assets/highlight.png");
   textBack = load_image("Graphic_Assets/textBackground.png");
   font = TTF_OpenFont("Graphic_Assets/edosz.ttf",28);
-  
+
   if(board == NULL){
     cerr << "No board" << endl;
     return false;
@@ -404,12 +401,12 @@ bool load_files()
     cerr << "No ghost sheet" << endl;
     return false;
   }
-  
+
   else if(highlight == NULL){
     cerr << "No hightlight sheet" << endl;
     return false;
   }
-  
+
   else if(textBack == NULL){
     cerr << "No textBack sheet" << endl;
     return false;
@@ -612,7 +609,7 @@ void generatePieces()
       pieces.push_back(newPiece);
     }
   }
-  
+
   c->it = 65;
   cerr << "[DEBUG] Done generating boards" << endl;
 }
@@ -709,7 +706,7 @@ void pieceSpawn(string name, int x, int y, int team)
   c->board[x][y] = newPiece;
   c->it++;
 
-  cerr << "[DEBUG] Piece spawned:" << name << " " << x << " " << y << " " << team << endl;
+  cerr << "[DEBUG] Piece spawned:" << name << " " << x << " " << y << " " << team << " " << c->it - 1 << endl;
 
 }
 
@@ -758,6 +755,7 @@ string snip(string msg, int &cursor)
 //Processes messages from the server, necessary for game to work
 void netProcess(string msg)
 {
+  bool display = true;
   stringstream ss;
   int index;
   index = msg.find(" ");
@@ -811,7 +809,7 @@ void netProcess(string msg)
     pieceSpawn(name, x, y, team);
 
   }//If- PLAC
-  else if(cmd == "REMV")//REMV <x> <y>
+  else if(cmd == "REMV")//REMV <piece num>
   {
     int number;
 
@@ -821,6 +819,10 @@ void netProcess(string msg)
     //Find and remove piece
     for(unsigned int i=0;i<pieces.size();i++){
       if(pieces[i]->getNum() == number){
+	//Need to perform a strange check on c->board bc the movement commands come in first
+	//If our removed piece still exists on the board, make its board spot NULL
+	if(c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y]->getNum() == pieces[i]->getNum())
+	  c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y] = NULL;
 	pieces[i] = pieces[pieces.size()-1];
 	pieces.pop_back();
 	break;
@@ -882,6 +884,8 @@ void netProcess(string msg)
     ghostPiece.setClip(i_clip-6);
     ghostPiece.setPos(i_x,i_y);
 
+    display = false;
+
   }//If- HOLD
   else if(cmd == "GMSG")//GMSG <player> <msg>
   {
@@ -910,6 +914,12 @@ void netProcess(string msg)
     cerr << "[ERROR] corrupted message received:" << msg << endl;
     cerr << "[ERROR] Ending:" << end << endl;
   }
+
+  //Debug printing
+  if(display)
+    cerr << "[DEBUG] Message Received:" << msg << " | " << msg.length() << endl;
+
+
   if(msg.size() > (unsigned)index)//If message is greater than ending char ~
   {
     //cerr << "[LONG STRING] Recursing with string:" << msg.substr(index,msg.size()-index) << endl;;
@@ -946,16 +956,16 @@ int main ( int argc, char* argv[] )
   set_clips();
   generatePieces();
 
-//// --------------
-//// MAIN GAME LOOP
-//// --------------
+  //// --------------
+  //// MAIN GAME LOOP
+  //// --------------
   //While the user hasn't quit
   while(quit == false)
   {
 
-//// ----------
-//// SDL EVENTS
-//// ----------
+    //// ----------
+    //// SDL EVENTS
+    //// ----------
     //While theres an event to handle
     while(SDL_PollEvent(&event))
     {
@@ -991,7 +1001,7 @@ int main ( int argc, char* argv[] )
 	      string result = selected->processClicks(clicked_spots, c);
 	      selected = NULL;
 	      clicked_spots.clear();
-	      
+
 	      if(result == "ERROR"){
 		cerr << "[ERROR] Something was clicked incorrectly" << endl;
 		continue;
@@ -1014,6 +1024,7 @@ int main ( int argc, char* argv[] )
 	    x = x - x%SPRITE_SIZE;
 	    y = y - y%SPRITE_SIZE;
 
+	    cerr << "Clicked Spot:" << x << "," << y << " | " << x/64 << "," << y/64 << endl;
 	    //Send command
 	    stringstream ss;
 	    ss.str("");
@@ -1023,14 +1034,16 @@ int main ( int argc, char* argv[] )
 	    bool capture = false;
 	    for(unsigned int i=0;i<pieces.size();i++){
 	      if(pieces[i]->getPos().x == x && pieces[i]->getPos().y == y){//If mouse spot is occupied
-		//ss << "CAPT " << selected->getNum() << " " << pieces[i]->getNum() << " ~";
-		ss.str(selected->getCaptCmd(pieces[i]->getSpot()));
 		//If we find our own selected piece, ignore it	
 		if(pieces[i]->getSpot().x == selected->getSpot().x && 
 		    pieces[i]->getSpot().y == selected->getSpot().y){
 		  failure = true;
 		  break;
 		}
+		cerr << "[DEBUG] Fetching command from spot:" << pieces[i]->getSpot().x << "," << pieces[i]->getSpot().y << endl;
+		coord help = { x/64, y/64 };
+		cerr << "[DEBUG] Command:" << selected->getCaptCmd(help) << endl;
+		ss.str(selected->getCaptCmd(pieces[i]->getSpot()));
 		//check if the piece is allowed to be captured at all (For the sake of golems and such
 		failure = !(c->isCapturable(selected->getSpot(), pieces[i]->getSpot()));//IsCapturable returns true if its a good case, we dont want failure to be true if its a good case
 		capture = true;
@@ -1038,7 +1051,6 @@ int main ( int argc, char* argv[] )
 	      }
 	    }
 	    //MOVE check
-	    //Send move command
 	    if(!capture)
 	    {  
 	      ss << "MOVE " << selected->getNum() << " " << x << " " << y << " ~";
@@ -1048,13 +1060,12 @@ int main ( int argc, char* argv[] )
 	    coord spot;
 	    spot.x = x / 64;
 	    spot.y = y / 64;
-	    cerr << "Spot:" << spot.x << "," << spot.y << endl;
 
 	    //[Engine] Perform check 
 	    //Acquire valid spots
 	    bool valid = false;
 	    for(unsigned int i=0;i<spots.size();i++){//check if our spot is valid
-	      cerr << "(" << spots[i].x << "," << spots[i].y << ")" << endl;
+	      //cerr << "(" << spots[i].x << "," << spots[i].y << ")" << endl;
 	      if(spots[i].x == spot.x && spots[i].y == spot.y)
 		valid = true;
 	    }
@@ -1068,10 +1079,9 @@ int main ( int argc, char* argv[] )
 	      selected = NULL;
 	      continue;
 	    }
-	    
+
 	    //FINALLY- We know our move is valid, perform faction checks
-	    cerr << "Testing polymprphism:" << endl;
-	    cerr << "Move message:" << selected->Move(spot) << "Piece name:" << selected->debug_name << endl;
+	    cerr << "Move message from selected piece:" << selected->Move(spot) << " | Piece name:" << selected->debug_name << endl;
 	    //TODO: This is where we perform faction checks through Move and *isCapturable
 	    string icing;//Icing on the MOVE/CAPT cake
 	    icing = selected->Move(spot); 
@@ -1152,7 +1162,6 @@ int main ( int argc, char* argv[] )
       //Do appropriate things with server message
       string msg = "DEFAULT";
       int bytes = s_socket.readString(msg,256);
-      cerr << "Message Received:" << msg << " | " << bytes << endl;
 
       netProcess(msg);
     }//if- socket has event

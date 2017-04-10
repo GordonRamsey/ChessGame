@@ -56,6 +56,8 @@ class Piece {
 
 	void setAlpha(int x);
 
+
+        //Used in Moving and Capturing
     virtual vector<coord> validSpots(Chess* c) { };
 	string getCaptCmd(coord spot);
 
@@ -65,8 +67,11 @@ class Piece {
     virtual string processClicks(vector<coord> clickedOn, Chess* c) 
       { return "DEFAULT"; }
 
-	void levelUp() { m_level = true; }
 	int isLevel() { return m_level; }
+	void levelUp() { 
+	  if(!isLevel())
+	    setClip(getClip()+12);
+	  m_level = true; }
 
 };
 #endif
