@@ -24,9 +24,18 @@ string Queen::processClicks(vector<coord> clickedOn, Chess* c)
   if(clickedOn.size() != 1)
     return "ERROR";
 
+  //Need to validate spots before acting on them
+  if(c->board[clickedOn[0].x/64][clickedOn[0].y/64] == NULL)
+    return "ERROR"; 
+
   int num = c->board[clickedOn[0].x/64][clickedOn[0].y/64]->getNum();
+  
+  //Are we clicking on ourself?
   if(num == getNum())
     return "ERROR";
+
+  //Everything checks out, fashion a command to make the move
+  //setClip(1);
   ss << "MOVE " << c->board[getSpot().x][getSpot().y]->getNum() << " " << clickedOn[0].x << " " << clickedOn[0].y << " ~";
   ss << "REMV " << num << " ~";
 
@@ -44,7 +53,7 @@ vector<coord> Queen::validSpots(Chess* c)
   seek = getSpot();
   while(true){//Checking untill 1. hit board limit 2. hit a piece
     seek.y--;
-    if(seek.y < 0 or seek.x > 13)//Out of bounds
+    if(seek.y < 0)//Out of bounds
       break;
     if(c->validspots[seek.x][seek.y] == 0)//valid spot
       break;
@@ -89,7 +98,7 @@ vector<coord> Queen::validSpots(Chess* c)
   seek = getSpot();
   while(true){//Checking untill 1. hit board limit 2. hit a piece
     seek.x++;
-    if(seek.y < 0 or seek.x > 13)//Out of bounds
+    if(seek.x > 13)//Out of bounds
       break;
     if(c->validspots[seek.x][seek.y] == 0)//valid spot
       break;
@@ -112,7 +121,7 @@ vector<coord> Queen::validSpots(Chess* c)
   while(true){//Checking untill 1. hit board limit 2. hit a piece
     seek.y++;
     seek.x++;
-    if(seek.y < 0 or seek.x > 13)//Out of bounds
+    if(seek.y > 13 or seek.x > 13)//Out of bounds
       break;
     if(c->validspots[seek.x][seek.y] == 0)//valid spot
       break;
@@ -121,7 +130,7 @@ vector<coord> Queen::validSpots(Chess* c)
         spots.push_back(seek);
 	ss.str("");
         ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-	ss << "PLAC " << "queen " << getSpot().x << " " << getSpot().y << " " << getTeam()-1 << " ~";
+	ss << "PLAC " << "queen " << getSpot().x << " " << getSpot().y << " " << getTeam()-1 << " ~";//Make a friendly queen!
 	captureMap[seek] = ss.str();
         break;
       }
@@ -135,7 +144,7 @@ vector<coord> Queen::validSpots(Chess* c)
   seek = getSpot();
   while(true){//Checking untill 1. hit board limit 2. hit a piece
     seek.y++;
-    if(seek.y < 0 or seek.x > 13)//Out of bounds
+    if(seek.y > 13)//Out of bounds
       break;
     if(c->validspots[seek.x][seek.y] == 0)//valid spot
       break;
@@ -158,7 +167,7 @@ vector<coord> Queen::validSpots(Chess* c)
   while(true){//Checking untill 1. hit board limit 2. hit a piece
     seek.y++;
     seek.x--;
-    if(seek.y < 0 or seek.x > 13)//Out of bounds
+    if(seek.y > 13 or seek.x < 0)//Out of bounds
       break;
     if(c->validspots[seek.x][seek.y] == 0)//valid spot
       break;
@@ -180,7 +189,7 @@ vector<coord> Queen::validSpots(Chess* c)
   seek = getSpot();
   while(true){//Checking untill 1. hit board limit 2. hit a piece
     seek.x--;
-    if(seek.y < 0 or seek.x > 13)//Out of bounds
+    if(seek.x < 0)//Out of bounds
       break;
     if(c->validspots[seek.x][seek.y] == 0)//valid spot
       break;
@@ -203,7 +212,7 @@ vector<coord> Queen::validSpots(Chess* c)
   while(true){//Checking untill 1. hit board limit 2. hit a piece
     seek.y--;
     seek.x--;
-    if(seek.y < 0 or seek.x > 13)//Out of bounds
+    if(seek.y < 0 or seek.x < 0)//Out of bounds
       break;
     if(c->validspots[seek.x][seek.y] == 0)//valid spot
       break;

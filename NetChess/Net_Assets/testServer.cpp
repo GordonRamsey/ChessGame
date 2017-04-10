@@ -32,6 +32,8 @@ void nextPlayer()
   current_player++;
   if(current_player == 5)
     current_player = 1;
+
+  cerr << "[CURRENT PLAYER] = " << current_player << endl;
 }
 
 int main(int argc, char* argv[])

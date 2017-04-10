@@ -20,10 +20,16 @@ struct coord {
     else 
       return false;
   }
+
+  coord& operator=(const coord& a){
+    x = a.x;
+    y = a.y;
+    return *this;
+  }
+
 };
 
 class Piece;
-
 
 class Chess
 {
