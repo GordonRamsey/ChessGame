@@ -11,9 +11,9 @@ struct coord {
   bool operator<(const coord& a) const{
     return ((x < a.x) || (x == a.x && y < a.y));
   }
-  bool operator==(const coord& a) const{
+  /*bool operator==(const coord& a) const{
     return (x == a.x && y == a.y);
-  }
+  }*/
 };
 
 class Piece;
