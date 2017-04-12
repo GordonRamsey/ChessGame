@@ -144,12 +144,12 @@ void Piece::handle_events()
 	  {
 	    this->setClip(this->getClip()+6);
 	    selected = this;
-	    cerr << "Selected:" << selected->debug_name << ":" << selected->getNum() << endl;
+	    cerr << "Selected:" << selected->debug_name << " : " << selected->getNum() << endl;
 	    captureMap.clear();
 	    spots = validSpots(c);
 	    cerr << "Capturable spots:" << captureMap.size() << endl;
-	    for (map<coord,string>::iterator it=captureMap.begin(); it!=captureMap.end(); ++it)
-	    cerr << it->first.x << "," << it->first.y << " => " << it->second << '\n';
+	    for(auto it : captureMap)
+	      cerr << it.first.x << "," << it.first.y << " => " << it.second << '\n';
 
 	  }//If left click
 	  else if(event.button.button == SDL_BUTTON_RIGHT)

@@ -48,6 +48,7 @@ vector<coord> Queen::validSpots(Chess* c)
   coord seek;
   vector<coord> spots;
   stringstream ss;
+  pair <map<coord,string>::iterator,bool> debug;
 
   //Check North
   seek = getSpot();
@@ -59,11 +60,16 @@ vector<coord> Queen::validSpots(Chess* c)
       break;
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
+        cerr << "[QUEEN] Pushing capt. spot: " << seek.x << "," << seek.y << endl;
         spots.push_back(seek);
 	ss.str("");
         ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 	captureMap[seek] = ss.str();
-        break;
+//        debug = captureMap.insert(pair<coord,string>(seek, ss.str()));
+//	if(debug.second == false)
+//	  cerr << "element aleady exists" << endl;
+
+	break;
       }
       else
 	break;
@@ -82,11 +88,16 @@ vector<coord> Queen::validSpots(Chess* c)
       break;
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
-        spots.push_back(seek);
-	    ss.str("");
+        cerr << "[QUEEN] Pushing capt. spot: " << seek.x << "," << seek.y << endl;
+	spots.push_back(seek);
+	ss.str("");
         ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-	    captureMap[seek] = ss.str();
-        break;
+	captureMap[seek] = ss.str();
+        //debug = captureMap.insert(pair<coord,string>(seek, ss.str()));
+	//if(debug.second == false)
+	//  cerr << "element aleady exists" << endl;
+        
+	break;
       }
       else
 	    break;
@@ -104,10 +115,14 @@ vector<coord> Queen::validSpots(Chess* c)
       break;
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
+        cerr << "[QUEEN] Pushing capt. spot: " << seek.x << "," << seek.y << endl;
         spots.push_back(seek);
 	ss.str("");
         ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 	captureMap[seek] = ss.str();
+        //debug = captureMap.insert(pair<coord,string>(seek, ss.str()));
+	//if(debug.second == false)
+	//  cerr << "element aleady exists" << endl;
         break;
       }
       else
@@ -127,12 +142,17 @@ vector<coord> Queen::validSpots(Chess* c)
       break;
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
+        cerr << "[QUEEN] Pushing capt. spot: " << seek.x << "," << seek.y << endl;
         spots.push_back(seek);
 	ss.str("");
         ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 	ss << "PLAC " << "queen " << getSpot().x << " " << getSpot().y << " " << getTeam()-1 << " ~";//Make a friendly queen!
 	captureMap[seek] = ss.str();
-        break;
+        //debug = captureMap.insert(pair<coord,string>(seek, ss.str()));
+	//if(debug.second == false)
+	//  cerr << "element aleady exists" << endl;
+        
+	break;
       }
       else
 	break;
@@ -150,10 +170,14 @@ vector<coord> Queen::validSpots(Chess* c)
       break;
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
+        cerr << "[QUEEN] Pushing capt. spot: " << seek.x << "," << seek.y << endl;
         spots.push_back(seek);
 	ss.str("");
         ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 	captureMap[seek] = ss.str();
+        //debug = captureMap.insert(pair<coord,string>(seek, ss.str()));
+	//if(debug.second == false)
+	//  cerr << "element aleady exists" << endl;
         break;
       }
       else
@@ -173,9 +197,13 @@ vector<coord> Queen::validSpots(Chess* c)
       break;
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
+        cerr << "[QUEEN] Pushing capt. spot: " << seek.x << "," << seek.y << endl;
         spots.push_back(seek);
 	ss.str("");
         ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+        //debug = captureMap.insert(pair<coord,string>(seek, ss.str()));
+	//if(debug.second == false)
+	//  cerr << "element aleady exists" << endl;
 	captureMap[seek] = ss.str();
         break;
       }
@@ -195,9 +223,13 @@ vector<coord> Queen::validSpots(Chess* c)
       break;
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
+        cerr << "[QUEEN] Pushing capt. spot: " << seek.x << "," << seek.y << endl;
         spots.push_back(seek);
 	ss.str("");
         ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+        //debug = captureMap.insert(pair<coord,string>(seek, ss.str()));
+	//if(debug.second == false)
+	//  cerr << "element aleady exists" << endl;
 	captureMap[seek] = ss.str();
         break;
       }
@@ -218,9 +250,13 @@ vector<coord> Queen::validSpots(Chess* c)
       break;
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
+        cerr << "[QUEEN] Pushing capt. spot: " << seek.x << "," << seek.y << endl;
         spots.push_back(seek);
 	ss.str("");
         ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+        //debug = captureMap.insert(pair<coord,string>(seek, ss.str()));
+	//if(debug.second == false)
+	//  cerr << "element aleady exists" << endl;
 	captureMap[seek] = ss.str();
         break;
       }

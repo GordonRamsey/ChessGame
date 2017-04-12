@@ -8,25 +8,12 @@ using namespace std;
 struct coord {
   int x;
   int y;
-  bool operator>(const coord& other) const{
-    if(x > other.x)
-      return true;
-    else 
-      return false;
+  bool operator<(const coord& a) const{
+    return ((x < a.x) || (x == a.x && y < a.y));
   }
-  bool operator<(const coord& other) const{
-    if(x < other.x)
-      return true;
-    else 
-      return false;
-  }
-
-  coord& operator=(const coord& a){
-    x = a.x;
-    y = a.y;
-    return *this;
-  }
-
+  /*bool operator==(const coord& a) const{
+    return (x == a.x && y == a.y);
+  }*/
 };
 
 class Piece;

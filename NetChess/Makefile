@@ -23,4 +23,6 @@ $(CLIENT_EXECUTABLE): $(COMMON_OBJECTS) $(CLIENT_OBJECTS) $(PIECE_OBJECTS)
 	$(CC) $(CFLAGS) $< -o $@
 
 clean:	
-	rm *o $(CLIENT_EXECUTABLE)
+	rm *o $(CLIENT_EXECUTABLE) \
+	./Piece_Assets/*.o
+  	
