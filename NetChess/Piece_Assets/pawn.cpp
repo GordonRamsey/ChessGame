@@ -20,8 +20,10 @@ string Pawn::Move(coord newpos)
   if(first_move == true)
     first_move = false;
   stringstream ss;
-  ss << "[MOVE-PAWN]" << newpos.x << "," << newpos.y << endl;
+  ss << "PLAC pawn " << getSpot().x << " " << getSpot().y << " " << getTeam()-1 << " ~";
   return ss.str();
+  
+  return "DEFAULT";
 }
 
 vector<coord> Pawn::validSpots(Chess* c)
