@@ -21,23 +21,22 @@ class Piece {
 	int num; //Piece number, for network purposes
 	SDL_Surface* sheet;
 	int owner;
-
 	bool m_level = false;
 
     public:
         
-        Piece(int x, int y, int num); //Constructor
-        ~Piece();//Deconstructor
-        Piece& operator=(const Piece& other);
+    Piece(int x, int y, int num); //Constructor
+    ~Piece();//Deconstructor
+    Piece& operator=(const Piece& other);
         
 	string debug_name;
 	map <coord,string> captureMap;//postions that we can capture
         
 	coord getPos() const;
-        void setPos(int x, int y);
+    void setPos(int x, int y);
         
 	//Called to give a network message to spawn other things
-        virtual string Move(coord newpos) { return "DEFAULT MOVE"; }
+    virtual string Move(coord newpos) { return "DEFAULT MOVE"; }
 
 	//SDL Functions
 	void handle_events();
@@ -57,10 +56,22 @@ class Piece {
 
 	void setAlpha(int x);
 
-        virtual vector<coord> validSpots(Chess* c) { };
+
+        //Used in Moving and Capturing
+    virtual vector<coord> validSpots(Chess* c) { };
 	string getCaptCmd(coord spot);
 
-	void levelUp() { m_level = true; }
+	//Used for special unit commands
+	int clicks = 0;
+	int getClicks() { return clicks; }
+    virtual string processClicks(vector<coord> clickedOn, Chess* c) 
+      { return "DEFAULT"; }
+
+	int isLevel() { return m_level; }
+	void levelUp() { 
+	  if(!isLevel())
+	    setClip(getClip()+12);
+	  m_level = true; }
 
 };
 #endif

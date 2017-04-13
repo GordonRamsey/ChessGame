@@ -32,6 +32,8 @@ void nextPlayer()
   current_player++;
   if(current_player == 5)
     current_player = 1;
+
+  cerr << "[CURRENT PLAYER] = " << current_player << endl;
 }
 
 int main(int argc, char* argv[])
@@ -132,6 +134,12 @@ int main(int argc, char* argv[])
 	    }//HOLD comparison
 	    else if(strncmp(msg.c_str(), "GMSG", 4) == 0)
 	    {//simple handshake and relay this one
+	      for(int j=0;j<sockets.size(); ++j)
+		sockets[j].writeString(msg);
+	    }
+	    else if(strncmp(msg.c_str(), "PLAC", 4) == 0)
+	    {//This shouldnt be coming in on its own, assume a move or capt has been sent already
+	      cerr << "PLAC Command recognized" << endl;
 	      for(int j=0;j<sockets.size(); ++j)
 		sockets[j].writeString(msg);
 	    }

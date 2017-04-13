@@ -6,6 +6,7 @@ Pawn::Pawn(int x, int y, int it, char state) : Piece(x, y, it)
 {
   dir = state;
   debug_name = "pawn";
+  clicks = 0;
   // :)
 }
 
@@ -137,19 +138,23 @@ vector<coord> Pawn::validSpots(Chess* c)
   {
     if(dir == 'N'){
       seek.y -= 2;
-      spots.push_back(seek);
+      if(c->board[seek.x][seek.y] == NULL)
+        spots.push_back(seek);
     }
     if(dir == 'S'){
       seek.y += 2;
-      spots.push_back(seek);
+      if(c->board[seek.x][seek.y] == NULL)
+	spots.push_back(seek);
     }
     if(dir == 'E'){
       seek.x += 2;
-      spots.push_back(seek);
+      if(c->board[seek.x][seek.y] == NULL)
+	spots.push_back(seek);
     }
     if(dir == 'W'){
       seek.x -= 2;
-      spots.push_back(seek);
+      if(c->board[seek.x][seek.y] == NULL)
+	spots.push_back(seek);
     }
   }
   return spots;

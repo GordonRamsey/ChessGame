@@ -10,5 +10,7 @@ class King : public Piece
     ~King();
     string Move(coord newpos);
     vector<coord> validSpots(Chess* c);
+    virtual string processClicks(vector<coord> clickedOn, Chess* c) 
+      { return "DEFAULT"; }
 };
 #endif

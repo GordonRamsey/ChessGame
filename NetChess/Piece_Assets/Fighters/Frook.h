@@ -4,8 +4,7 @@
 class FRook : public Rook
 {
 	private:
-		bool m_level;
-
+        string debug_name;
 	public:
 		FRook(int x, int y, int it);
 		~FRook();

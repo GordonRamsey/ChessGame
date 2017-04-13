@@ -2,7 +2,6 @@
 
 Bishop::Bishop(int x, int y, int it) : Piece(x, y, it)
 {
-  // :)
   debug_name = "bishop";
 }
 
@@ -43,7 +42,7 @@ vector<coord> Bishop::validSpots(Chess* c)
         break;
       }
       else
-	break;
+		break;
     }
     spots.push_back(seek);
   }

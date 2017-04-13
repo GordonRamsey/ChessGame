@@ -8,22 +8,15 @@ using namespace std;
 struct coord {
   int x;
   int y;
-  bool operator>(const coord& other) const{
-    if(x > other.x)
-      return true;
-    else 
-      return false;
+  bool operator<(const coord& a) const{
+    return ((x < a.x) || (x == a.x && y < a.y));
   }
-  bool operator<(const coord& other) const{
-    if(x < other.x)
-      return true;
-    else 
-      return false;
-  }
+  /*bool operator==(const coord& a) const{
+    return (x == a.x && y == a.y);
+  }*/
 };
 
 class Piece;
-
 
 class Chess
 {
@@ -59,7 +52,6 @@ class Chess
     void removePiece(int num);
     bool isValid(int x, int y);
     bool isCapturable(coord a_spot, coord d_spot);
-    void spawn(string name, int x, int y);
 
 
 };
