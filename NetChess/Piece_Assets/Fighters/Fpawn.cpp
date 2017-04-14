@@ -527,3 +527,4 @@ vector<coord> FPawn::validSpots(Chess* c)
       }
     }
   }
+}
