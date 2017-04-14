@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS= -c
+CFLAGS= -c -g
 LDFLAGS=
 COMMON_SOURCES=Socket.cpp SocketSet.cpp
 SERVER_SOURCES=testServer.cpp

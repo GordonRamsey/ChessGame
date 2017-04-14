@@ -6,6 +6,7 @@
 struct player{
   Socket sock;
   int number;
+  int team = -1;
 };
 
 Socket listener;
@@ -34,6 +35,11 @@ void nextPlayer()
     current_player = 1;
 
   cerr << "[CURRENT PLAYER] = " << current_player << endl;
+  ss.str("");
+  ss << "TURN " << current_player << " ~";
+
+  for(int j=0;j<sockets.size(); ++j)
+    sockets[j].writeString(ss.str());
 }
 
 int main(int argc, char* argv[])
@@ -78,79 +84,103 @@ int main(int argc, char* argv[])
 	  if(!sockets[i].isClosed())
 	  {
 	    cerr << msg << "\n";
+	    
+	    //Snip large messages so each command can be processed individually
+	    //Necessary incase of HOLD clobbering
+	    vector<string> snipped;
+	    int cur = 0;
+	    while(cur < msg.length()){
+	      int snip = msg.find("~",cur);
+	      if(snip == string::npos)//If message is invalid/corrupted do not process it
+		break;
+	      snipped.push_back(msg.substr(cur,snip-cur+1));
+	      cur = snip + 1;
+	    }
 
-	    if(strncmp(msg.c_str(),"MOVE",4) == 0)
+	    for(unsigned int s=0;s<snipped.size();s++)
 	    {
-	      bool success = false;
-	      cerr << "MOVE command recognized" << endl;
-	      //Check if its correct player, relay info and next player if it is
-	      for(int j=0;j<players.size(); ++j){
-		if(players[j].sock == sockets[i])
-		  if(players[j].number == current_player){
-		    for(int j=0;j<sockets.size(); ++j)
-		      sockets[j].writeString(msg);//Relay
-		    nextPlayer();
-		    success = true;
-		    break;
-		  }
-	      }
-	      if(!success)
-		cerr << "Command received from invalid player" << endl;
-	    }// MOVE Comparison
-	    else if(strncmp(msg.c_str(),"CAPT",4) == 0)
-	    {
-	      //Check if its correct player, relay info and next player if it is
-	      bool success = false;
-	      cerr << "CAPT command recognized" << endl;
-	      for(int j=0;j<players.size(); ++j){
-		if(players[j].sock == sockets[i])
-		  if(players[j].number == current_player){
-		    for(int j=0;j<sockets.size(); ++j)
-		      sockets[j].writeString(msg);
-		    nextPlayer();
-		    success = true;
-		    break;
-		  }
-	      }
-	      if(!success)
-		cerr << "Command received from invalid player" << endl;
-	    }//CAPT comparison
-	    //HOLD method test
-	    else if(strncmp(msg.c_str(), "HOLD",4) == 0)
-	    {
-	      bool success = false;
-	      cerr << "HOLD command recognized" << endl;
-	      for(int j=0;j<players.size(); ++j){
-		if(players[j].sock == sockets[i])
-		  if(players[j].number == current_player){
-		    for(int j=0;j<sockets.size(); ++j)
-		      sockets[j].writeString(msg);
-		    success = true;
-		    break;
-		  }
+	      msg = snipped[s];
+	      cerr << "Processing message:" << msg << endl;
+
+	      if(strncmp(msg.c_str(),"MOVE",4) == 0)
+	      {
+		bool success = false;
+		cerr << "MOVE command recognized" << endl;
+		//Check if its correct player, relay info and next player if it is
+		for(int j=0;j<players.size(); ++j){
+		  if(players[j].sock == sockets[i])
+		    if(players[j].number == current_player){
+		      for(int j=0;j<sockets.size(); ++j)
+			sockets[j].writeString(msg);//Relay
+		      nextPlayer();
+		      success = true;
+		      break;
+		    }
+		}
 		if(!success)
-		  cerr << "Command received from invalid player" << endl;	    
+		  cerr << "Command received from invalid player" << endl;
+	      }// MOVE Comparison
+	      else if(strncmp(msg.c_str(),"CAPT",4) == 0)
+	      {
+		//Check if its correct player, relay info and next player if it is
+		bool success = false;
+		cerr << "CAPT command recognized" << endl;
+		for(int j=0;j<players.size(); ++j){
+		  if(players[j].sock == sockets[i])
+		    if(players[j].number == current_player){
+		      for(int j=0;j<sockets.size(); ++j)
+			sockets[j].writeString(msg);
+		      nextPlayer();
+		      success = true;
+		      break;
+		    }
+		}
+		if(!success)
+		  cerr << "Command received from invalid player" << endl;
+	      }//CAPT comparison
+	      //HOLD method test
+	      else if(strncmp(msg.c_str(), "HOLD",4) == 0)
+	      {
+		bool success = false;
+		cerr << "HOLD command recognized" << endl;
+		for(int j=0;j<players.size(); ++j){
+		  if(players[j].sock == sockets[i])
+		    if(players[j].number == current_player){
+		      for(int j=0;j<sockets.size(); ++j)
+			sockets[j].writeString(msg);
+		      success = true;
+		      break;
+		    }
+		  if(!success)
+		    cerr << "Command received from invalid player" << endl;	    
+		}
+	      }//HOLD comparison
+	      else if(strncmp(msg.c_str(), "GMSG", 4) == 0)
+	      {//simple handshake and relay this one
+		for(int j=0;j<sockets.size(); ++j)
+		  sockets[j].writeString(msg);
 	      }
-	    }//HOLD comparison
-	    else if(strncmp(msg.c_str(), "GMSG", 4) == 0)
-	    {//simple handshake and relay this one
-	      for(int j=0;j<sockets.size(); ++j)
-		sockets[j].writeString(msg);
-	    }
-	    else if(strncmp(msg.c_str(), "PLAC", 4) == 0)
-	    {//This shouldnt be coming in on its own, assume a move or capt has been sent already
-	      cerr << "PLAC Command recognized" << endl;
-	      for(int j=0;j<sockets.size(); ++j)
-		sockets[j].writeString(msg);
-	    }
-	    else //Anything that isnt a command
-	    {
-	      cerr << "Sending unknown message to clients:" << msg << endl;
-	      for(int j=0;j<sockets.size(); ++j){
-		Socket sock = sockets[j];
-		sock.writeString(msg);
+	      else if(strncmp(msg.c_str(), "PLAC", 4) == 0)
+	      {//This shouldnt be coming in on its own, assume a move or capt has been sent already
+		cerr << "PLAC Command recognized" << endl;
+		for(int j=0;j<sockets.size(); ++j)
+		  sockets[j].writeString(msg);
 	      }
-	    }
+	      else if(strncmp(msg.c_str(), "REMV", 4) == 0)
+	      {
+		cerr << "REMV Command recognized" << endl;
+		for(int j=0;j<sockets.size(); ++j)
+		  sockets[j].writeString(msg);
+	      }
+	      else //Anything that isnt a command
+	      {
+		cerr << "Sending unknown message to clients:" << msg << endl;
+		for(int j=0;j<sockets.size(); ++j){
+		  Socket sock = sockets[j];
+		  sock.writeString(msg);
+		}
+	      }
+	    }//for each snipped element of msg
 	  }//if- socket is not closed
 	  else{
 	    cout << "Socket has been closed" << endl;

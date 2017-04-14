@@ -79,6 +79,7 @@ vector<coord> clicked_spots;
 vector<Piece*> pieces;
 
 int player_num; //Our player num relevent to the current game
+int player_turn = 1;
 bool game_start = false;
 
 //Chat Variables
@@ -154,6 +155,9 @@ void Piece::handle_events()
 	  }//If left click
 	  else if(event.button.button == SDL_BUTTON_RIGHT)
 	  {
+	    if(player_num != player_turn)
+	      return;
+	    
 	    if(this->clicks == 0)
 	      return;
 
@@ -896,13 +900,13 @@ void netProcess(string msg)
     addChat(ss.str());
 
   }//If- GMSG
-  else if(cmd == "STAT")//STAT <code>
+  else if(cmd == "TURN")//TURN <Player num>
   {
-    string code = snip(msg,index);
-    if(code == "01"){     
-      cerr << "Handshake received" << endl;
-    }
-  }
+    string s_num = snip(msg,index);
+    int num = atoi(s_num.c_str());
+    player_turn = num;
+    cerr << "[TURN] It is now the turn of player:" << player_turn << endl;
+  }//If- TURN
   else
   {
     cerr << "Unknown command received:" << msg << endl;
@@ -1011,7 +1015,8 @@ int main ( int argc, char* argv[] )
 		continue;
 	      }
 
-	      s_socket.writeString(result);
+	      if(player_num == player_turn)
+	        s_socket.writeString(result);
 	      continue;
 	    }
 	  }
@@ -1084,12 +1089,21 @@ int main ( int argc, char* argv[] )
 	    cerr << "Move message from selected piece:" << selected->Move(spot) << " | Piece name:" << selected->debug_name << endl;
 	    //TODO: This is where we perform faction checks through Move and *isCapturable
 	    string icing;//Icing on the MOVE/CAPT cake
-	    icing = selected->Move(spot); 
+	    icing = selected->Move(spot);
+
+	    cerr << "ss before icing:" << ss.str() << endl;
+
+	    if(icing != "DEFAULT"){
+	      ss.str(ss.str() + icing);
+	    }
+
+	    cerr << "[DEBUG] Sending message:" << ss.str() << endl;
 
 	    selected = NULL;
 	    lastMove.clear();
 
-	    s_socket.writeString(ss.str());
+	    if(player_num == player_turn)
+  	      s_socket.writeString(ss.str());
 
 	    continue;
 	  }//If- Selected != null
@@ -1126,7 +1140,8 @@ int main ( int argc, char* argv[] )
 	  ss.str("");
 	  ss << "HOLD " << selected->getClip() << " " << x << " " << y << " ~";
 	  //socketSet.wait(0);
-	  s_socket.writeString(ss.str());
+	  if(player_num == player_turn)
+	    s_socket.writeString(ss.str());
 
 	}
 

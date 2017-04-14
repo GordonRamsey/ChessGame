@@ -12,9 +12,7 @@ Bishop::~Bishop()
 
 string Bishop::Move(coord newpos)
 {
-  stringstream ss;
-  ss << "[MOVE-BISHOP]" << newpos.x << "," << newpos.y << endl;
-  return ss.str();
+  return "DEFAULT";
 }
 
 /*string Bishop::processClicks(vector<coord> clickedOn, Chess* c)
