@@ -18,6 +18,7 @@ string Rook::Move(coord newpos)
   return ss.str();
 }
 
+
 vector<coord> Rook::validSpots(Chess* c)
 {
   //c->board

@@ -17,6 +17,7 @@ string Knight::Move(coord newpos)
   return ss.str();
 }
 
+
 vector<coord> Knight::validSpots(Chess* c)
 {
   //c->board

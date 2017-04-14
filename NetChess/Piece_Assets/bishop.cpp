@@ -17,6 +17,32 @@ string Bishop::Move(coord newpos)
   return ss.str();
 }
 
+/*string Bishop::processClicks(vector<coord> clickedOn, Chess* c)
+{
+    stringstream ss;
+    ss.str("");
+    
+    if(clickedOn.size() != 1)
+        return "ERROR";
+
+    //Need to validate spots before acting on them
+    if(c->board[clickedOn[0].x/64][clickedOn[0].y/64]->getNum();
+        return "ERROR";
+
+    int num = c->board[clickedOn[0].x/64][clickedOn[0].y/64]->getNum();
+
+    //Are we clicking on ourself?
+    if(num == getNum())
+        return "ERROR";
+
+    //Everything checks out, fashion a command to make the move
+    ss << "MOVE " << c->board[getSpot().x][getSpot.y]->getNum() << " " << clickedOn[0].x << " " << clickedOn[0].y << " ~";
+    ss << "REMV " << num << " ~";
+
+    return ss.str();
+}
+*/
+
 vector<coord> Bishop::validSpots(Chess* c)
 {
   //c->board

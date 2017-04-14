@@ -24,6 +24,7 @@ string Pawn::Move(coord newpos)
   return ss.str();
 }
 
+
 vector<coord> Pawn::validSpots(Chess* c)
 {
   cerr << "Inside pawn valid spots" << endl;
@@ -50,10 +51,10 @@ vector<coord> Pawn::validSpots(Chess* c)
     seek.x--;
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
-	spots.push_back(seek);
-	ss.str("");
+	    spots.push_back(seek);
+	    ss.str("");
         ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-	captureMap[seek] = ss.str();
+	    captureMap[seek] = ss.str();
       }
     }
   }
