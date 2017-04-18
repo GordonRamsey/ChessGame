@@ -15,6 +15,7 @@ string King::Move(coord newpos)
   return "DEFAULT";
 }
 
+
 vector<coord> King::validSpots(Chess* c)
 {
   //c->board

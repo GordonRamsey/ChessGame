@@ -21,10 +21,10 @@ class Piece {
 	int num; //Piece number, for network purposes
 	SDL_Surface* sheet;
 	int owner;
-	bool m_level = false;
 
     public:
         
+	bool m_level = false;
     Piece(int x, int y, int num); //Constructor
     ~Piece();//Deconstructor
     Piece& operator=(const Piece& other);

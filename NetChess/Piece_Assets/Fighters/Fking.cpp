@@ -18,6 +18,8 @@ vector<coord> FKing::validSpots(Chess* c)
     return King::validSpots(c); //Calls the Kings validSpots(Chess* c) function
 }
 
+//Add Virtual Function
+
 //Add function for leveling up allies
 void FKing::Morale(Chess* c)
 {

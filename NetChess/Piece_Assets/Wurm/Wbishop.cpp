@@ -1,49 +1,23 @@
-#include "bishop.h"
+#include "Wbishop.h"
 
-Bishop::Bishop(int x, int y, int it) : Piece(x, y, it)
+WBishop::WBishop(int x, int y, int it) : Bishop(x, y, it)
 {
-  debug_name = "bishop";
+	debug_name = "Wbishop";
 }
 
-Bishop::~Bishop()
-{
+WBishop::~WBishop()
+{}
 
+string WBishop::Move(coord newpost)
+{
+	stringstream ss;
+	ss << "MOVE " << getNum() << " " << newpos.x*64 << " " << newpos.y*64 << " ~";
+	return ss.str();
 }
 
-string Bishop::Move(coord newpos)
+vector<coord> WBishop:: validSpots(Chess* c)
 {
-  return "DEFAULT";
-}
-
-/*string Bishop::processClicks(vector<coord> clickedOn, Chess* c)
-{
-    stringstream ss;
-    ss.str("");
-    
-    if(clickedOn.size() != 1)
-        return "ERROR";
-
-    //Need to validate spots before acting on them
-    if(c->board[clickedOn[0].x/64][clickedOn[0].y/64]->getNum();
-        return "ERROR";
-
-    int num = c->board[clickedOn[0].x/64][clickedOn[0].y/64]->getNum();
-
-    //Are we clicking on ourself?
-    if(num == getNum())
-        return "ERROR";
-
-    //Everything checks out, fashion a command to make the move
-    ss << "MOVE " << c->board[getSpot().x][getSpot.y]->getNum() << " " << clickedOn[0].x << " " << clickedOn[0].y << " ~";
-    ss << "REMV " << num << " ~";
-
-    return ss.str();
-}
-*/
-
-vector<coord> Bishop::validSpots(Chess* c)
-{
-  //c->board
+ //c->board
   stringstream ss;
   coord seek;
   vector<coord> spots;
@@ -60,13 +34,13 @@ vector<coord> Bishop::validSpots(Chess* c)
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
-	ss.str("");
+    ss.str("");
         ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-	captureMap[seek] = ss.str();
+    captureMap[seek] = ss.str();
         break;
       }
       else
-		break;
+        break;
     }
     spots.push_back(seek);
   }
@@ -83,17 +57,16 @@ vector<coord> Bishop::validSpots(Chess* c)
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
-	ss.str("");
+    ss.str("");
         ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-	captureMap[seek] = ss.str();
+    captureMap[seek] = ss.str();
         break;
       }
       else
-	break;
+    break;
     }
     spots.push_back(seek);
   }
-
   //Check North/West
   seek = getSpot();
   while(true){//Checking untill 1. hit board limit 2. hit a piece
@@ -106,13 +79,13 @@ vector<coord> Bishop::validSpots(Chess* c)
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
-	ss.str("");
+    ss.str("");
         ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-	captureMap[seek] = ss.str();
+    captureMap[seek] = ss.str();
         break;
       }
       else
-	break;
+    break;
     }
     spots.push_back(seek);
   }
@@ -129,15 +102,17 @@ vector<coord> Bishop::validSpots(Chess* c)
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
-	ss.str("");
+    ss.str("");
         ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-	captureMap[seek] = ss.str();
+    captureMap[seek] = ss.str();
         break;
       }
       else
-	break;
+    break;
     }
     spots.push_back(seek);
   }
   return spots;
+}
+
 }

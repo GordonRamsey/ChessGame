@@ -1,6 +1,6 @@
 #ifndef FPAWN_H
 #define FPAWN_H
-#include "pawn.h"
+#include "../pawn.h"
 class FPawn : public Pawn
 {
 	private:
@@ -10,5 +10,6 @@ class FPawn : public Pawn
 		~FPawn();
 		string Move(coord newpos);
 		vector<coord> validSpots(Chess* c);
+		string processClicks(vector<coord> clickedOn, Chess* c);
 };
 #endif
