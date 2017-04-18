@@ -10,5 +10,6 @@ class FBishop : public Bishop
 		~FBishop();
 		string Move(coord newpos);
 		vector<coord> validSpots(Chess* c);
+		string processClicks(vector<coord> clickedOn, Chess* c);
 };
 #endif
