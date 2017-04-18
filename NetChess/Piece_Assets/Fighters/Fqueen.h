@@ -1,14 +1,14 @@
 #ifndef FQUEEN_H
 #define FQUEEN_H
-#include "queen.h"
+#include "../queen.h"
 
-class Queen : public Piece
+class FQueen : public Queen 
 {
   private:
     string debug_name;
   public:
-    Queen(int x, int y, int it);
-    ~Queen();
+    FQueen(int x, int y, int it);
+    ~FQueen();
     string Move(coord newpos);
     vector<coord> validSpots(Chess* c);
 };

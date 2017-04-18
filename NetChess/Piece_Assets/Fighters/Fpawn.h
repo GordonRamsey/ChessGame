@@ -1,6 +1,6 @@
 #ifndef FPAWN_H
 #define FPAWN_H
-#include "pawn.h"
+#include "../pawn.h"
 class FPawn : public Pawn
 {
 	private:
