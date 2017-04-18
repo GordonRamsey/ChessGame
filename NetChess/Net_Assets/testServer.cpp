@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
     {
       for(int i=sockets.size()-1; i >= 0; --i) {
 	if(sockets[i].hasEvent()){
-	  int bytes = sockets[i].readString(msg,255);
+	  int bytes = sockets[i].readString(msg,2048);
 	  if(!sockets[i].isClosed())
 	  {
 	    cerr << msg << "\n";
