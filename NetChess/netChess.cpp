@@ -1119,23 +1119,18 @@ int main ( int argc, char* argv[] )
 
 	    //FINALLY- We know our move is valid, perform faction checks
 	    cerr << "Move message from selected piece:" << selected->Move(spot) << " | Piece name:" << selected->debug_name << endl;
-	    //TODO: This is where we perform faction checks through Move and *isCapturable
 	    string icing;//Icing on the MOVE/CAPT cake
-	    icing = selected->Move(spot);
-
-	    cerr << "ss before icing:" << ss.str() << endl;
-
-	    if(icing != "DEFAULT"){
-	      ss.str(ss.str() + icing);
-	    }
-
-	    cerr << "[DEBUG] Sending message:" << ss.str() << endl;
 
 	    selected = NULL;
 	    lastMove.clear();
 
-	    if(player_num == player_turn)
-  	      s_socket.writeString(ss.str());
+	    if(player_num == player_turn){
+	      icing = selected->Move(spot);
+	      if(icing != "DEFAULT")
+	        { ss.str(ss.str() + icing); }
+	      cerr << "[DEBUG] Sending message:" << ss.str() << endl;
+	      s_socket.writeString(ss.str());
+	    }
 
 	    continue;
 	  }//If- Selected != null
