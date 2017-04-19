@@ -245,7 +245,7 @@ vector<coord> FKnight::validSpots(Chess* c)
 	  if((c->validspots[seek.x-1][seek.y] != 0) && (c->board[seek.x-1][seek.y] != NULL))
 	  {
 	    if(c->board[seek.x-1][seek.y]->getTeam() != getTeam())
-	      ss << "REMV " << c->board[seek.x-1][seek.x]->getNum() << " ~";
+	      ss << "REMV " << c->board[seek.x-1][seek.y]->getNum() << " ~";
 	  }
 	  captureMap[seek] = ss.str();
 	}
