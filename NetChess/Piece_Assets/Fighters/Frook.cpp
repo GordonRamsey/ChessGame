@@ -2,7 +2,7 @@
 
 FRook::FRook(int x, int y, int it) : Rook(x, y, it)
 {
-    debug_name = "Frook";
+  debug_name = "Frook";
 }
 
 FRook::~FRook()
@@ -10,162 +10,214 @@ FRook::~FRook()
 
 string FRook::Move(coord newpos)
 {
-	stringstream ss;
-	ss << "[MOVE-Rook]" << newpos.x << "," << newpos.y << endl;
-	return ss.str()
+  return Rook::Move(newpos);
 }
 
 vector<coord> FRook::validSpots(Chess* c)
 {
-	coord seek;
-    coord tempseek; 
-	if(!m_level)
-		return Rook::validSpots(c);
+  stringstream ss;
+  coord seek;
+  coord tempseek; 
+  if(!m_level)
+    return Rook::validSpots(c);
 
-	vector<coord> spots(Rook::validSpots(c));
-    seek = getSpot(); 
-    //Check North  
-    while(true){
-        seek.y-=1;
-        if(seek.y < 0 or seek.x > 13)//Out of bounds
-            break; 
-        if(c->validspots[seek.x][seek.y] == 0)//valid spot
-            break;
+  vector<coord> spots(Rook::validSpots(c));
+  seek = getSpot(); 
+  //Check North  
+  while(true){
+    seek.y-=1;
+    if(seek.y < 0)//Out of bounds
+      break; 
+    if(c->validspots[seek.x][seek.y] == 0)//valid spot
+      break;
 
-        //look to the left
-        tempseek.x = seek.x+1; 
-        tempseek.y = seek.y; 
-        if(c->board[tempseek.x][tempseek.y] != NULL){
-            if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
-                spots.push_back(tempseek); 
-                ss.str("");
-                ss << "CAPT " << getNum() << " " << c->board[tempseek.x][tempseek.y]->getNum() << " ~"; 
-                captureMap(tempseek) = ss.str(); 
-                break; 
-            }
-            else break; 
-        }
-
-        //look to the right; 
-        tempseek.x = seek.x-1; 
-        if(c->board[tempseek.x][tempseek.y] != NULL){
-            if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
-                spots.push_back(tempseek); 
-                ss.str("");
-                ss << "CAPT " << getNum() << " " << c->board[tempseek.x][tempseek.y]->getNum() << " ~"; 
-                captureMap(tempseek) = ss.str(); 
-                break; 
-            } 
-        else break; 
-        }
-        spots.push_back(seek); 
+    //Check seek spot
+    if(c->board[seek.x][seek.y] != NULL){
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
+	spots.push_back(seek); 
+	ss.str("");
+	ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~"; 
+	captureMap[seek] = ss.str(); 
+	break; 
+      }
+      else
+	break;
     }
-    //Check South
-    while(true){
-        seek.y+=1;
-        if(seek.y < 0 or seek.x > 13)//Out of bounds
-            break; 
-        if(c->validspots[seek.x][seek.y] == 0)//valid spot
-            break;
 
-        //look to the left
-        tempseek.x = seek.x+1; 
-        tempseek.y = seek.y; 
-        if(c->board[tempseek.x][tempseek.y] != NULL){
-            if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
-                spots.push_back(tempseek); 
-                ss.str("");
-                ss << "CAPT " << getNum() << " " << c->board[tempseek.x][tempseek.y]->getNum() << " ~"; 
-                captureMap(tempseek) = ss.str(); 
-                break; 
-            }
-            else break; 
-        }
-
-        //look to the right; 
-        tempseek.x = seek.x-1; 
-        if(c->board[tempseek.x][tempseek.y] != NULL){
-            if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
-                spots.push_back(tempseek); 
-                ss.str("");
-                ss << "CAPT " << getNum() << " " << c->board[tempseek.x][tempseek.y]->getNum() << " ~"; 
-                captureMap(tempseek) = ss.str(); 
-                break; 
-            } 
-        else break; 
-        }
-        spots.push_back(seek); 
+    //look to the right
+    tempseek.x = seek.x+1; 
+    tempseek.y = seek.y; 
+    if(!(tempseek.x > 13 || c->validspots[tempseek.x][tempseek.y] == 0)){
+      if(c->board[tempseek.x][tempseek.y] != NULL){
+	if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
+	  spots.push_back(tempseek); 
+	  ss.str("");
+	  ss << "CAPT " << getNum() << " " << c->board[tempseek.x][tempseek.y]->getNum() << " ~"; 
+	  captureMap[tempseek] = ss.str(); 
+	}
+      }
     }
-    //Check Left
-    while(true){
-        seek.x-=1;
-        if(seek.y < 0 or seek.x > 13)//Out of bounds
-            break; 
-        if(c->validspots[seek.x][seek.y] == 0)//valid spot
-            break;
 
-        //look up
-        tempseek.x = seek.x; 
-        tempseek.y = seek.y-1; 
-        if(c->board[tempseek.x][tempseek.y] != NULL){
-            if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
-                spots.push_back(tempseek); 
-                ss.str("");
-                ss << "CAPT " << getNum() << " " << c->board[tempseek.x][tempseek.y]->getNum() << " ~"; 
-                captureMap(tempseek) = ss.str(); 
-                break; 
-            }
-            else break; 
-        }
+    //look to the left 
+    tempseek.x = seek.x-1; 
+    if(!(tempseek.x < 0 || c->validspots[tempseek.x][tempseek.y] == 0)){
+      if(c->board[tempseek.x][tempseek.y] != NULL){
+	if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
+	  spots.push_back(tempseek); 
+	  ss.str("");
+	  ss << "CAPT " << getNum() << " " << c->board[tempseek.x][tempseek.y]->getNum() << " ~"; 
+	  captureMap[tempseek] = ss.str(); 
+	} 
+      }
+    }	
+    spots.push_back(seek);
+  }
+  //Check South
+  while(true){
+    seek.y+=1;
+    if(seek.y > 13)//Out of bounds
+      break; 
+    if(c->validspots[seek.x][seek.y] == 0)//valid spot
+      break;
 
-        //look down; 
-        tempseek.y = seek.y+1; 
-        if(c->board[tempseek.x][tempseek.y] != NULL){
-            if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
-                spots.push_back(tempseek); 
-                ss.str("");
-                ss << "CAPT " << getNum() << " " << c->board[tempseek.x][tempseek.y]->getNum() << " ~"; 
-                captureMap(tempseek) = ss.str(); 
-                break; 
-            } 
-        else break; 
-        }
-        spots.push_back(seek); 
+    //Check seek spot
+    if(c->board[seek.x][seek.y] != NULL){
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
+	spots.push_back(seek); 
+	ss.str("");
+	ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~"; 
+	captureMap[seek] = ss.str(); 
+	break; 
+      }
+      else
+	break;
     }
-    //Check Right
-	while(true){
-        seek.x+=1;
-        if(seek.y < 0 or seek.x > 13)//Out of bounds
-            break; 
-        if(c->validspots[seek.x][seek.y] == 0)//valid spot
-            break;
 
-        //look up
-        tempseek.x = seek.x; 
-        tempseek.y = seek.y-1; 
-        if(c->board[tempseek.x][tempseek.y] != NULL){
-            if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
-                spots.push_back(tempseek); 
-                ss.str("");
-                ss << "CAPT " << getNum() << " " << c->board[tempseek.x][tempseek.y]->getNum() << " ~"; 
-                captureMap(tempseek) = ss.str(); 
-                break; 
-            }
-            else break; 
-        }
-
-        //look to the right; 
-        tempseek.y = seek.y+1; 
-        if(c->board[tempseek.x][tempseek.y] != NULL){
-            if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
-                spots.push_back(tempseek); 
-                ss.str("");
-                ss << "CAPT " << getNum() << " " << c->board[tempseek.x][tempseek.y]->getNum() << " ~"; 
-                captureMap(tempseek) = ss.str(); 
-                break; 
-            } 
-        else break; 
-        }
-        spots.push_back(seek); 
+    //look to the left
+    tempseek.x = seek.x+1; 
+    tempseek.y = seek.y; 
+    if(!(tempseek.x > 13 || c->validspots[tempseek.x][tempseek.y] == 0)){
+      if(c->board[tempseek.x][tempseek.y] != NULL){
+	if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
+	  spots.push_back(tempseek); 
+	  ss.str("");
+	  ss << "CAPT " << getNum() << " " << c->board[tempseek.x][tempseek.y]->getNum() << " ~"; 
+	  captureMap[tempseek] = ss.str(); 
+	}
+      }
     }
+
+    //look to the right; 
+    tempseek.x = seek.x-1; 
+    if(!(tempseek.x < 0 || c->validspots[tempseek.x][tempseek.y] == 0)){
+      if(c->board[tempseek.x][tempseek.y] != NULL){
+	if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
+	  spots.push_back(tempseek); 
+	  ss.str("");
+	  ss << "CAPT " << getNum() << " " << c->board[tempseek.x][tempseek.y]->getNum() << " ~"; 
+	  captureMap[tempseek] = ss.str(); 
+	} 
+      }
+    }
+    spots.push_back(seek); 
+  }
+  //Check Left
+  while(true){
+    seek.x-=1;
+    if(seek.x < 0)//Out of bounds
+      break; 
+    if(c->validspots[seek.x][seek.y] == 0)//valid spot
+      break;
+
+    //Check seek spot
+    if(c->board[seek.x][seek.y] != NULL){
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
+	spots.push_back(seek); 
+	ss.str("");
+	ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~"; 
+	captureMap[seek] = ss.str(); 
+	break; 
+      }
+      else
+	break;
+    } 
+
+    //look up
+    tempseek.x = seek.x; 
+    tempseek.y = seek.y-1; 
+    if(!(tempseek.y < 0 || c->validspots[tempseek.x][tempseek.y] == 0)){
+      if(c->board[tempseek.x][tempseek.y] != NULL){
+	if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
+	  spots.push_back(tempseek); 
+	  ss.str("");
+	  ss << "CAPT " << getNum() << " " << c->board[tempseek.x][tempseek.y]->getNum() << " ~"; 
+	  captureMap[tempseek] = ss.str(); 
+	}
+      }
+    }
+
+    //look down; 
+    tempseek.y = seek.y+1; 
+    if(!(tempseek.y > 13 || c->validspots[tempseek.x][tempseek.y] == 0)){
+      if(c->board[tempseek.x][tempseek.y] != NULL){
+	if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
+	  spots.push_back(tempseek); 
+	  ss.str("");
+	  ss << "CAPT " << getNum() << " " << c->board[tempseek.x][tempseek.y]->getNum() << " ~"; 
+	  captureMap[tempseek] = ss.str(); 
+	} 
+      }
+    }
+    spots.push_back(seek); 
+  }
+  //Check Right
+  while(true){
+    seek.x+=1;
+    if(seek.x > 13)//Out of bounds
+      break; 
+    if(c->validspots[seek.x][seek.y] == 0)//valid spot
+      break;
+
+    //Check seek spot
+    if(c->board[seek.x][seek.y] != NULL){
+      if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
+	spots.push_back(seek); 
+	ss.str("");
+	ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~"; 
+	captureMap[seek] = ss.str(); 
+	break; 
+      }
+      else
+	break;
+    } 
+
+    //look up
+    tempseek.x = seek.x; 
+    tempseek.y = seek.y-1; 
+    if(!(tempseek.y < 0 || c->validspots[tempseek.x][tempseek.y] == 0)){
+      if(c->board[tempseek.x][tempseek.y] != NULL){
+	if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
+	  spots.push_back(tempseek); 
+	  ss.str("");
+	  ss << "CAPT " << getNum() << " " << c->board[tempseek.x][tempseek.y]->getNum() << " ~"; 
+	  captureMap[tempseek] = ss.str(); 
+	}
+      }
+    }
+
+    //look to the right; 
+    tempseek.y = seek.y+1; 
+    if(!(tempseek.y > 13 || c->validspots[tempseek.x][tempseek.y] == 0)){
+      if(c->board[tempseek.x][tempseek.y] != NULL){
+	if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
+	  spots.push_back(tempseek); 
+	  ss.str("");
+	  ss << "CAPT " << getNum() << " " << c->board[tempseek.x][tempseek.y]->getNum() << " ~"; 
+	  captureMap[tempseek] = ss.str(); 
+	} 
+      }
+    }
+    spots.push_back(seek); 
+  }
+  return spots;
 }

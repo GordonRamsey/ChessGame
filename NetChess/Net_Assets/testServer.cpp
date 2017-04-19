@@ -19,6 +19,8 @@ int current_player = 1;
 
 void startGame(SocketSet socs)
 {
+  cout << "[BEGINNING GAME]" << endl;
+  cerr << "[CURRENT PLAYER] = " << current_player << endl;
   socs.wait(2);
   game_start = true;
   ss.str("");
@@ -80,7 +82,7 @@ int main(int argc, char* argv[])
     {
       for(int i=sockets.size()-1; i >= 0; --i) {
 	if(sockets[i].hasEvent()){
-	  int bytes = sockets[i].readString(msg,2048);
+	  int bytes = sockets[i].readString(msg,255);
 	  if(!sockets[i].isClosed())
 	  {
 	    cerr << msg << "\n";

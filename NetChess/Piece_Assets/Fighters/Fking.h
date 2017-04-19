@@ -12,6 +12,7 @@ class FKing : public King
     string Move(coord newpos);
     vector<coord> validSpots(Chess* c);
 	void Morale(Chess* c);
-    string processClicks(vector<coord> clickedOn, Chess* c);
+    string processClicks(vector<coord> clickedOn, Chess* c)
+      { return "DEFAULT"; }
 };
 #endif

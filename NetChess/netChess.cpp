@@ -459,28 +459,28 @@ void generatePieces()
       int num = it;
       if(j == 1)
       {
-	newPiece = new Pawn(x,y,num,'S');
+	newPiece = new FPawn(x,y,num,'S');
 	newPiece->setClip(CLIP_PAWN);
       }
       else{
 	if(i==0 || i ==7){  
-	  newPiece = new Rook(x,y,num);
+	  newPiece = new FRook(x,y,num);
 	  newPiece->setClip(CLIP_ROOK);
 	}
 	else if(i==1 || i ==6){ 
-	  newPiece = new Knight(x,y,num);
+	  newPiece = new FKnight(x,y,num);
 	  newPiece->setClip(CLIP_KNIGHT);
 	}
 	else if(i==2 || i ==5){  
-	  newPiece = new Bishop(x,y,num);
+	  newPiece = new FBishop(x,y,num);
 	  newPiece->setClip(CLIP_BISHOP);
 	}
 	else if(i==4){  
-	  newPiece = new King(x,y,num);
+	  newPiece = new FKing(x,y,num);
 	  newPiece->setClip(CLIP_KING);
 	}
 	else if(i==3){ 
-	  newPiece = new Queen(x,y,num);
+	  newPiece = new FQueen(x,y,num);
 	  newPiece->setClip(CLIP_QUEEN);
 	}
       }
@@ -654,20 +654,21 @@ void addChat(string msg)
 void pieceSpawn(string name, int x, int y, int team)
 {
   //PLAC <name> <x> <y> <team>
-  int coordx = x*64;
+  char dir; //S-N-E-W | 0-1-2-3
+  if(team == 0)
+    dir = 'S';
+  else if(team == 1)
+    dir = 'N';
+  else if(team == 2)
+    dir = 'E';
+  else if(team == 3)
+    dir = 'W';
+  
+  int coordx = x*64;  
   int coordy = y*64;
   Piece* newPiece = NULL;
   if(name == "pawn")
   {
-    char dir; //S-N-E-W | 0-1-2-3
-    if(team == 0)
-      dir = 'S';
-    else if(team == 1)
-      dir = 'N';
-    else if(team == 2)
-      dir = 'E';
-    else if(team == 3)
-      dir = 'W';
     newPiece = new Pawn(coordx, coordy, c->it, dir);
     newPiece->setClip(CLIP_PAWN);
   }
@@ -694,6 +695,36 @@ void pieceSpawn(string name, int x, int y, int team)
   else if(name == "queen")
   {
     newPiece = new Queen(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_QUEEN);
+  }
+  if(name == "Fpawn")
+  {
+    newPiece = new FPawn(coordx, coordy, c->it, dir);
+    newPiece->setClip(CLIP_PAWN);
+  }
+  else if(name == "Frook")
+  {
+    newPiece = new FRook(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_ROOK);
+  }
+  else if(name == "Fbishop")
+  {
+    newPiece = new FBishop(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_BISHOP);
+  }
+  else if(name == "Fknight")
+  {
+    newPiece = new FKnight(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_KNIGHT);
+  }
+  else if(name == "Fking")
+  {
+    newPiece = new FKing(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_KING);
+  }
+  else if(name == "Fqueen")
+  {
+    newPiece = new FQueen(coordx, coordy, c->it);
     newPiece->setClip(CLIP_QUEEN);
   }
   else if(name == "")
@@ -772,6 +803,7 @@ void netProcess(string msg)
     ss.str("");
     ss << "NetChess - " << player_num << " - Started";
     SDL_WM_SetCaption(ss.str().c_str(), NULL);
+    cerr << "[GAME START] Player turn:" << player_turn << endl;
     return;
   }
 

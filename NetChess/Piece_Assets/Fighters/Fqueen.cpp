@@ -10,14 +10,12 @@ FQueen::~FQueen()
 
 string FQueen::Move(coord newpos)
 {
-  stringstream ss;
-  ss << "MOVE " getNum() << " " << newpos.x*64 << " " << newpos.y*64 << " ~";
-  return ss.str();
+  return Queen::Move(newpos);
 }
 
 vector<coord> FQueen::validSpots(Chess* c)
 {
-  //c->board
+  stringstream ss;
   coord seek;
   if(!m_level)
     return Queen::validSpots(c);
@@ -38,7 +36,7 @@ vector<coord> FQueen::validSpots(Chess* c)
         spots.push_back(seek);
         ss.str("");
         ss << "CAPT " << getNum() <<  " " << c->board[seek.x][seek.y]->getNum() << " ~";
-        captureMap(seek) = ss.str();
+        captureMap[seek] = ss.str();
         break;
       }
       else
@@ -61,8 +59,8 @@ vector<coord> FQueen::validSpots(Chess* c)
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
         ss.str("");
-        ss << "CAPT " << getNum() <<  " " << c->board[seek.x][seek.y]->getNum() >> " ~";
-        captureMap(seek) = ss.str();
+        ss << "CAPT " << getNum() <<  " " << c->board[seek.x][seek.y]->getNum() << " ~";
+        captureMap[seek] = ss.str();
         break;
       }
       else
@@ -85,8 +83,8 @@ vector<coord> FQueen::validSpots(Chess* c)
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
         ss.str("");
-        ss << "CAPT " << getNum() <<  " " << c->board[seek.x][seek.y]->getNum() >> " ~";
-        captureMap(seek) = ss.str();
+        ss << "CAPT " << getNum() <<  " " << c->board[seek.x][seek.y]->getNum() << " ~";
+        captureMap[seek] = ss.str();
         break;
       }
       else
@@ -109,8 +107,8 @@ vector<coord> FQueen::validSpots(Chess* c)
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
         ss.str("");
-        ss << "CAPT " << getNum() <<  " " << c->board[seek.x][seek.y]->getNum() >> " ~";
-        captureMap(seek) = ss.str();
+        ss << "CAPT " << getNum() <<  " " << c->board[seek.x][seek.y]->getNum() << " ~";
+        captureMap[seek] = ss.str();
         break;
       }
       else
@@ -133,8 +131,8 @@ vector<coord> FQueen::validSpots(Chess* c)
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
         ss.str("");
-        ss << "CAPT " << getNum() <<  " " << c->board[seek.x][seek.y]->getNum() >> " ~";
-        captureMap(seek) = ss.str();
+        ss << "CAPT " << getNum() <<  " " << c->board[seek.x][seek.y]->getNum() << " ~";
+        captureMap[seek] = ss.str();
         break;
       }
       else
@@ -157,8 +155,8 @@ vector<coord> FQueen::validSpots(Chess* c)
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
         ss.str("");
-        ss << "CAPT " << getNum() <<  " " << c->board[seek.x][seek.y]->getNum() >> " ~";
-        captureMap(seek) = ss.str();
+        ss << "CAPT " << getNum() <<  " " << c->board[seek.x][seek.y]->getNum() << " ~";
+        captureMap[seek] = ss.str();
         break;
       }
       else
@@ -181,8 +179,8 @@ vector<coord> FQueen::validSpots(Chess* c)
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
         ss.str("");
-        ss << "CAPT " << getNum() <<  " " << c->board[seek.x][seek.y]->getNum() >> " ~";
-        captureMap(seek) = ss.str();
+        ss << "CAPT " << getNum() <<  " " << c->board[seek.x][seek.y]->getNum() << " ~";
+        captureMap[seek] = ss.str();
         break;
       }
       else
@@ -205,8 +203,8 @@ vector<coord> FQueen::validSpots(Chess* c)
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
         spots.push_back(seek);
         ss.str("");
-        ss << "CAPT " << getNum() <<  " " << c->board[seek.x][seek.y]->getNum() >> " ~";
-        captureMap(seek) = ss.str();
+        ss << "CAPT " << getNum() <<  " " << c->board[seek.x][seek.y]->getNum() << " ~";
+        captureMap[seek] = ss.str();
         break;
       }
       else

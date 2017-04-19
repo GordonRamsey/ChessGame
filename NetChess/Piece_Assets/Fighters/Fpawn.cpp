@@ -11,20 +11,19 @@ FPawn::~FPawn()
 
 string FPawn::Move(coord newpos)
 {
-  if(first_move == true)
-    first_move == false;
-
-  stringstream ss;
-  ss << "Move" << getNum() << " " << newpos.x*64 << " " << newpos.y*64 << " ~";
-  return ss,str();
-
+  return Pawn::Move(newpos);
 }
 
 vector<coord> FPawn::validSpots(Chess* c)
 {
-  stringsteam ss;
+  //TODO: Use original pawn movement function
+  
+  stringstream ss;
   coord seek;
   seek = getSpot();
+  
+  vector<coord> spots(Pawn::validSpots(c));
+  
   if(dir == 'N') //Starting Cardinal direction is North... SO PLAYER 2 PAWNS
   {
     //Check forward 1
@@ -79,7 +78,7 @@ vector<coord> FPawn::validSpots(Chess* c)
 	  {
 	    if(c->board[seek.x+1][seek.y-1] != NULL)
 	    {
-	      if(getTeam() != c->board[seek.x+1][seek.y-1]->getteam())
+	      if(getTeam() != c->board[seek.x+1][seek.y-1]->getTeam())
 	      {
 		seek.x++;
 		seek.y--;
@@ -133,7 +132,7 @@ vector<coord> FPawn::validSpots(Chess* c)
 	  {
 	    if(c->board[seek.x+1][seek.y-1] != NULL)
 	    {
-	      if(getTeam() != c->board[seek.x+1][seek.y-1]->getteam())
+	      if(getTeam() != c->board[seek.x+1][seek.y-1]->getTeam())
 	      {
 		seek.x++;
 		seek.y--;
@@ -204,7 +203,7 @@ vector<coord> FPawn::validSpots(Chess* c)
 	  {
 	    if(c->board[seek.x+1][seek.y+1] != NULL)
 	    {
-	      if(getTeam() != c->board[seek.x+1][seek.y+1]->getteam())
+	      if(getTeam() != c->board[seek.x+1][seek.y+1]->getTeam())
 	      {
 		seek.x++;
 		seek.y++;
@@ -258,7 +257,7 @@ vector<coord> FPawn::validSpots(Chess* c)
 	  {
 	    if(c->board[seek.x+1][seek.y+1] != NULL)
 	    {
-	      if(getTeam() != c->board[seek.x+1][seek.y+1]->getteam())
+	      if(getTeam() != c->board[seek.x+1][seek.y+1]->getTeam())
 	      {
 		seek.x++;
 		seek.y++;
@@ -438,7 +437,7 @@ vector<coord> FPawn::validSpots(Chess* c)
 	  {
 	    if(c->board[seek.x+1][seek.y-1] != NULL)
 	    {
-	      if(getTeam() != c->board[seek.x+1][seek.y-1]->getteam())
+	      if(getTeam() != c->board[seek.x+1][seek.y-1]->getTeam())
 	      {
 		seek.x++;
 		seek.y--;
@@ -456,7 +455,7 @@ vector<coord> FPawn::validSpots(Chess* c)
 	  {
 	    if(c->board[seek.x+1][seek.y+1] != NULL)
 	    {
-	      if(getTeam() != c->board[seek.x+1][seek.y+1]->getteam())
+	      if(getTeam() != c->board[seek.x+1][seek.y+1]->getTeam())
 	      {
 		seek.x++;
 		seek.y++;
@@ -492,7 +491,7 @@ vector<coord> FPawn::validSpots(Chess* c)
 	  {
 	    if(c->board[seek.x+1][seek.y-1] != NULL)
 	    {
-	      if(getTeam() != c->board[seek.x+1][seek.y-1]->getteam())
+	      if(getTeam() != c->board[seek.x+1][seek.y-1]->getTeam())
 	      {
 		seek.x++;
 		seek.y--;
@@ -510,7 +509,7 @@ vector<coord> FPawn::validSpots(Chess* c)
 	  {
 	    if(c->board[seek.x+1][seek.y+1] != NULL)
 	    {
-	      if(getTeam() != c->board[seek.x+1][seek.y+1]->getteam())
+	      if(getTeam() != c->board[seek.x+1][seek.y+1]->getTeam())
 	      {
 		seek.x++;
 		seek.y++;
@@ -527,4 +526,5 @@ vector<coord> FPawn::validSpots(Chess* c)
       }
     }
   }
+  return spots;
 }

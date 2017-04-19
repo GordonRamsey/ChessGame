@@ -8,8 +8,10 @@
 //String input includes
 #include "Text_Assets/StringInput.h"
 
-//Piece includes
+//Piece include
 #include "Piece_Assets/piece.h"
+
+//Default template includes
 #include "Piece_Assets/pawn.h"
 #include "Piece_Assets/rook.h"
 #include "Piece_Assets/knight.h"
@@ -17,6 +19,14 @@
 #include "Piece_Assets/king.h"
 #include "Piece_Assets/queen.h"
 #include "Piece_Assets/wall.h"
+
+//Fighter includes
+#include "Piece_Assets/Fighters/Fpawn.h"
+#include "Piece_Assets/Fighters/Frook.h"
+#include "Piece_Assets/Fighters/Fknight.h"
+#include "Piece_Assets/Fighters/Fbishop.h"
+#include "Piece_Assets/Fighters/Fking.h"
+#include "Piece_Assets/Fighters/Fqueen.h"
 
 //Game object includes
 #include "Piece_Assets/chess.h"
