@@ -1118,7 +1118,6 @@ int main ( int argc, char* argv[] )
 	    }
 
 	    //FINALLY- We know our move is valid, perform faction checks
-	    cerr << "Move message from selected piece:" << selected->Move(spot) << " | Piece name:" << selected->debug_name << endl;
 	   
 	    if(player_num == player_turn){ 
 	      string icing;//Icing on the MOVE/CAPT cake
@@ -1130,9 +1129,9 @@ int main ( int argc, char* argv[] )
 	    selected = NULL;
 	    lastMove.clear();
 
-	    cerr << "[DEBUG] Sending message:" << ss.str() << endl;
 
 	    if(player_num == player_turn){
+	      cerr << "[DEBUG] Sending message:" << ss.str() << endl;
 	      s_socket.writeString(ss.str());
 	    }
 
