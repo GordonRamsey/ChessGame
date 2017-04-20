@@ -4,8 +4,6 @@
 
 class FKnight : public Knight 
 {
-  private:
-        string debug_name;
   public:
     FKnight(int x, int y, int it);
     ~FKnight();

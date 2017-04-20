@@ -3,8 +3,6 @@
 #include "../pawn.h"
 class FPawn : public Pawn
 {
-  private:
-    string debug_name;
   public:
     FPawn(int x, int y, int it, char state);
     ~FPawn();

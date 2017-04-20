@@ -4,8 +4,6 @@
 #include <string>
 class FKing : public King
 {
-  private:
-	string debug_name;
   public:
     FKing(int x, int y, int it);
     ~FKing();

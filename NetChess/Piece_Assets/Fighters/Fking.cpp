@@ -2,9 +2,7 @@
 
 FKing::FKing(int x, int y, int it) : King(x, y, it)
 {
-  cerr << "Fking construct" << endl;
   debug_name = "Fking";
-  cerr << "Fking: Debug name:" << debug_name << endl;
 }
 
 FKing::~FKing()
@@ -18,7 +16,7 @@ string FKing::processClicks(vector<coord> clickedOn, Chess* c)
     if(clickedOn.size() != 1)
       return "ERROR";
 
-    if(clickedOn[0] == getSpot())
+    if(clickedOn[0] == getPos())
     {
       ss.str(Morale(c));
       return ss.str();
@@ -59,4 +57,5 @@ string FKing::Morale(Chess* c)
       }
     }
   }
+  return ss.str();
 }

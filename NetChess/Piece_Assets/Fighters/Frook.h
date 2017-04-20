@@ -3,8 +3,6 @@
 #include "../rook.h"
 class FRook : public Rook
 {
-  private:
-    string debug_name;
   public:
     FRook(int x, int y, int it);
     ~FRook();

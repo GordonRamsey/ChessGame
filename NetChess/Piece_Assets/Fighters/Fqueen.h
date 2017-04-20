@@ -4,8 +4,6 @@
 
 class FQueen : public Queen 
 {
-  private:
-    string debug_name;
   public:
     FQueen(int x, int y, int it);
     ~FQueen();
