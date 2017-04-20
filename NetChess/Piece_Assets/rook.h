@@ -4,8 +4,6 @@
 
 class Rook : public Piece
 {
-  private:
-
   public:
     Rook(int x, int y, int it);
     ~Rook();
