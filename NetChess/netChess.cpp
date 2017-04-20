@@ -939,6 +939,19 @@ void netProcess(string msg)
     player_turn = num;
     cerr << "[TURN] It is now the turn of player:" << player_turn << endl;
   }//If- TURN
+  else if(cmd == "LVUP")//LVUP <piece num>
+  {
+    string s_num = snip(msg,index);
+    int num = atoi(s_num.c_str());
+    for(unsigned int i=0;i<pieces.size();i++){
+      if(pieces[i]->getNum() == num)
+      {
+	pieces[i]->levelUp();
+	c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y]->levelUp();
+      }
+    }
+
+  }//If- LVUP
   else
   {
     cerr << "Unknown command received:" << msg << endl;
@@ -1039,11 +1052,11 @@ int main ( int argc, char* argv[] )
 	      clicked_spots.clear();
 
 	      if(result == "ERROR"){
-		cerr << "[ERROR] Something was clicked incorrectly" << endl;
+		cerr << "[ERROR] ERROR return, something was clicked incorrectly" << endl;
 		continue;
 	      }
 	      if(result == "DEFAULT"){
-		cerr << "[ERROR] DEFAULT return value" << endl;
+		cerr << "[DEBUG] DEFAULT return value" << endl;
 		continue;
 	      }
 

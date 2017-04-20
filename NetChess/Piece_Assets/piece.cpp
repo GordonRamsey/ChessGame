@@ -97,3 +97,16 @@ string Piece::getCaptCmd(coord spot)
   return captureMap[spot];
 }
 
+void Piece::levelUp() 
+{ 
+  if(!isLevel())
+    setClip(getClip()+12);
+  m_level = true;
+  cerr << "Level up piece name:" << debug_name << endl;
+  if(debug_name == "Fking")
+  { 
+    cerr << "OOH WEE UPGRADED KING" << endl; 
+    clicks = 1;
+  }
+}
+

@@ -68,10 +68,7 @@ class Piece {
       { return "DEFAULT"; }
 
 	int isLevel() { return m_level; }
-	void levelUp() { 
-	  if(!isLevel())
-	    setClip(getClip()+12);
-	  m_level = true; }
 
+	void levelUp();
 };
 #endif
