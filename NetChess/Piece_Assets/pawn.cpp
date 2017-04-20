@@ -26,7 +26,6 @@ string Pawn::Move(coord newpos)
 
 vector<coord> Pawn::validSpots(Chess* c)
 {
-  cerr << "Inside pawn valid spots" << endl;
   stringstream ss;
 
   //c->board

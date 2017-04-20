@@ -2,8 +2,10 @@
 
 King::King(int x, int y, int it) : Piece(x, y, it)
 {
-  // :)
+  cerr << "Construct standard king" << endl;
   debug_name = "king";
+  cerr << "King: Debug name:" << debug_name << endl;
+
 }
 
 King::~King()
