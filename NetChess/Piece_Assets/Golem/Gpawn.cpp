@@ -35,3 +35,19 @@ void GPawn::Rock()
     else
         rock = true;
 }
+
+string Gpawn::processClicks(vector<coord> clickedOn, Chess* c)
+{ 
+    if(clickedOn.size() != 1)
+        return "ERROR";
+    
+    if(clickedOn[0] == getSpot())
+    {
+        stringstream ss;
+        ss.str("");
+        ss << "MOVE " << getNum() <<  " " << getSpot().x << " " << getSpot().y <<  " ~";
+        Rock();
+        return ss;
+    }
+    return "DEFAULT";
+}
