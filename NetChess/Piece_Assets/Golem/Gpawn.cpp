@@ -36,7 +36,7 @@ void GPawn::Rock()
         rock = true;
 }
 
-string Gpawn::processClicks(vector<coord> clickedOn, Chess* c)
+string GPawn::processClicks(vector<coord> clickedOn, Chess* c)
 { 
     if(clickedOn.size() != 1)
         return "ERROR";

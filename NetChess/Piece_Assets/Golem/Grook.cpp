@@ -16,12 +16,41 @@ string GRook::Move(coord newpos)
 
 string GRook::processClicks(vector<coord> clickedOn, Chess* c)
 {
+    if(clickedOn.size() != 1)
+        return "ERROR";
+    
+    if(clickedOn[0] == getSpot())
+    {
+        if(isRock())
+        {
+            stringstream ss;
+            ss.str("");
+            ss << "MOVE " << getNum() << " " << getPos().x << " " << getPos().y << " ~";
+            Rock();
+            return ss;
+        }
+    }
     return "DEFAULT";
 }
 
 vector<coord> GRook::validSpots(Chess* c)
 {
-    return Rook::validSpots(c);
+    if(!rock)
+        return Rook::validSpots(c);
+    
+    vector<coord> empty;
+    return empty;
 }
 
+bool GRook::isRock() const
+{
+    return rock;
+}
 
+void GRook::Rock()
+{
+    if(rock)
+        rock = false;
+    else
+        rock = true;
+}

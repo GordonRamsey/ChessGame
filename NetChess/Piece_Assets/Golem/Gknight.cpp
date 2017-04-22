@@ -15,7 +15,42 @@ string GKnight::Move(coord newpos)
 }
 
 vector<coord> GKnight::validSpots(Chess* c)
-{
-    return Knight::validSpots(c);
+{   
+    if(!rock)
+        return Knight::validSpots(c);
+
+    vector<coord> empty;
+    return empty;
 }
 
+string GKnight::processClicks(vector<coord> clickedOn, Chess* c)
+{
+    if(clickedOn.size() != 1)
+        return "ERROR";
+
+    if(clickedOn[0] == getSpot())
+    {
+        if(isRock())
+        {
+            string stream ss;
+            ss.str("");
+            ss << "MOVE " << getNum() << " " << getPos().x << " " << getPos().y << " ~";
+            Rock;
+            return ss;
+        }
+    }
+    return "DEFAULT";
+}
+
+bool GKnight::isRock() const
+{
+    return rock;
+}
+
+void GKnight::Rock()
+{
+    if(rock)
+        rock = false;
+    else
+        rock = true;
+}

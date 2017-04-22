@@ -3,11 +3,15 @@
 #include "../king.h"
 class GKing : public King
 {
+  private:
+    bool rock = false;
   public:
     GKing(int x, int y, int it);
     ~GKing();
     string Move(coord newpos);
     vector<coord> validSpots(Chess* c);
     string processClicks(vector<coord> clickedOn, Chess* c) 
+    bool isRock() const;
+    void Rock()
 };
 #endif

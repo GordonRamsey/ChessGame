@@ -16,11 +16,41 @@ string GBishop::Move(coord newpos)
 
 string GBishop::processClicks(vector<coord> clickedOn, Chess* c)
 {
+    if(clickedOn.size() != 1)
+        return "ERROR";
+
+    if(clickedOn[0] == getSpot())
+    {
+        if(isRock())
+        {
+            stringstream ss;
+            ss.str("");
+            ss << "MOVE " << getNum() << " " << getPos().x << " " << getPos().y << " ~";
+            Rock();
+            return ss;
+        }
+    }
     return "DEFAULT";
 }
 
 vector<coord> GBishop::validSpots(Chess* c)
 {
-    return Bishop::validSpots(c);
+    if(!rock)
+        return Bishop::validSpots(c);
+
+    vector<coord> empty;
+    return empty;
 }
 
+bool GBishop::isRock() const
+{
+    return rock;
+}
+
+void GBishop::Rock()
+{
+    if(rock)
+        rock = false;
+    else
+        rock = true;
+}

@@ -29,12 +29,45 @@ bool Chess::isCapturable(coord a_spot, coord d_spot)
   Piece* attacking = board[a_spot.x][a_spot.y];
   Piece* defending = board[d_spot.x][d_spot.y];
 
-  if(defending->debug_name == "GKnight")
+  if(defending->debug_name == "Gknight")
   {
     //Check if attacker is pawn
     if(attacking->debug_name.find("pawn") != npos)
         return false;
+
+    if(defending->isRock())
+        return false;
+
   }
+
+  if(defending->debug_name == "Gpawn")
+  {
+    if(defending->isRock())
+        return false;
+  }
+
+  if(defending->debug_name == "Gbishop")
+  {
+    if(defending->isRock())
+        return false;
+
+    if(defending->m_level) //If it's leveled check if attacker is diagonal to it
+  }
+
+  if(defending->debug_name == "Gqueen")
+  {
+    if(defending->isRock())
+        return false;
+  }
+
+  if(defending->debug_name == "Grook")
+  {
+    if(defending->isRock())
+        return false;
+
+    if(defending->m_level) //If it's leveled check if attacker is in line with it
+  }
+
 
   //Run checks o3o
 

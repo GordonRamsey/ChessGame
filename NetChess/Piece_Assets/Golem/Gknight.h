@@ -4,6 +4,8 @@
 
 class GKnight : public Knight
 {
+  private:
+    bool rock = false;
   public:
     GKnight(int x, int y, int it);
     ~GKnight();
@@ -11,5 +13,7 @@ class GKnight : public Knight
     vector<coord> validSpots(Chess* c);
     string processClicks(vector<coord> clickedOn, Chess* c) 
       { return "DEFAULT"; }
+    bool isRock() const;
+    void Rock();
 };
 #endif

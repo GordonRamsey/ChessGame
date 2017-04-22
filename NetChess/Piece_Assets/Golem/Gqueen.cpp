@@ -16,10 +16,41 @@ string GQueen::Move(coord newpos)
 
 vector<coord> GQueen::validSpots(Chess* c)
 {
-    return Queen::validSpots(c);
+    if(!rock)
+        return Queen::validSpots(c);
+
+    vector<coord> empty
+    return empty;
 }
 
 string GQueen::processClicks(vector<coord> clickedOn, Chess* c)
 {
+    if(clickedOn.size() != 1)
+        return "ERROR";
+
+    if(clickedOn[0] == getSpot())
+    {
+        if(isRock())
+        {
+            stringstream ss;
+            ss.str("");
+            ss << "MOVE " << getNum() << " " << getPos().x << " " << getPos().y << " ~";
+            Rock();
+            return ss;
+        }
+    }
     return "DEFAULT";
+}
+
+bool GQueen::isRock() const
+{
+    return rock;
+}
+
+void GQueen::Rock()
+{
+    if(rock)
+        rock = false;
+    else
+        rock = true;
 }
