@@ -29,6 +29,13 @@ bool Chess::isCapturable(coord a_spot, coord d_spot)
   Piece* attacking = board[a_spot.x][a_spot.y];
   Piece* defending = board[d_spot.x][d_spot.y];
 
+  if(defending->debug_name == "GKnight")
+  {
+    //Check if attacker is pawn
+    if(attacking->debug_name.find("pawn") != npos)
+        return false;
+  }
+
   //Run checks o3o
 
   //Cannot capture walls!

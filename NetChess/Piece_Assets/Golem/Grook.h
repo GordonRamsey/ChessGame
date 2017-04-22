@@ -10,6 +10,5 @@ class GRook : public Rook
     string Move(coord newpos);
     vector<coord> validSpots(Chess* c);
     string processClicks(vector<coord> clickedOn, Chess* c);
-    isRock() const; //how to determine attacking direction protection
 };
 #endif
