@@ -52,6 +52,13 @@ bool Chess::isCapturable(coord a_spot, coord d_spot)
         return false;
 
     if(defending->m_level) //If it's leveled check if attacker is diagonal to it
+    {
+        if(((a_spot.x < d_spot.x) and (a_spot.y < d_spot.y)) or
+           ((a_spot.x < d_spot.x) and (a_spot.y > d_spot.y)) or
+           ((a_spot.x > d_spot.x) and (a_spot.y > d_spot.y)) or
+           ((a_spot.x > d_spot.x) and (a_spot.y < d_spot.y)))
+           return false;
+    }
   }
 
   if(defending->debug_name == "Gqueen")
@@ -66,6 +73,11 @@ bool Chess::isCapturable(coord a_spot, coord d_spot)
         return false;
 
     if(defending->m_level) //If it's leveled check if attacker is in line with it
+    {
+        if(((a_spot.x == d_spot.x) && ((a_spot.y > d_spot.y) or (a_spot.y < d_spot.y))) or
+           ((a_spot.y == d_spot.y) && ((a_spot.x > d_spot.x) or (a_spot.x < d_spot.x))))
+           return false;
+    }
   }
 
 
