@@ -1,3 +1,4 @@
+#include "piece.h"
 #include "chess.h"
 
 
@@ -23,7 +24,7 @@ bool Chess::isValid(int x, int y)
   return true;
 }
 
-bool Chess::isCapturable(coord a_spot, coord d_spot)
+bool Chess::isCapturable(coord a_spot, coord d_spot, string &capicing)
 {
   //A_spot = spot of attacking piece, d is defense
   Piece* attacking = board[a_spot.x][a_spot.y];
@@ -32,7 +33,7 @@ bool Chess::isCapturable(coord a_spot, coord d_spot)
   if(defending->debug_name == "Gknight")
   {
     //Check if attacker is pawn
-    if(attacking->debug_name.find("pawn") != npos)
+    if(attacking->debug_name.find("pawn") != string::npos)
         return false;
 
     if(defending->isRock())

@@ -16,8 +16,6 @@ string FPawn::Move(coord newpos)
 
 vector<coord> FPawn::validSpots(Chess* c)
 {
-  //TODO: Use original pawn movement function
-  
   stringstream ss;
   coord seek;
   seek = getSpot();

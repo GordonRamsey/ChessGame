@@ -5,7 +5,6 @@
 class GQueen : public Queen
 {
   private:
-    bool rock = false;
   public:
     GQueen(int x, int y, int it);
     ~GQueen();

@@ -4,7 +4,6 @@
 class GPawn : public Pawn
 {
   private:
-    bool rock = false;        
   public:
     GPawn(int x, int y, int it, char state);
     ~GPawn();

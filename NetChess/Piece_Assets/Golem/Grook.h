@@ -5,7 +5,6 @@
 class GRook : public Rook
 {
   private:
-    bool rock = false;
   public:
     GRook(int x, int y, int it);
     ~GRook();
