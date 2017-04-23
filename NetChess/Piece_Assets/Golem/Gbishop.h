@@ -5,7 +5,6 @@
 class GBishop : public Bishop
 {
   private:
-    bool rock = false;
   public:
     GBishop(int x, int y, int it);
     ~GBishop();

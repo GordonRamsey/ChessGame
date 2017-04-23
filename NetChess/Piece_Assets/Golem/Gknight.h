@@ -5,7 +5,6 @@
 class GKnight : public Knight
 {
   private:
-    bool rock = false;
   public:
     GKnight(int x, int y, int it);
     ~GKnight();

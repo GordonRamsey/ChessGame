@@ -51,7 +51,7 @@ class Chess
     //remove piece from board
     void removePiece(int num);
     bool isValid(int x, int y);
-    bool isCapturable(coord a_spot, coord d_spot);
+    bool isCapturable(coord a_spot, coord d_spot, string &capicing);
 
 
 };

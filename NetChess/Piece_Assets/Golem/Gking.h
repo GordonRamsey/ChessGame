@@ -4,7 +4,6 @@
 class GKing : public King
 {
   private:
-    bool rock = false;
   public:
     GKing(int x, int y, int it);
     ~GKing();

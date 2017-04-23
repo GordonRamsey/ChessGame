@@ -950,9 +950,20 @@ void netProcess(string msg)
 	c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y]->levelUp();
       }
     }
-
   }//If- LVUP
-  else
+  else if(cmd == "ROCK")//LVUP <piece num>
+  {
+    string s_num = snip(msg,index);
+    int num = atoi(s_num.c_str());
+    for(unsigned int i=0;i<pieces.size();i++){
+      if(pieces[i]->getNum() == num)
+      {
+	pieces[i]->Rock();
+	c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y]->Rock();
+      }
+    }
+  }//If- LVUP
+else
   {
     cerr << "Unknown command received:" << msg << endl;
     return;
@@ -1094,8 +1105,16 @@ int main ( int argc, char* argv[] )
 		coord help = { x/64, y/64 };
 		cerr << "[DEBUG] Command:" << selected->getCaptCmd(help) << endl;
 		ss.str(selected->getCaptCmd(pieces[i]->getSpot()));
-		//check if the piece is allowed to be captured at all (For the sake of golems and such
-		failure = !(c->isCapturable(selected->getSpot(), pieces[i]->getSpot()));//IsCapturable returns true if its a good case, we dont want failure to be true if its a good case
+		//check if the piece is allowed to be captured at all (For the sake of golems and such)
+		//IsCapturable returns true if its a good case, we dont want failure to be true if its a good case
+		string capicing = "DEFAULT";
+		
+		failure = !(c->isCapturable(selected->getSpot(), pieces[i]->getSpot(), capicing));
+		
+		//If captured unit has additional effects (See Necro)
+		if(capicing != "DEFAULT")
+		  ss << capicing;
+		
 		capture = true;
 		break;
 	      }

@@ -1,3 +1,6 @@
+#ifndef PIECE_H
+#define PIECE_H
+
 #include <SDL/SDL.h>
 #include <vector>
 #include <string>
@@ -6,8 +9,6 @@
 #include <iostream>
 #include <map>
 
-#ifndef PIECE_H
-#define PIECE_H
 
 using namespace std;
 
@@ -21,6 +22,7 @@ class Piece {
 	int num; //Piece number, for network purposes
 	SDL_Surface* sheet;
 	int owner;
+	bool rock = false;
 
     public:
         
@@ -70,5 +72,13 @@ class Piece {
 	int isLevel() { return m_level; }
 
 	void levelUp();
+
+	bool isRock(){ return rock; }
+	void Rock(){
+	  if (rock)
+	    rock = false;
+	  else
+	    rock = true;
+	}
 };
 #endif
