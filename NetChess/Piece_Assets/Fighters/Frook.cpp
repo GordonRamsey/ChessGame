@@ -21,7 +21,7 @@ vector<coord> FRook::validSpots(Chess* c)
   if(!m_level)
     return Rook::validSpots(c);
 
-  vector<coord> spots(Rook::validSpots(c));
+  vector<coord> spots;
   seek = getSpot(); 
   //Check North  
   while(true){
@@ -32,13 +32,14 @@ vector<coord> FRook::validSpots(Chess* c)
       break;
 
     //Check seek spot
+    cerr << "[FROOK] Checking spot:" << seek.x << "," << seek.y << endl;
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
 	spots.push_back(seek); 
 	ss.str("");
 	ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~"; 
-	captureMap[seek] = ss.str(); 
-	break; 
+	captureMap[seek] = ss.str();
+	break;
       }
       else
 	break;
@@ -47,6 +48,7 @@ vector<coord> FRook::validSpots(Chess* c)
     //look to the right
     tempseek.x = seek.x+1; 
     tempseek.y = seek.y; 
+    cerr << "[FROOK] Checking alt spot:" << tempseek.x << "," << tempseek.y << endl;
     if(!(tempseek.x > 13 || c->validspots[tempseek.x][tempseek.y] == 0)){
       if(c->board[tempseek.x][tempseek.y] != NULL){
 	if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
@@ -60,6 +62,7 @@ vector<coord> FRook::validSpots(Chess* c)
 
     //look to the left 
     tempseek.x = seek.x-1; 
+    cerr << "[FROOK] Checking alt spot:" << tempseek.x << "," << tempseek.y << endl;
     if(!(tempseek.x < 0 || c->validspots[tempseek.x][tempseek.y] == 0)){
       if(c->board[tempseek.x][tempseek.y] != NULL){
 	if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
@@ -73,6 +76,7 @@ vector<coord> FRook::validSpots(Chess* c)
     spots.push_back(seek);
   }
   //Check South
+  seek = getSpot(); 
   while(true){
     seek.y+=1;
     if(seek.y > 13)//Out of bounds
@@ -81,13 +85,14 @@ vector<coord> FRook::validSpots(Chess* c)
       break;
 
     //Check seek spot
+    cerr << "[FROOK] Checking spot:" << seek.x << "," << seek.y << endl;
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
 	spots.push_back(seek); 
 	ss.str("");
 	ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~"; 
-	captureMap[seek] = ss.str(); 
-	break; 
+	captureMap[seek] = ss.str();
+	break;
       }
       else
 	break;
@@ -96,6 +101,7 @@ vector<coord> FRook::validSpots(Chess* c)
     //look to the left
     tempseek.x = seek.x+1; 
     tempseek.y = seek.y; 
+    cerr << "[FROOK] Checking alt spot:" << tempseek.x << "," << tempseek.y << endl;
     if(!(tempseek.x > 13 || c->validspots[tempseek.x][tempseek.y] == 0)){
       if(c->board[tempseek.x][tempseek.y] != NULL){
 	if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
@@ -109,6 +115,7 @@ vector<coord> FRook::validSpots(Chess* c)
 
     //look to the right; 
     tempseek.x = seek.x-1; 
+    cerr << "[FROOK] Checking alt spot:" << tempseek.x << "," << tempseek.y << endl;
     if(!(tempseek.x < 0 || c->validspots[tempseek.x][tempseek.y] == 0)){
       if(c->board[tempseek.x][tempseek.y] != NULL){
 	if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
@@ -122,6 +129,7 @@ vector<coord> FRook::validSpots(Chess* c)
     spots.push_back(seek); 
   }
   //Check Left
+  seek = getSpot(); 
   while(true){
     seek.x-=1;
     if(seek.x < 0)//Out of bounds
@@ -130,13 +138,14 @@ vector<coord> FRook::validSpots(Chess* c)
       break;
 
     //Check seek spot
+    cerr << "[FROOK] Checking spot:" << seek.x << "," << seek.y << endl;
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
 	spots.push_back(seek); 
 	ss.str("");
 	ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~"; 
-	captureMap[seek] = ss.str(); 
-	break; 
+	captureMap[seek] = ss.str();
+	break;
       }
       else
 	break;
@@ -145,6 +154,7 @@ vector<coord> FRook::validSpots(Chess* c)
     //look up
     tempseek.x = seek.x; 
     tempseek.y = seek.y-1; 
+    cerr << "[FROOK] Checking alt spot:" << tempseek.x << "," << tempseek.y << endl;
     if(!(tempseek.y < 0 || c->validspots[tempseek.x][tempseek.y] == 0)){
       if(c->board[tempseek.x][tempseek.y] != NULL){
 	if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
@@ -158,6 +168,7 @@ vector<coord> FRook::validSpots(Chess* c)
 
     //look down; 
     tempseek.y = seek.y+1; 
+    cerr << "[FROOK] Checking alt spot:" << tempseek.x << "," << tempseek.y << endl;
     if(!(tempseek.y > 13 || c->validspots[tempseek.x][tempseek.y] == 0)){
       if(c->board[tempseek.x][tempseek.y] != NULL){
 	if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
@@ -171,6 +182,7 @@ vector<coord> FRook::validSpots(Chess* c)
     spots.push_back(seek); 
   }
   //Check Right
+  seek = getSpot(); 
   while(true){
     seek.x+=1;
     if(seek.x > 13)//Out of bounds
@@ -179,13 +191,14 @@ vector<coord> FRook::validSpots(Chess* c)
       break;
 
     //Check seek spot
+    cerr << "[FROOK] Checking spot:" << seek.x << "," << seek.y << endl;
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
 	spots.push_back(seek); 
 	ss.str("");
 	ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~"; 
-	captureMap[seek] = ss.str(); 
-	break; 
+	captureMap[seek] = ss.str();
+	break;
       }
       else
 	break;
@@ -194,6 +207,7 @@ vector<coord> FRook::validSpots(Chess* c)
     //look up
     tempseek.x = seek.x; 
     tempseek.y = seek.y-1; 
+    cerr << "[FROOK] Checking alt spot:" << tempseek.x << "," << tempseek.y << endl;
     if(!(tempseek.y < 0 || c->validspots[tempseek.x][tempseek.y] == 0)){
       if(c->board[tempseek.x][tempseek.y] != NULL){
 	if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
@@ -207,6 +221,7 @@ vector<coord> FRook::validSpots(Chess* c)
 
     //look to the right; 
     tempseek.y = seek.y+1; 
+    cerr << "[FROOK] Checking alt spot:" << tempseek.x << "," << tempseek.y << endl;
     if(!(tempseek.y > 13 || c->validspots[tempseek.x][tempseek.y] == 0)){
       if(c->board[tempseek.x][tempseek.y] != NULL){
 	if(c->board[tempseek.x][tempseek.y]->getTeam() != getTeam()){
