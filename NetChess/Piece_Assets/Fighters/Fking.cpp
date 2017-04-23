@@ -42,9 +42,9 @@ vector<coord> FKing::validSpots(Chess* c)
 string FKing::Morale(Chess* c)
 {
   stringstream ss;
- 
   if(m_level)
   {
+    ss << "MOVE " << getNum() << " " << getPos().x << " " << getPos().y << " ~";
     for(int i = 0; i < 14; ++i)
     {
       for(int j = 0; j < 14; ++j)
