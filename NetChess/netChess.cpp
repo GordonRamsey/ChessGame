@@ -500,28 +500,28 @@ void generatePieces()
       int num = it;
       if(j == 0)
       {
-	newPiece = new Pawn(x,y,num,'N');
+	newPiece = new GPawn(x,y,num,'N');
 	newPiece->setClip(CLIP_PAWN);
       }
       else{
 	if(i==0 || i ==7){  
-	  newPiece = new Rook(x,y,num);
+	  newPiece = new GRook(x,y,num);
 	  newPiece->setClip(CLIP_ROOK);
 	}
 	else if(i==1 || i ==6){ 
-	  newPiece = new Knight(x,y,num);
+	  newPiece = new GKnight(x,y,num);
 	  newPiece->setClip(CLIP_KNIGHT);
 	}
 	else if(i==2 || i ==5){  
-	  newPiece = new Bishop(x,y,num);
+	  newPiece = new GBishop(x,y,num);
 	  newPiece->setClip(CLIP_BISHOP);
 	}
 	else if(i==4){  
-	  newPiece = new King(x,y,num);
+	  newPiece = new GKing(x,y,num);
 	  newPiece->setClip(CLIP_KING);
 	}
 	else if(i==3){ 
-	  newPiece = new Queen(x,y,num);
+	  newPiece = new GQueen(x,y,num);
 	  newPiece->setClip(CLIP_QUEEN);
 	}
       }

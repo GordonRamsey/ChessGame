@@ -22,8 +22,10 @@ class Piece {
 	int num; //Piece number, for network purposes
 	SDL_Surface* sheet;
 	int owner;
+    
+    protected:
 	bool rock = false;
-
+    
     public:
         
 	bool m_level = false;
@@ -75,10 +77,14 @@ class Piece {
 
 	bool isRock(){ return rock; }
 	void Rock(){
-	  if (rock)
+	  if (rock){  
 	    rock = false;
-	  else
+	    setClip(getClip()-12);
+	  }
+	  else{
 	    rock = true;
+	    setClip(getClip()+12);
+	  }
 	}
 };
 #endif

@@ -99,13 +99,13 @@ string Piece::getCaptCmd(coord spot)
 
 void Piece::levelUp() 
 { 
-  if(!isLevel())
+  if(!isLevel() && debug_name.find("pawn") == string::npos)
     setClip(getClip()+12);
   m_level = true;
   cerr << "Level up piece name:" << debug_name << endl;
   if(debug_name == "Fking")
   { 
-    cerr << "OOH WEE UPGRADED KING" << endl; 
+    cerr << "OOH WEE UPGRADED FKING" << endl; 
     clicks = 1;
   }
 }

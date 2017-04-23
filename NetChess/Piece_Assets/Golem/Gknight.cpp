@@ -32,11 +32,11 @@ string GKnight::processClicks(vector<coord> clickedOn, Chess* c)
     {
         if(isRock())
         {
-            string stream ss;
+            stringstream ss;
             ss.str("");
             ss << "MOVE " << getNum() << " " << getPos().x << " " << getPos().y << " ~";
-            Rock;
-            return ss;
+            Rock();
+            return ss.str();
         }
     }
     return "DEFAULT";

@@ -19,7 +19,7 @@ vector<coord> GQueen::validSpots(Chess* c)
     if(!rock)
         return Queen::validSpots(c);
 
-    vector<coord> empty
+    vector<coord> empty;
     return empty;
 }
 
@@ -36,7 +36,7 @@ string GQueen::processClicks(vector<coord> clickedOn, Chess* c)
             ss.str("");
             ss << "MOVE " << getNum() << " " << getPos().x << " " << getPos().y << " ~";
             Rock();
-            return ss;
+            return ss.str();
         }
     }
     return "DEFAULT";

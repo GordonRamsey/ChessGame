@@ -47,7 +47,7 @@ string GPawn::processClicks(vector<coord> clickedOn, Chess* c)
         ss.str("");
         ss << "MOVE " << getNum() <<  " " << getPos().x << " " << getPos().y <<  " ~";
         Rock();
-        return ss;
+        return ss.str();
     }
     return "DEFAULT";
 }

@@ -28,6 +28,14 @@
 #include "Piece_Assets/Fighters/Fking.h"
 #include "Piece_Assets/Fighters/Fqueen.h"
 
+//Golem includes
+#include "Piece_Assets/Golem/Gpawn.h"
+#include "Piece_Assets/Golem/Grook.h"
+#include "Piece_Assets/Golem/Gknight.h"
+#include "Piece_Assets/Golem/Gbishop.h"
+#include "Piece_Assets/Golem/Gking.h"
+#include "Piece_Assets/Golem/Gqueen.h"
+
 //Game object includes
 #include "Piece_Assets/chess.h"
 
