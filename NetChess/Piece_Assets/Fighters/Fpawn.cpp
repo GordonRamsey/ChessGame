@@ -24,20 +24,6 @@ vector<coord> FPawn::validSpots(Chess* c)
   
   if(dir == 'N') //Starting Cardinal direction is North... SO PLAYER 2 PAWNS
   {
-    //Check forward 1
-    if(c->isValid(seek.x, seek.y-1))
-    {
-      seek.y--;
-      if(c->board[seek.x][seek.y] == NULL)
-	spots.push_back(seek);
-    }
-    //Check forward 2 if first_move
-    if(first_move)
-    {
-      seek.y--;
-      if(c->board[seek.x][seek.y] == NULL)
-	spots.push_back(seek);
-    }
     seek = getSpot();
     //Check NW for capture
     if(c->isValid(seek.x-1, seek.y-1))
@@ -48,11 +34,6 @@ vector<coord> FPawn::validSpots(Chess* c)
       {
 	if(getTeam() != c->board[seek.x][seek.y]->getTeam())
 	{
-	  spots.push_back(seek);
-	  ss.str("");
-	  ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-	  captureMap[seek] = ss.str();
-
 	  //Check NW again for capture
 	  if(c->isValid(seek.x-1, seek.y-1))
 	  {
@@ -66,6 +47,7 @@ vector<coord> FPawn::validSpots(Chess* c)
 		ss.str("");
 		ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 		ss << "REMV " << c->board[seek.x+1][seek.y+1]->getNum() << " ~";
+		captureMap[seek] = ss.str();
 		seek.x++;
 		seek.y++;
 	      }
@@ -84,6 +66,7 @@ vector<coord> FPawn::validSpots(Chess* c)
 		ss.str("");
 		ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 		ss << "REMV " << c->board[seek.x-1][seek.y+1]->getNum() << " ~";
+		captureMap[seek] = ss.str();
 		seek.x--;
 		seek.y++;
 	      }
@@ -102,11 +85,6 @@ vector<coord> FPawn::validSpots(Chess* c)
       {
 	if(getTeam() != c->board[seek.x][seek.y]->getTeam())
 	{
-	  spots.push_back(seek);
-	  ss.str("");
-	  ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-	  captureMap[seek] = ss.str();
-
 	  //Check NW again for capture
 	  if(c->isValid(seek.x-1, seek.y-1))
 	  {
@@ -120,6 +98,7 @@ vector<coord> FPawn::validSpots(Chess* c)
 		ss.str("");
 		ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 		ss << "REMV " << c->board[seek.x+1][seek.y+1]->getNum() << " ~";
+		captureMap[seek] = ss.str();
 		seek.x++;
 		seek.y++;
 	      }
@@ -138,6 +117,7 @@ vector<coord> FPawn::validSpots(Chess* c)
 		ss.str("");
 		ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 		ss << "REMV " << c->board[seek.x-1][seek.y+1]->getNum() << " ~";
+		captureMap[seek] = ss.str();
 		seek.x--;
 		seek.y++;
 	      }
@@ -149,20 +129,6 @@ vector<coord> FPawn::validSpots(Chess* c)
   }
   if(dir == 'S') //Starting Cardinal direction is South... SO PLAYER 1 PAWNS
   {
-    //Check forward 1
-    if(c->isValid(seek.x, seek.y+1))
-    {
-      seek.y++;
-      if(c->board[seek.x][seek.y] == NULL)
-	spots.push_back(seek);
-    }
-    //Check forward 2 if first_move
-    if(first_move)
-    {
-      seek.y++;
-      if(c->board[seek.x][seek.y] == NULL)
-	spots.push_back(seek);
-    }
     seek = getSpot();
     //Check SW for capture
     if(c->isValid(seek.x-1, seek.y+1))
@@ -173,11 +139,6 @@ vector<coord> FPawn::validSpots(Chess* c)
       {
 	if(getTeam() != c->board[seek.x][seek.y]->getTeam())
 	{
-	  spots.push_back(seek);
-	  ss.str("");
-	  ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-	  captureMap[seek] = ss.str();
-
 	  //Check SW again for capture
 	  if(c->isValid(seek.x-1, seek.y+1))
 	  {
@@ -191,6 +152,7 @@ vector<coord> FPawn::validSpots(Chess* c)
 		ss.str("");
 		ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 		ss << "REMV " << c->board[seek.x+1][seek.y-1]->getNum() << " ~";
+		captureMap[seek] = ss.str();
 		seek.x++;
 		seek.y--;
 	      }
@@ -208,9 +170,10 @@ vector<coord> FPawn::validSpots(Chess* c)
 		spots.push_back(seek);
 		ss.str("");
 		ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-		ss << "REMV " << c->board[seek.x+1][seek.y+1]->getNum() << " ~";
-		seek.x++;
-		seek.y++;
+		ss << "REMV " << c->board[seek.x-1][seek.y-1]->getNum() << " ~";
+		captureMap[seek] = ss.str();
+		seek.x--;
+		seek.y--;
 	      }
 	    }
 	  }
@@ -227,11 +190,6 @@ vector<coord> FPawn::validSpots(Chess* c)
       {
 	if(getTeam() != c->board[seek.x][seek.y]->getTeam())
 	{
-	  spots.push_back(seek);
-	  ss.str("");
-	  ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-	  captureMap[seek] = ss.str();
-
 	  //Check SW again for capture
 	  if(c->isValid(seek.x-1, seek.y+1))
 	  {
@@ -245,6 +203,7 @@ vector<coord> FPawn::validSpots(Chess* c)
 		ss.str("");
 		ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 		ss << "REMV " << c->board[seek.x+1][seek.y-1]->getNum() << " ~";
+		captureMap[seek] = ss.str();
 		seek.x++;
 		seek.y--;
 	      }
@@ -262,9 +221,10 @@ vector<coord> FPawn::validSpots(Chess* c)
 		spots.push_back(seek);
 		ss.str("");
 		ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-		ss << "REMV " << c->board[seek.x+1][seek.y+1]->getNum() << " ~";
-		seek.x++;
-		seek.y++;
+		ss << "REMV " << c->board[seek.x-1][seek.y-1]->getNum() << " ~";
+		captureMap[seek] = ss.str();
+		seek.x--;
+		seek.y--;
 	      }
 	    }
 	  }
@@ -275,20 +235,6 @@ vector<coord> FPawn::validSpots(Chess* c)
 
   if(dir == 'W') //Starting Cardinal direction is West... SO PLAYER 3 PAWNS
   {
-    //Check forward 1
-    if(c->isValid(seek.x-1, seek.y))
-    {
-      seek.x--;
-      if(c->board[seek.x][seek.y] == NULL)
-	spots.push_back(seek);
-    }
-    //Check forward 2 if first_move
-    if(first_move)
-    {
-      seek.x--;
-      if(c->board[seek.x][seek.y] == NULL)
-	spots.push_back(seek);
-    }
     seek = getSpot();
     //Check NW for capture
     if(c->isValid(seek.x-1, seek.y-1))
@@ -299,11 +245,6 @@ vector<coord> FPawn::validSpots(Chess* c)
       {
 	if(getTeam() != c->board[seek.x][seek.y]->getTeam())
 	{
-	  spots.push_back(seek);
-	  ss.str("");
-	  ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-	  captureMap[seek] = ss.str();
-
 	  //Check NW again for capture
 	  if(c->isValid(seek.x-1, seek.y-1))
 	  {
@@ -317,6 +258,7 @@ vector<coord> FPawn::validSpots(Chess* c)
 		ss.str("");
 		ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 		ss << "REMV " << c->board[seek.x+1][seek.y+1]->getNum() << " ~";
+		captureMap[seek] = ss.str();
 		seek.x++;
 		seek.y++;
 	      }
@@ -335,6 +277,7 @@ vector<coord> FPawn::validSpots(Chess* c)
 		ss.str("");
 		ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 		ss << "REMV " << c->board[seek.x+1][seek.y-1]->getNum() << " ~";
+		captureMap[seek] = ss.str();
 		seek.x++;
 		seek.y--;
 	      }
@@ -353,11 +296,6 @@ vector<coord> FPawn::validSpots(Chess* c)
       {
 	if(getTeam() != c->board[seek.x][seek.y]->getTeam())
 	{
-	  spots.push_back(seek);
-	  ss.str("");
-	  ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-	  captureMap[seek] = ss.str();
-
 	  //Check NW again for capture
 	  if(c->isValid(seek.x-1, seek.y-1))
 	  {
@@ -371,6 +309,7 @@ vector<coord> FPawn::validSpots(Chess* c)
 		ss.str("");
 		ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 		ss << "REMV " << c->board[seek.x+1][seek.y+1]->getNum() << " ~";
+		captureMap[seek] = ss.str();
 		seek.x++;
 		seek.y++;
 	      }
@@ -389,6 +328,7 @@ vector<coord> FPawn::validSpots(Chess* c)
 		ss.str("");
 		ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 		ss << "REMV " << c->board[seek.x+1][seek.y-1]->getNum() << " ~";
+		captureMap[seek] = ss.str();
 		seek.x++;
 		seek.y--;
 	      }
@@ -401,20 +341,6 @@ vector<coord> FPawn::validSpots(Chess* c)
 
   if(dir == 'E') //Starting Cardinal direction is Eest... SO PLAYER 4 PAWNS
   {
-    //Check forward 1
-    if(c->isValid(seek.x+1, seek.y))
-    {
-      seek.x++;
-      if(c->board[seek.x][seek.y] == NULL)
-	spots.push_back(seek);
-    }
-    //Check forward 2 if first_move
-    if(first_move)
-    {
-      seek.x++;
-      if(c->board[seek.x][seek.y] == NULL)
-	spots.push_back(seek);
-    }
     seek = getSpot();
     //Checking NE for capture
     if(c->isValid(seek.x+1, seek.y-1))
@@ -425,11 +351,6 @@ vector<coord> FPawn::validSpots(Chess* c)
       {
 	if(getTeam() != c->board[seek.x][seek.y]->getTeam())
 	{
-	  spots.push_back(seek);
-	  ss.str("");
-	  ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-	  captureMap[seek] = ss.str();
-
 	  //Check NE again for capture
 	  if(c->isValid(seek.x+1, seek.y-1))
 	  {
@@ -460,9 +381,9 @@ vector<coord> FPawn::validSpots(Chess* c)
 		spots.push_back(seek);
 		ss.str("");
 		ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-		ss << "REMV " << c->board[seek.x+1][seek.y+1]->getNum() << " ~";
-		seek.x++;
-		seek.y++;
+		ss << "REMV " << c->board[seek.x-1][seek.y-1]->getNum() << " ~";
+		seek.x--;
+		seek.y--;
 	      }
 	    }
 	  } 
@@ -479,11 +400,6 @@ vector<coord> FPawn::validSpots(Chess* c)
       {
 	if(getTeam() != c->board[seek.x][seek.y]->getTeam())
 	{
-	  spots.push_back(seek);
-	  ss.str("");
-	  ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-	  captureMap[seek] = ss.str();
-	   
 	  //Check NE again for capture
 	  if(c->isValid(seek.x+1, seek.y-1))
 	  {
@@ -514,9 +430,9 @@ vector<coord> FPawn::validSpots(Chess* c)
 		spots.push_back(seek);
 		ss.str("");
 		ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-		ss << "REMV " << c->board[seek.x+1][seek.y+1]->getNum() << " ~";
-		seek.x++;
-		seek.y++;
+		ss << "REMV " << c->board[seek.x-1][seek.y-1]->getNum() << " ~";
+		seek.x--;
+		seek.y--;
 	      }
 	    }
 	  } 
