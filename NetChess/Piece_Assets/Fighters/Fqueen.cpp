@@ -3,6 +3,7 @@
 FQueen::FQueen(int x, int y, int it) : Queen(x, y, it)
 {
     debug_name = "Fqueen";
+    clicks = 0;
 }
 
 FQueen::~FQueen()

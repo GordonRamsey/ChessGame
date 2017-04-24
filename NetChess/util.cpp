@@ -193,7 +193,7 @@ void util_set_clips(SDL_Rect clips [])
 
   //Extra row 2
   clips[30].x = SPRITE_SIZE*0;
-  clips[30].y = SPRITE_SIZE*4;
+  clips[30].y = SPRITE_SIZE*5;
   clips[30].w = SPRITE_SIZE;
   clips[30].h = SPRITE_SIZE;
  

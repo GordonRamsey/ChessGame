@@ -3,7 +3,7 @@ using namespace std;
 
 GKnight::GKnight(int x, int y, int it) : Knight(x, y ,it)
 {
-    debug_name = "GKnight";
+    debug_name = "Gknight";
 }
 
 GKnight::~GKnight()

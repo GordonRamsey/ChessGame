@@ -11,7 +11,7 @@ GBishop::~GBishop()
 
 string GBishop::Move(coord newpos)
 {
-    return "DEFAULT";
+    return Bishop::Move(newpos);
 }
 
 string GBishop::processClicks(vector<coord> clickedOn, Chess* c)

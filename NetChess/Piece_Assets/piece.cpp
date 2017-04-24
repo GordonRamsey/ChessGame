@@ -108,21 +108,20 @@ void Piece::levelUp()
     cerr << "OOH WEE UPGRADED FKING" << endl; 
     clicks = 1;
   }
+  else if(debug_name == "Gking")
+  {
+    clicks = 1;
+  }
 }
 void Piece::Rock()
 {
   if (rock){  
     rock = false;
-    if(getClip() < 6)
-      setClip(getClip()-24);
-    else
-      setClip(getClip()-12);
+    setClip(getClip()-24);
   }
   else{
     rock = true;
-    if(getClip() < 6)
-      setClip(getClip()+24);
-    else
-      setClip(getClip()+12);
+    setClip(getClip()+24);
   }
+  cerr << "[ROCK] Piece num:" << getNum() << " Rock:" << isRock() << " Clip:" << getClip() << endl;
 }

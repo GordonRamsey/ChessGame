@@ -11,7 +11,7 @@ GRook::~GRook()
 
 string GRook::Move(coord newpos)
 {
-    return "DEFAULT";
+    return Rook::Move(newpos);
 }
 
 string GRook::processClicks(vector<coord> clickedOn, Chess* c)
@@ -26,7 +26,6 @@ string GRook::processClicks(vector<coord> clickedOn, Chess* c)
             stringstream ss;
             ss.str("");
             ss << "MOVE " << getNum() << " " << getPos().x << " " << getPos().y << " ~";
-            Rock();
             return ss.str();
         }
     }

@@ -11,7 +11,7 @@ GQueen::~GQueen()
 
 string GQueen::Move(coord newpos)
 {
-    return "DEFAULT";
+    return Queen::Move(newpos);
 }
 
 vector<coord> GQueen::validSpots(Chess* c)
@@ -35,7 +35,6 @@ string GQueen::processClicks(vector<coord> clickedOn, Chess* c)
             stringstream ss;
             ss.str("");
             ss << "MOVE " << getNum() << " " << getPos().x << " " << getPos().y << " ~";
-            Rock();
             return ss.str();
         }
     }

@@ -30,6 +30,8 @@ bool Chess::isCapturable(coord a_spot, coord d_spot, string &capicing)
   Piece* attacking = board[a_spot.x][a_spot.y];
   Piece* defending = board[d_spot.x][d_spot.y];
 
+  cerr << "[isCapturable] A:" << attacking->debug_name << " | D:" << defending->debug_name << endl; 
+
   if(defending->debug_name == "Gknight")
   {
     //Check if attacker is pawn
@@ -38,11 +40,11 @@ bool Chess::isCapturable(coord a_spot, coord d_spot, string &capicing)
 
     if(defending->isRock())
         return false;
-
   }
 
   if(defending->debug_name == "Gpawn")
   {
+    cerr << "Checking Gpawn isrock:" << defending->isRock() << endl;
     if(defending->isRock())
         return false;
   }

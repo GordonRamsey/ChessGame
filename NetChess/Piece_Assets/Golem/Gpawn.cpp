@@ -12,7 +12,7 @@ GPawn::~GPawn()
 
 string GPawn::Move(coord newpos)
 {
-    return "DEFAULT";
+    return Pawn::Move(newpos);
 }
 
 vector<coord> GPawn::validSpots(Chess* c)
@@ -35,7 +35,6 @@ string GPawn::processClicks(vector<coord> clickedOn, Chess* c)
         ss.str("");
         ss << "MOVE " << getNum() <<  " " << getPos().x << " " << getPos().y <<  " ~";
         ss << "ROCK " << getNum() << " ~";
-        Rock();
         return ss.str();
     }
     return "DEFAULT";

@@ -11,7 +11,7 @@ GKing::~GKing()
 
 string GKing::Move(coord newpos)
 {
-    return "DEFAULT";
+    return King::Move(newpos);
 }
 
 vector<coord> GKing::validSpots(Chess* c)
@@ -50,7 +50,7 @@ string GKing::MakeRocks(Chess* c)
   if(m_level)
   {
     ss << "MOVE " << getNum() << " " << getPos().x << " " << getPos().y << " ~";
-    coord cur_pos = getPos();
+    coord cur_pos = getSpot();
     if(c->validspots[cur_pos.x-1][cur_pos.y-1] != 0 && c->board[cur_pos.x-1][cur_pos.y-1] != NULL)
     {
       if(c->board[cur_pos.x-1][cur_pos.y-1]->getTeam() == getTeam())
