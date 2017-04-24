@@ -109,4 +109,20 @@ void Piece::levelUp()
     clicks = 1;
   }
 }
-
+void Piece::Rock()
+{
+  if (rock){  
+    rock = false;
+    if(getClip() < 6)
+      setClip(getClip()-24);
+    else
+      setClip(getClip()-12);
+  }
+  else{
+    rock = true;
+    if(getClip() < 6)
+      setClip(getClip()+24);
+    else
+      setClip(getClip()+12);
+  }
+}

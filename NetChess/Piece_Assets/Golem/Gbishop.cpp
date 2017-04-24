@@ -42,15 +42,3 @@ vector<coord> GBishop::validSpots(Chess* c)
     return empty;
 }
 
-bool GBishop::isRock() const
-{
-    return rock;
-}
-
-void GBishop::Rock()
-{
-    if(rock)
-        rock = false;
-    else
-        rock = true;
-}

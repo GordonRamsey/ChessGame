@@ -4,14 +4,17 @@
 #include <queue>
 #include <sstream>
 #include "bridge.h"
+#include "util.cpp"
 
 using namespace std;
 
 const int SCREEN_WIDTH = 1216;
 const int SCREEN_HEIGHT = 896;
 const int SCREEN_BPP = 32;
+
+
+/*
 const int SPRITE_SIZE = 64;
-const int BORDER_SIZE = 0;
 
 //Slices for our sprite sheet
 int CLIP_PAWN = 0;
@@ -41,6 +44,7 @@ int CLIP_BISHOP_UPGRADE_SELECT = 20;
 int CLIP_KNIGHT_UPGRADE_SELECT = 21;
 int CLIP_QUEEN_UPGRADE_SELECT = 22;
 int CLIP_KING_UPGRADE_SELECT = 23;
+*/
 
 //Our connection to the server
 Socket s_socket;
@@ -64,7 +68,7 @@ SDL_Surface *textBack = NULL;
 //The event structure
 SDL_Event event;
 
-SDL_Rect clips[24];
+SDL_Rect clips[48];
 
 //Our "held" piece
 Piece* selected = NULL;
@@ -203,6 +207,7 @@ void Piece::setTeam(int x)
   }
 }
 
+/*
 void set_clips()
 {
   //Clip range for pawn
@@ -330,7 +335,132 @@ void set_clips()
   clips[CLIP_KING_UPGRADE_SELECT].y = SPRITE_SIZE*3;
   clips[CLIP_KING_UPGRADE_SELECT].w = SPRITE_SIZE;
   clips[CLIP_KING_UPGRADE_SELECT].h = SPRITE_SIZE;
+
+  //clip range for extra piece images
+  clips[24].x = SPRITE_SIZE*0;
+  clips[24].y = SPRITE_SIZE*4;
+  clips[24].w = SPRITE_SIZE;
+  clips[24].h = SPRITE_SIZE;
+ 
+  clips[25].x = SPRITE_SIZE*1;
+  clips[25].y = SPRITE_SIZE*4;
+  clips[25].w = SPRITE_SIZE;
+  clips[25].h = SPRITE_SIZE;
+ 
+  clips[26].x = SPRITE_SIZE*2;
+  clips[26].y = SPRITE_SIZE*4;
+  clips[26].w = SPRITE_SIZE;
+  clips[26].h = SPRITE_SIZE;
+ 
+  clips[27].x = SPRITE_SIZE*3;
+  clips[27].y = SPRITE_SIZE*4;
+  clips[27].w = SPRITE_SIZE;
+  clips[27].h = SPRITE_SIZE;
+ 
+  clips[28].x = SPRITE_SIZE*4;
+  clips[28].y = SPRITE_SIZE*4;
+  clips[28].w = SPRITE_SIZE;
+  clips[28].h = SPRITE_SIZE;
+ 
+  clips[29].x = SPRITE_SIZE*5;
+  clips[29].y = SPRITE_SIZE*4;
+  clips[29].w = SPRITE_SIZE;
+  clips[29].h = SPRITE_SIZE;
+
+  //Extra row 2
+  clips[30].x = SPRITE_SIZE*0;
+  clips[30].y = SPRITE_SIZE*4;
+  clips[30].w = SPRITE_SIZE;
+  clips[30].h = SPRITE_SIZE;
+ 
+  clips[31].x = SPRITE_SIZE*1;
+  clips[31].y = SPRITE_SIZE*5;
+  clips[31].w = SPRITE_SIZE;
+  clips[31].h = SPRITE_SIZE;
+ 
+  clips[32].x = SPRITE_SIZE*2;
+  clips[32].y = SPRITE_SIZE*5;
+  clips[32].w = SPRITE_SIZE;
+  clips[32].h = SPRITE_SIZE;
+ 
+  clips[33].x = SPRITE_SIZE*3;
+  clips[33].y = SPRITE_SIZE*5;
+  clips[33].w = SPRITE_SIZE;
+  clips[33].h = SPRITE_SIZE;
+ 
+  clips[34].x = SPRITE_SIZE*4;
+  clips[34].y = SPRITE_SIZE*5;
+  clips[34].w = SPRITE_SIZE;
+  clips[34].h = SPRITE_SIZE;
+ 
+  clips[35].x = SPRITE_SIZE*5;
+  clips[35].y = SPRITE_SIZE*5;
+  clips[35].w = SPRITE_SIZE;
+  clips[35].h = SPRITE_SIZE;
+  
+  //Extra row 3
+  clips[36].x = SPRITE_SIZE*0;
+  clips[36].y = SPRITE_SIZE*5;
+  clips[36].w = SPRITE_SIZE;
+  clips[36].h = SPRITE_SIZE;
+ 
+  clips[37].x = SPRITE_SIZE*1;
+  clips[37].y = SPRITE_SIZE*5;
+  clips[37].w = SPRITE_SIZE;
+  clips[37].h = SPRITE_SIZE;
+ 
+  clips[38].x = SPRITE_SIZE*2;
+  clips[38].y = SPRITE_SIZE*5;
+  clips[38].w = SPRITE_SIZE;
+  clips[38].h = SPRITE_SIZE;
+ 
+  clips[39].x = SPRITE_SIZE*3;
+  clips[39].y = SPRITE_SIZE*5;
+  clips[39].w = SPRITE_SIZE;
+  clips[39].h = SPRITE_SIZE;
+ 
+  clips[40].x = SPRITE_SIZE*4;
+  clips[40].y = SPRITE_SIZE*5;
+  clips[40].w = SPRITE_SIZE;
+  clips[40].h = SPRITE_SIZE;
+ 
+  clips[41].x = SPRITE_SIZE*5;
+  clips[41].y = SPRITE_SIZE*5;
+  clips[41].w = SPRITE_SIZE;
+  clips[41].h = SPRITE_SIZE;
+
+  //Extra row 4
+  clips[42].x = SPRITE_SIZE*0;
+  clips[42].y = SPRITE_SIZE*6;
+  clips[42].w = SPRITE_SIZE;
+  clips[42].h = SPRITE_SIZE;
+ 
+  clips[43].x = SPRITE_SIZE*1;
+  clips[43].y = SPRITE_SIZE*6;
+  clips[43].w = SPRITE_SIZE;
+  clips[43].h = SPRITE_SIZE;
+ 
+  clips[44].x = SPRITE_SIZE*2;
+  clips[44].y = SPRITE_SIZE*6;
+  clips[44].w = SPRITE_SIZE;
+  clips[44].h = SPRITE_SIZE;
+ 
+  clips[45].x = SPRITE_SIZE*3;
+  clips[45].y = SPRITE_SIZE*6;
+  clips[45].w = SPRITE_SIZE;
+  clips[45].h = SPRITE_SIZE;
+ 
+  clips[46].x = SPRITE_SIZE*4;
+  clips[46].y = SPRITE_SIZE*6;
+  clips[46].w = SPRITE_SIZE;
+  clips[46].h = SPRITE_SIZE;
+ 
+  clips[47].x = SPRITE_SIZE*5;
+  clips[47].y = SPRITE_SIZE*6;
+  clips[47].w = SPRITE_SIZE;
+  clips[47].h = SPRITE_SIZE;
 }
+*/
 
 SDL_Surface *load_image( std::string filename )
 {
@@ -374,6 +504,7 @@ bool init()
   }
 
   SDL_WM_SetCaption("NetChess", NULL);
+  util_set_clips(clips);
 
   return true;
 }
@@ -1013,7 +1144,6 @@ int main ( int argc, char* argv[] )
     return 1;
   if(load_files() == false)
     return 1;
-  set_clips();
   generatePieces();
 
   //// --------------

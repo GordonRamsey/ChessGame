@@ -4,6 +4,7 @@ using namespace std;
 GPawn::GPawn(int x, int y, int it, char state) : Pawn(x,y,it,state)
 {
     debug_name = "Gpawn";
+    clicks = 1;
 }
 
 GPawn::~GPawn()
@@ -23,25 +24,12 @@ vector<coord> GPawn::validSpots(Chess* c)
     return empty;
 }
 
-bool GPawn::isRock() const
-{
-    return rock;
-}
-
-void GPawn::Rock()
-{
-    if(rock)
-        rock = false;
-    else
-        rock = true;
-}
-
 string GPawn::processClicks(vector<coord> clickedOn, Chess* c)
 { 
     if(clickedOn.size() != 1)
         return "ERROR";
     
-    if(clickedOn[0] == getSpot())
+    if(clickedOn[0] == getPos())
     {
         stringstream ss;
         ss.str("");

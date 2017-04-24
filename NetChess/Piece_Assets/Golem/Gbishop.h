@@ -11,7 +11,5 @@ class GBishop : public Bishop
     string Move(coord newpos);
     vector<coord> validSpots(Chess* c);
     string processClicks(vector<coord> clickedOn, Chess* c); 
-    bool isRock() const;
-    void Rock();
 };
 #endif

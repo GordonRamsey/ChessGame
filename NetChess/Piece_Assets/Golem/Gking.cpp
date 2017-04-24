@@ -102,15 +102,3 @@ string GKing::MakeRocks(Chess* c)
   return ss.str();
 }
 
-bool GKing::isRock() const
-{
-  return rock;
-}
-
-void GKing::Rock()
-{
-  if(rock)
-    rock = false;
-  else
-    rock = true;
-}

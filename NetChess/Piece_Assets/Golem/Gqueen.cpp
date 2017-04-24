@@ -42,15 +42,3 @@ string GQueen::processClicks(vector<coord> clickedOn, Chess* c)
     return "DEFAULT";
 }
 
-bool GQueen::isRock() const
-{
-    return rock;
-}
-
-void GQueen::Rock()
-{
-    if(rock)
-        rock = false;
-    else
-        rock = true;
-}

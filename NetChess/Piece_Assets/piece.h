@@ -76,15 +76,6 @@ class Piece {
 	void levelUp();
 
 	bool isRock(){ return rock; }
-	void Rock(){
-	  if (rock){  
-	    rock = false;
-	    setClip(getClip()-12);
-	  }
-	  else{
-	    rock = true;
-	    setClip(getClip()+12);
-	  }
-	}
+        void Rock();	
 };
 #endif

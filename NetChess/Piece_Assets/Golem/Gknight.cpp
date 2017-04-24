@@ -42,15 +42,3 @@ string GKnight::processClicks(vector<coord> clickedOn, Chess* c)
     return "DEFAULT";
 }
 
-bool GKnight::isRock() const
-{
-    return rock;
-}
-
-void GKnight::Rock()
-{
-    if(rock)
-        rock = false;
-    else
-        rock = true;
-}

@@ -42,15 +42,3 @@ vector<coord> GRook::validSpots(Chess* c)
     return empty;
 }
 
-bool GRook::isRock() const
-{
-    return rock;
-}
-
-void GRook::Rock()
-{
-    if(rock)
-        rock = false;
-    else
-        rock = true;
-}
