@@ -4,6 +4,7 @@
 class NPawn : public Pawn
 {
   private:
+    Piece* bitten = NULL;
   public:
     NPawn(int x, int y, int it, char state);
     ~NPawn();

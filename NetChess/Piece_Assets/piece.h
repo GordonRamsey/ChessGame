@@ -62,7 +62,10 @@ class Piece {
 
 
         //Used in Moving and Capturing
-    virtual vector<coord> validSpots(Chess* c) { };
+    virtual vector<coord> validSpots(Chess* c) 
+      { vector<coord> empty;
+        return empty; }
+
 	string getCaptCmd(coord spot);
 
 	//Used for special unit commands
@@ -72,10 +75,13 @@ class Piece {
       { return "DEFAULT"; }
 
 	int isLevel() { return m_level; }
-
 	void levelUp();
 
+	//For golems
 	bool isRock(){ return rock; }
         void Rock();	
+
+	//For necros and walls
+        string turnPass() { return "DEFAULT"; }
 };
 #endif

@@ -23,3 +23,14 @@ string NPawn::processClicks(vector<coord> clickedOn, Chess* c)
 { 
   return "DEFAULT";
 }
+
+string NPawn::turnPass()
+{
+  if(bitten != NULL)
+  {
+    stringstream ss;
+    ss << "REMV " << bitten->getNum() << " ~";
+    ss << "PLAC undead_pawn" << ;
+  }
+
+}

@@ -108,6 +108,22 @@ void Piece::levelUp()
     cerr << "OOH WEE UPGRADED FKING" << endl; 
     clicks = 1;
   }
+  else if(debug_name == "Nking")
+  {
+    clicks = 3;
+  }
+  else if(debug_name == "Nknight")
+  {
+    clicks = 1;
+  }
+  else if(debug_name == "Nqueen")
+  {
+    clicks = 2;
+  }
+  else if(debug_name == "Nbishop")
+  {
+    clicks = 2;
+  }
   else if(debug_name == "Gking")
   {
     clicks = 1;

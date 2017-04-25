@@ -384,28 +384,28 @@ void generatePieces()
       int num = it;
       if(j == 1)
       {
-	newPiece = new Pawn(x,y,num,'E');
+	newPiece = new NPawn(x,y,num,'E');
 	newPiece->setClip(CLIP_PAWN);
       }
       else{
 	if(i==0 || i ==7){  
-	  newPiece = new Rook(x,y,num);
+	  newPiece = new NRook(x,y,num);
 	  newPiece->setClip(CLIP_ROOK);
 	}
 	else if(i==1 || i ==6){ 
-	  newPiece = new Knight(x,y,num);
+	  newPiece = new NKnight(x,y,num);
 	  newPiece->setClip(CLIP_KNIGHT);
 	}
 	else if(i==2 || i ==5){  
-	  newPiece = new Bishop(x,y,num);
+	  newPiece = new NBishop(x,y,num);
 	  newPiece->setClip(CLIP_BISHOP);
 	}
 	else if(i==4){  
-	  newPiece = new King(x,y,num);
+	  newPiece = new NKing(x,y,num);
 	  newPiece->setClip(CLIP_KING);
 	}
 	else if(i==3){ 
-	  newPiece = new Queen(x,y,num);
+	  newPiece = new NQueen(x,y,num);
 	  newPiece->setClip(CLIP_QUEEN);
 	}
       }
@@ -835,6 +835,35 @@ void netProcess(string msg)
 
 }
 
+// ------------------------
+// Drawing Helper Functions
+// ------------------------
+
+void drawAura(coord spot)
+{
+  if(c->board[spot.x][spot.y+1] == NULL and c->isValid(spot.x,spot.y+1))
+    apply_surface((spot.x)*64, (spot.y+1)*64, pieceSheet3, screen, &clips    [25]);
+  if(c->board[spot.x][spot.y-1] == NULL and c->isValid(spot.x,spot.y-1))
+    apply_surface((spot.x)*64, (spot.y-1)*64, pieceSheet3, screen, &clips    [25]);
+  if(c->board[spot.x+1][spot.y] == NULL and c->isValid(spot.x+1,spot.y))
+    apply_surface((spot.x+1)*64, (spot.y)*64, pieceSheet3, screen, &clips    [25]);
+  if(c->board[spot.x+1][spot.y+1] == NULL and c->isValid(spot.x+1,spot.y+1))
+    apply_surface((spot.x+1)*64, (spot.y+1)*64, pieceSheet3, screen, &clips    [25]);
+  if(c->board[spot.x+1][spot.y-1] == NULL and c->isValid(spot.x+1,spot.y-1))
+    apply_surface((spot.x+1)*64, (spot.y-1)*64, pieceSheet3, screen, &clips    [25]);
+  if(c->board[spot.x-1][spot.y] == NULL and c->isValid(spot.x-1,spot.y))
+    apply_surface((spot.x-1)*64, (spot.y)*64, pieceSheet3, screen, &clips    [25]);
+  if(c->board[spot.x-1][spot.y+1] == NULL and c->isValid(spot.x-1,spot.y+1))
+    apply_surface((spot.x-1)*64, (spot.y+1)*64, pieceSheet3, screen, &clips    [25]);
+  if(c->board[spot.x-1][spot.y-1] == NULL and c->isValid(spot.x-1,spot.y-1))
+    apply_surface((spot.x-1)*64, (spot.y-1)*64, pieceSheet3, screen, &clips    [25]);
+} 
+
+
+// -------------------
+// Main Game Functions
+// -------------------
+
 int main ( int argc, char* argv[] )
 {
   bool quit = false;
@@ -1086,6 +1115,9 @@ int main ( int argc, char* argv[] )
       //Do appropriate things with server message
       string msg = "DEFAULT";
       int bytes = s_socket.readString(msg,256);
+      if(bytes == 256){
+	cerr << "[ERROR] Read too large (> 256)" << endl;
+      }
 
       netProcess(msg);
     }//if- socket has event
@@ -1098,14 +1130,22 @@ int main ( int argc, char* argv[] )
 
     //Apply the board to the screen
     apply_surface(0, 0, board, screen, NULL);
-
+    
+    //Next apply last move highlight
     for(unsigned int i=lastMove.size()-2;i<lastMove.size();i++){
       apply_surface(lastMove[i].x*64, lastMove[i].y*64, highlight, screen, &clips[2]);
     }
 
     //Show() pieces
     for(unsigned int i=0;i<pieces.size();i++)
+    {
+      //Draw auras first
+      if(pieces[i]->debug_name == "Nrook")
+	if(pieces[i]->isLevel())
+	  drawAura(pieces[i]->getSpot());
+      
       pieces[i]->show();
+    }
 
     ghostPiece.show();
 

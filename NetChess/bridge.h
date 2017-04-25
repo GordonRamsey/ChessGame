@@ -36,6 +36,14 @@
 #include "Piece_Assets/Golem/Gking.h"
 #include "Piece_Assets/Golem/Gqueen.h"
 
+//Necro includes
+#include "Piece_Assets/Necro/Npawn.h"
+#include "Piece_Assets/Necro/Nrook.h"
+#include "Piece_Assets/Necro/Nknight.h"
+#include "Piece_Assets/Necro/Nbishop.h"
+#include "Piece_Assets/Necro/Nking.h"
+#include "Piece_Assets/Necro/Nqueen.h"
+
 //Game object includes
 #include "Piece_Assets/chess.h"
 

@@ -37,19 +37,29 @@ class Chess
      {0,0,0,1,1,1,1,1,1,1,1,0,0,0},
      {0,0,0,1,1,1,1,1,1,1,1,0,0,0}};
     
+    int terrain [14][14] = //Use 0 for clear and 1 for tunnels
+    {{0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+     {0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+     {0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+     {0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+     {0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+     {0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+     {0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+     {0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+     {0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+     {0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+     {0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+     {0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+     {0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+     {0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+
     Piece* board [14][14];
-    Piece* terrain[14][14];
-    vector<Piece*> pieces;
 
     int it;
 
     Chess();
     ~Chess();
     
-    //Set position of piece on board
-    void setPiecePos(int num, int x, int y);
-    //remove piece from board
-    void removePiece(int num);
     bool isValid(int x, int y);
     bool isCapturable(coord a_spot, coord d_spot, string &capicing);
 
