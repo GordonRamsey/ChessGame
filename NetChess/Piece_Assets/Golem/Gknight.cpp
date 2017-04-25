@@ -35,7 +35,7 @@ string GKnight::processClicks(vector<coord> clickedOn, Chess* c)
             stringstream ss;
             ss.str("");
             ss << "MOVE " << getNum() << " " << getPos().x << " " << getPos().y << " ~";
-            Rock();
+	    ss << "ROCK " << getNum() << " ~";
             return ss.str();
         }
     }

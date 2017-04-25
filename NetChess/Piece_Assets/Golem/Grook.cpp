@@ -26,6 +26,7 @@ string GRook::processClicks(vector<coord> clickedOn, Chess* c)
             stringstream ss;
             ss.str("");
             ss << "MOVE " << getNum() << " " << getPos().x << " " << getPos().y << " ~";
+	    ss << "ROCK " << getNum() << " ~";
             return ss.str();
         }
     }

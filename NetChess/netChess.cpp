@@ -224,7 +224,8 @@ bool load_files()
 {
   //Load the image
   board = load_image("Graphic_Assets/fourPlayerBoard64.png");
-  pieceSheet1 = load_image("Graphic_Assets/basicPieces64.png");
+  //pieceSheet1 = load_image("Graphic_Assets/basicPieces64.png");
+  pieceSheet1 = load_image("Graphic_Assets/Fighter-Pieces.png");
   pieceSheet2 = load_image("Graphic_Assets/basicPieces642.png");
   pieceSheet3 = load_image("Graphic_Assets/basicPieces643.png");
   pieceSheet4 = load_image("Graphic_Assets/basicPieces644.png");
