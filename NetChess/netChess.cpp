@@ -232,7 +232,7 @@ bool load_files()
   pieceSheet1 = load_image("Graphic_Assets/Fighter-Pieces.png");
   pieceSheet2 = load_image("Graphic_Assets/basicPieces642.png");
   pieceSheet3 = load_image("Graphic_Assets/basicPieces643.png");
-  pieceSheet4 = load_image("Graphic_Assets/basicPieces644.png");
+  pieceSheet4 = load_image("Graphic_Assets/basicPieces644-better.png");
   ghostSheet = load_image("Graphic_Assets/ghostPieces64.png");
   highlight = load_image("Graphic_Assets/highlight.png");
   textBack = load_image("Graphic_Assets/textBackground.png");
