@@ -185,7 +185,14 @@ int main(int argc, char* argv[])
 		cerr << "ROCK Command recognized" << endl;
 		for(int j=0;j<sockets.size(); ++j)
 		  sockets[j].writeString(msg);
-	      }else //Anything that isnt a command
+	      }
+	      else if(strncmp(msg.c_str(), "BITE", 4) == 0)
+	      {
+		cerr << "BITE Command recognized" << endl;
+		for(int j=0;j<sockets.size(); ++j)
+		  sockets[j].writeString(msg);
+	      } 
+	      else //Anything that isnt a command
 	      {
 		cerr << "Sending unknown message to clients:" << msg << endl;
 		for(int j=0;j<sockets.size(); ++j){

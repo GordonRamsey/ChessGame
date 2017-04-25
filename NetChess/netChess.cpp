@@ -70,6 +70,10 @@ Piece ghostPiece = Piece(-1,-64,-64);
 //array to store locations for lastMove highlighting
 vector<coord> lastMove;
 
+//Necro variables
+Piece* bitten = NULL;
+int bitten_turn = -1;
+
 void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL)
 {
   //Temp rectangle to hold the offset
@@ -540,7 +544,7 @@ void pieceSpawn(string name, int x, int y, int team)
     newPiece = new Queen(coordx, coordy, c->it);
     newPiece->setClip(CLIP_QUEEN);
   }
-  if(name == "Fpawn")
+  else if(name == "Fpawn")
   {
     newPiece = new FPawn(coordx, coordy, c->it, dir);
     newPiece->setClip(CLIP_PAWN);
@@ -570,6 +574,36 @@ void pieceSpawn(string name, int x, int y, int team)
     newPiece = new FQueen(coordx, coordy, c->it);
     newPiece->setClip(CLIP_QUEEN);
   }
+  else if(name == "Npawn")
+  {
+    newPiece = new NPawn(coordx, coordy, c->it, dir);
+    newPiece->setClip(CLIP_PAWN);
+  }
+  else if(name == "Nrook")
+  {
+    newPiece = new NRook(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_ROOK);
+  }
+  else if(name == "Nbishop")
+  {
+    newPiece = new NBishop(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_BISHOP);
+  }
+  else if(name == "Nknight")
+  {
+    newPiece = new NKnight(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_KNIGHT);
+  }
+  else if(name == "Nking")
+  {
+    newPiece = new NKing(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_KING);
+  }
+  else if(name == "Nqueen")
+  {
+    newPiece = new NQueen(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_QUEEN);
+  } 
   else if(name == "")
   {
 
@@ -587,9 +621,6 @@ void pieceSpawn(string name, int x, int y, int team)
   cerr << "[DEBUG] Piece spawned:" << name << " " << x << " " << y << " " << team << " " << c->it - 1 << endl;
 
 }
-
-
-
 
 //Connect to the server Whoaaaa!
 int connectServer(int argc, char* argv[])
@@ -629,6 +660,8 @@ string snip(string msg, int &cursor)
   cursor++;
   return ret;
 }
+
+void fullRotation();
 
 //Processes messages from the server, necessary for game to work
 void netProcess(string msg)
@@ -781,6 +814,9 @@ void netProcess(string msg)
     int num = atoi(s_num.c_str());
     player_turn = num;
     cerr << "[TURN] It is now the turn of player:" << player_turn << endl;
+    cerr << "Bite turn:" << bitten_turn << endl;
+    if(bitten_turn  == player_turn)
+      fullRotation();
   }//If- TURN
   else if(cmd == "LVUP")//LVUP <piece num>
   {
@@ -810,6 +846,19 @@ void netProcess(string msg)
       }
     }
   }//If- ROCK
+  else if(cmd == "BITE")//ROCK <piece num>
+  {
+    string s_num = snip(msg,index);
+    int num = atoi(s_num.c_str());
+    for(unsigned int i=0;i<pieces.size();i++){
+      if(pieces[i]->getNum() == num)
+      {
+	bitten = pieces[i];
+	bitten_turn = player_turn;
+	break;
+      }
+    }
+  }//If- ROCK
   else
   {
     cerr << "Unknown command received:" << msg << endl;
@@ -829,34 +878,57 @@ void netProcess(string msg)
 
   if(msg.size() > (unsigned)index)//If message is greater than ending char ~
   {
-    //cerr << "[LONG STRING] Recursing with string:" << msg.substr(index,msg.size()-index) << endl;;
     netProcess(msg.substr(index,msg.size()-index));
   }
 
 }
 
+//currently used only with necro pawn
+void fullRotation()
+{
+  //XXX
+  if(bitten != NULL){
+    stringstream ss;
+    ss << "REMV " << bitten->getNum() << " ~";
+    ss << "PLAC Npawn " << bitten->getSpot().x << " " << bitten->getSpot().y << " " << bitten_turn-1 << " ~";
+    netProcess(ss.str());
+    bitten = NULL;
+    bitten_turn = -1;
+  }
+}
+
+
+
 // ------------------------
 // Drawing Helper Functions
 // ------------------------
 
-void drawAura(coord spot)
+void drawAura(coord spot, string name)
 {
-  if(c->board[spot.x][spot.y+1] == NULL and c->isValid(spot.x,spot.y+1))
-    apply_surface((spot.x)*64, (spot.y+1)*64, pieceSheet3, screen, &clips    [25]);
-  if(c->board[spot.x][spot.y-1] == NULL and c->isValid(spot.x,spot.y-1))
-    apply_surface((spot.x)*64, (spot.y-1)*64, pieceSheet3, screen, &clips    [25]);
-  if(c->board[spot.x+1][spot.y] == NULL and c->isValid(spot.x+1,spot.y))
-    apply_surface((spot.x+1)*64, (spot.y)*64, pieceSheet3, screen, &clips    [25]);
-  if(c->board[spot.x+1][spot.y+1] == NULL and c->isValid(spot.x+1,spot.y+1))
-    apply_surface((spot.x+1)*64, (spot.y+1)*64, pieceSheet3, screen, &clips    [25]);
-  if(c->board[spot.x+1][spot.y-1] == NULL and c->isValid(spot.x+1,spot.y-1))
-    apply_surface((spot.x+1)*64, (spot.y-1)*64, pieceSheet3, screen, &clips    [25]);
-  if(c->board[spot.x-1][spot.y] == NULL and c->isValid(spot.x-1,spot.y))
-    apply_surface((spot.x-1)*64, (spot.y)*64, pieceSheet3, screen, &clips    [25]);
-  if(c->board[spot.x-1][spot.y+1] == NULL and c->isValid(spot.x-1,spot.y+1))
-    apply_surface((spot.x-1)*64, (spot.y+1)*64, pieceSheet3, screen, &clips    [25]);
-  if(c->board[spot.x-1][spot.y-1] == NULL and c->isValid(spot.x-1,spot.y-1))
-    apply_surface((spot.x-1)*64, (spot.y-1)*64, pieceSheet3, screen, &clips    [25]);
+  if(name == "Nrook"){
+
+    if(c->board[spot.x][spot.y+1] == NULL and c->isValid(spot.x,spot.y+1))
+      apply_surface((spot.x)*64, (spot.y+1)*64, pieceSheet3, screen, &clips    [25]);
+    if(c->board[spot.x][spot.y-1] == NULL and c->isValid(spot.x,spot.y-1))
+      apply_surface((spot.x)*64, (spot.y-1)*64, pieceSheet3, screen, &clips    [25]);
+    if(c->board[spot.x+1][spot.y] == NULL and c->isValid(spot.x+1,spot.y))
+      apply_surface((spot.x+1)*64, (spot.y)*64, pieceSheet3, screen, &clips    [25]);
+    if(c->board[spot.x+1][spot.y+1] == NULL and c->isValid(spot.x+1,spot.y+1))
+      apply_surface((spot.x+1)*64, (spot.y+1)*64, pieceSheet3, screen, &clips    [25]);
+    if(c->board[spot.x+1][spot.y-1] == NULL and c->isValid(spot.x+1,spot.y-1))
+      apply_surface((spot.x+1)*64, (spot.y-1)*64, pieceSheet3, screen, &clips    [25]);
+    if(c->board[spot.x-1][spot.y] == NULL and c->isValid(spot.x-1,spot.y))
+      apply_surface((spot.x-1)*64, (spot.y)*64, pieceSheet3, screen, &clips    [25]);
+    if(c->board[spot.x-1][spot.y+1] == NULL and c->isValid(spot.x-1,spot.y+1))
+      apply_surface((spot.x-1)*64, (spot.y+1)*64, pieceSheet3, screen, &clips    [25]);
+    if(c->board[spot.x-1][spot.y-1] == NULL and c->isValid(spot.x-1,spot.y-1))
+      apply_surface((spot.x-1)*64, (spot.y-1)*64, pieceSheet3, screen, &clips    [25]);
+  }
+  else if (name == "Bitten")
+  {
+    apply_surface((spot.x)*64, (spot.y)*64, pieceSheet3, screen, &clips    [24]);
+
+  }
 } 
 
 
@@ -1130,7 +1202,7 @@ int main ( int argc, char* argv[] )
 
     //Apply the board to the screen
     apply_surface(0, 0, board, screen, NULL);
-    
+
     //Next apply last move highlight
     for(unsigned int i=lastMove.size()-2;i<lastMove.size();i++){
       apply_surface(lastMove[i].x*64, lastMove[i].y*64, highlight, screen, &clips[2]);
@@ -1142,8 +1214,10 @@ int main ( int argc, char* argv[] )
       //Draw auras first
       if(pieces[i]->debug_name == "Nrook")
 	if(pieces[i]->isLevel())
-	  drawAura(pieces[i]->getSpot());
-      
+	  drawAura(pieces[i]->getSpot(), "Nrook");
+      if(bitten != NULL)
+	drawAura(bitten->getSpot(), "Bitten");
+
       pieces[i]->show();
     }
 

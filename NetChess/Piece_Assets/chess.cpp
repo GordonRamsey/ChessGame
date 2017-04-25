@@ -83,7 +83,6 @@ bool Chess::isCapturable(coord a_spot, coord d_spot, string &capicing)
     }
   }
 
-
   //Run checks o3o
 
   //Cannot capture walls!
