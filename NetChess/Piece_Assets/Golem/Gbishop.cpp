@@ -19,7 +19,7 @@ string GBishop::processClicks(vector<coord> clickedOn, Chess* c)
     if(clickedOn.size() != 1)
         return "ERROR";
 
-    if(clickedOn[0] == getSpot())
+    if(clickedOn[0] == getPos())
     {
         if(isRock())
         {
@@ -27,6 +27,7 @@ string GBishop::processClicks(vector<coord> clickedOn, Chess* c)
             ss.str("");
             ss << "MOVE " << getNum() << " " << getPos().x << " " << getPos().y << " ~";
 	    ss << "ROCK " << getNum() << " ~";
+	    clicks = 0;
             return ss.str();
         }
     }

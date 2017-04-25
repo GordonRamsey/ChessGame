@@ -54,49 +54,73 @@ string GKing::MakeRocks(Chess* c)
     if(c->validspots[cur_pos.x-1][cur_pos.y-1] != 0 && c->board[cur_pos.x-1][cur_pos.y-1] != NULL)
     {
       if(c->board[cur_pos.x-1][cur_pos.y-1]->getTeam() == getTeam())
+      {
 	ss <<"ROCK " << c->board[cur_pos.x-1][cur_pos.y-1]->getNum() << " ~";
+	c->board[cur_pos.x-1][cur_pos.y-1]->clicks = 1;
+      }
     }
 
     if(c->validspots[cur_pos.x][cur_pos.y-1] != 0 && c->board[cur_pos.x][cur_pos.y-1] != NULL)
     {
       if(c->board[cur_pos.x][cur_pos.y-1]->getTeam() == getTeam())
+      {
 	ss <<"ROCK " << c->board[cur_pos.x][cur_pos.y-1]->getNum() << " ~";
+	c->board[cur_pos.x][cur_pos.y-1]->clicks = 1;
+      }
     }
 
     if(c->validspots[cur_pos.x+1][cur_pos.y-1] != 0 && c->board[cur_pos.x+1][cur_pos.y-1] != NULL)
     {
       if(c->board[cur_pos.x+1][cur_pos.y-1]->getTeam() == getTeam())
+      {
 	ss <<"ROCK " << c->board[cur_pos.x+1][cur_pos.y-1]->getNum() << " ~";
+	c->board[cur_pos.x+1][cur_pos.y-1]->clicks = 1;
+      }
     }
 
     if(c->validspots[cur_pos.x+1][cur_pos.y] != 0 && c->board[cur_pos.x+1][cur_pos.y] != NULL)
     {
       if(c->board[cur_pos.x+1][cur_pos.y]->getTeam() == getTeam())
+      {	
 	ss <<"ROCK " << c->board[cur_pos.x+1][cur_pos.y]->getNum() << " ~";
+	c->board[cur_pos.x+1][cur_pos.y]->clicks = 1;
+      }
     }
 
     if(c->validspots[cur_pos.x+1][cur_pos.y+1] != 0 && c->board[cur_pos.x+1][cur_pos.y+1] != NULL)
     {
       if(c->board[cur_pos.x+1][cur_pos.y+1]->getTeam() == getTeam())
+      {
 	ss <<"ROCK " << c->board[cur_pos.x+1][cur_pos.y+1]->getNum() << " ~";
+	c->board[cur_pos.x+1][cur_pos.y+1]->clicks = 1;
+      }
     }
 
     if(c->validspots[cur_pos.x][cur_pos.y+1] != 0 && c->board[cur_pos.x][cur_pos.y+1] != NULL)
     {
       if(c->board[cur_pos.x][cur_pos.y+1]->getTeam() == getTeam())
+      {	
 	ss <<"ROCK " << c->board[cur_pos.x][cur_pos.y+1]->getNum() << " ~";
+	c->board[cur_pos.x][cur_pos.y+1]->clicks = 1;
+      }
     }
 
     if(c->validspots[cur_pos.x-1][cur_pos.y+1] != 0 && c->board[cur_pos.x-1][cur_pos.y+1] != NULL)
     {
       if(c->board[cur_pos.x-1][cur_pos.y+1]->getTeam() == getTeam())
+      {	
 	ss <<"ROCK " << c->board[cur_pos.x-1][cur_pos.y+1]->getNum() << " ~";
+	c->board[cur_pos.x-1][cur_pos.y+1]->clicks = 1;
+      }
     }
 
     if(c->validspots[cur_pos.x-1][cur_pos.y] != 0 && c->board[cur_pos.x-1][cur_pos.y] != NULL)
     {
       if(c->board[cur_pos.x-1][cur_pos.y]->getTeam() == getTeam())
+      {	
 	ss <<"ROCK " << c->board[cur_pos.x-1][cur_pos.y]->getNum() << " ~";
+	c->board[cur_pos.x-1][cur_pos.y]->clicks = 1;
+      }
     }
   }
   return ss.str();
