@@ -604,6 +604,36 @@ void pieceSpawn(string name, int x, int y, int team)
     newPiece = new NQueen(coordx, coordy, c->it);
     newPiece->setClip(CLIP_QUEEN);
   } 
+  else if(name == "Ppawn")
+  {
+    newPiece = new PPawn(coordx, coordy, c->it, dir);
+    newPiece->setClip(CLIP_PAWN);
+  }
+  else if(name == "Prook")
+  {
+    newPiece = new PRook(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_ROOK);
+  }
+  else if(name == "Pbishop")
+  {
+    newPiece = new PBishop(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_BISHOP);
+  }
+  else if(name == "Pknight")
+  {
+    newPiece = new PKnight(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_KNIGHT);
+  }
+  else if(name == "Pking")
+  {
+    newPiece = new PKing(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_KING);
+  }
+  else if(name == "Pqueen")
+  {
+    newPiece = new PQueen(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_QUEEN);
+  }
   else if(name == "")
   {
 
@@ -839,14 +869,11 @@ void netProcess(string msg)
       if(pieces[i]->getNum() == num)
       {
 	pieces[i]->Rock();
-	//c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y]->Rock();
-	cerr << "rocked piece:" << num << endl;
-	cerr << pieces[i]->isRock() << endl;
 	break;
       }
     }
   }//If- ROCK
-  else if(cmd == "BITE")//ROCK <piece num>
+  else if(cmd == "BITE")//BITE <piece num>
   {
     string s_num = snip(msg,index);
     int num = atoi(s_num.c_str());
@@ -858,7 +885,22 @@ void netProcess(string msg)
 	break;
       }
     }
-  }//If- ROCK
+  }//If- BITE
+  else if(cmd == "CLIP")//CLIP <piece num> <clip num>
+  {
+    string s_num = snip(msg,index);
+    string s_clip = snip(msg,index);
+    int num = atoi(s_num.c_str());
+    int clip = atoi(s_clip.c_str());
+    for(unsigned int i=0;i<pieces.size();i++){
+      if(pieces[i]->getNum() == num)
+      {
+	pieces[i]->setClip(clip);
+	break;
+      }
+      lastMove.clear();
+    }
+  }//If- CLIP
   else
   {
     cerr << "Unknown command received:" << msg << endl;

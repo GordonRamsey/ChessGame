@@ -192,7 +192,12 @@ int main(int argc, char* argv[])
 		for(int j=0;j<sockets.size(); ++j)
 		  sockets[j].writeString(msg);
 	      } 
-	      else //Anything that isnt a command
+	      else if(strncmp(msg.c_str(), "CLIP", 4) == 0)
+	      {
+		cerr << "CLIP Command recognized" << endl;
+		for(int j=0;j<sockets.size(); ++j)
+		  sockets[j].writeString(msg);
+	      }else //Anything that isnt a command
 	      {
 		cerr << "Sending unknown message to clients:" << msg << endl;
 		for(int j=0;j<sockets.size(); ++j){
