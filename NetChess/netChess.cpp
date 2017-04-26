@@ -429,28 +429,28 @@ void generatePieces()
       int num = it;
       if(j == 0)
       {
-	newPiece = new Pawn(x,y,num,'W');
+	newPiece = new PPawn(x,y,num,'W');
 	newPiece->setClip(CLIP_PAWN);
       }
       else{
 	if(i==0 || i ==7){  
-	  newPiece = new Rook(x,y,num);
+	  newPiece = new PRook(x,y,num);
 	  newPiece->setClip(CLIP_ROOK);
 	}
 	else if(i==1 || i ==6){ 
-	  newPiece = new Knight(x,y,num);
+	  newPiece = new PKnight(x,y,num);
 	  newPiece->setClip(CLIP_KNIGHT);
 	}
 	else if(i==2 || i ==5){  
-	  newPiece = new Bishop(x,y,num);
+	  newPiece = new PBishop(x,y,num);
 	  newPiece->setClip(CLIP_BISHOP);
 	}
 	else if(i==4){  
-	  newPiece = new King(x,y,num);
+	  newPiece = new PKing(x,y,num);
 	  newPiece->setClip(CLIP_KING);
 	}
 	else if(i==3){ 
-	  newPiece = new Queen(x,y,num);
+	  newPiece = new PQueen(x,y,num);
 	  newPiece->setClip(CLIP_QUEEN);
 	}
       }
@@ -908,21 +908,21 @@ void drawAura(coord spot, string name)
   if(name == "Nrook"){
 
     if(c->board[spot.x][spot.y+1] == NULL and c->isValid(spot.x,spot.y+1))
-      apply_surface((spot.x)*64, (spot.y+1)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x)*64, (spot.y+1)*64, pieceSheet3, screen, &clips[25]);
     if(c->board[spot.x][spot.y-1] == NULL and c->isValid(spot.x,spot.y-1))
-      apply_surface((spot.x)*64, (spot.y-1)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x)*64, (spot.y-1)*64, pieceSheet3, screen, &clips[25]);
     if(c->board[spot.x+1][spot.y] == NULL and c->isValid(spot.x+1,spot.y))
-      apply_surface((spot.x+1)*64, (spot.y)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x+1)*64, (spot.y)*64, pieceSheet3, screen, &clips[25]);
     if(c->board[spot.x+1][spot.y+1] == NULL and c->isValid(spot.x+1,spot.y+1))
-      apply_surface((spot.x+1)*64, (spot.y+1)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x+1)*64, (spot.y+1)*64, pieceSheet3, screen, &clips[25]);
     if(c->board[spot.x+1][spot.y-1] == NULL and c->isValid(spot.x+1,spot.y-1))
-      apply_surface((spot.x+1)*64, (spot.y-1)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x+1)*64, (spot.y-1)*64, pieceSheet3, screen, &clips[25]);
     if(c->board[spot.x-1][spot.y] == NULL and c->isValid(spot.x-1,spot.y))
-      apply_surface((spot.x-1)*64, (spot.y)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x-1)*64, (spot.y)*64, pieceSheet3, screen, &clips[25]);
     if(c->board[spot.x-1][spot.y+1] == NULL and c->isValid(spot.x-1,spot.y+1))
-      apply_surface((spot.x-1)*64, (spot.y+1)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x-1)*64, (spot.y+1)*64, pieceSheet3, screen, &clips[25]);
     if(c->board[spot.x-1][spot.y-1] == NULL and c->isValid(spot.x-1,spot.y-1))
-      apply_surface((spot.x-1)*64, (spot.y-1)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x-1)*64, (spot.y-1)*64, pieceSheet3, screen, &clips[25]);
   }
   else if (name == "Bitten")
   {
