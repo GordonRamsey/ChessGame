@@ -232,7 +232,7 @@ bool load_files()
   pieceSheet1 = load_image("Graphic_Assets/Fighter-Pieces.png");
   pieceSheet2 = load_image("Graphic_Assets/basicPieces642.png");
   pieceSheet3 = load_image("Graphic_Assets/basicPieces643.png");
-  pieceSheet4 = load_image("Graphic_Assets/basicPieces644.png");
+  pieceSheet4 = load_image("Graphic_Assets/basicPieces644-better.png");
   ghostSheet = load_image("Graphic_Assets/ghostPieces64.png");
   highlight = load_image("Graphic_Assets/highlight.png");
   textBack = load_image("Graphic_Assets/textBackground.png");
@@ -429,28 +429,28 @@ void generatePieces()
       int num = it;
       if(j == 0)
       {
-	newPiece = new Pawn(x,y,num,'W');
+	newPiece = new PPawn(x,y,num,'W');
 	newPiece->setClip(CLIP_PAWN);
       }
       else{
 	if(i==0 || i ==7){  
-	  newPiece = new Rook(x,y,num);
+	  newPiece = new PRook(x,y,num);
 	  newPiece->setClip(CLIP_ROOK);
 	}
 	else if(i==1 || i ==6){ 
-	  newPiece = new Knight(x,y,num);
+	  newPiece = new PKnight(x,y,num);
 	  newPiece->setClip(CLIP_KNIGHT);
 	}
 	else if(i==2 || i ==5){  
-	  newPiece = new Bishop(x,y,num);
+	  newPiece = new PBishop(x,y,num);
 	  newPiece->setClip(CLIP_BISHOP);
 	}
 	else if(i==4){  
-	  newPiece = new King(x,y,num);
+	  newPiece = new PKing(x,y,num);
 	  newPiece->setClip(CLIP_KING);
 	}
 	else if(i==3){ 
-	  newPiece = new Queen(x,y,num);
+	  newPiece = new PQueen(x,y,num);
 	  newPiece->setClip(CLIP_QUEEN);
 	}
       }
@@ -604,6 +604,36 @@ void pieceSpawn(string name, int x, int y, int team)
     newPiece = new NQueen(coordx, coordy, c->it);
     newPiece->setClip(CLIP_QUEEN);
   } 
+  else if(name == "Ppawn")
+  {
+    newPiece = new PPawn(coordx, coordy, c->it, dir);
+    newPiece->setClip(CLIP_PAWN);
+  }
+  else if(name == "Prook")
+  {
+    newPiece = new PRook(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_ROOK);
+  }
+  else if(name == "Pbishop")
+  {
+    newPiece = new PBishop(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_BISHOP);
+  }
+  else if(name == "Pknight")
+  {
+    newPiece = new PKnight(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_KNIGHT);
+  }
+  else if(name == "Pking")
+  {
+    newPiece = new PKing(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_KING);
+  }
+  else if(name == "Pqueen")
+  {
+    newPiece = new PQueen(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_QUEEN);
+  }
   else if(name == "")
   {
 
@@ -839,14 +869,11 @@ void netProcess(string msg)
       if(pieces[i]->getNum() == num)
       {
 	pieces[i]->Rock();
-	//c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y]->Rock();
-	cerr << "rocked piece:" << num << endl;
-	cerr << pieces[i]->isRock() << endl;
 	break;
       }
     }
   }//If- ROCK
-  else if(cmd == "BITE")//ROCK <piece num>
+  else if(cmd == "BITE")//BITE <piece num>
   {
     string s_num = snip(msg,index);
     int num = atoi(s_num.c_str());
@@ -858,7 +885,22 @@ void netProcess(string msg)
 	break;
       }
     }
-  }//If- ROCK
+  }//If- BITE
+  else if(cmd == "CLIP")//CLIP <piece num> <clip num>
+  {
+    string s_num = snip(msg,index);
+    string s_clip = snip(msg,index);
+    int num = atoi(s_num.c_str());
+    int clip = atoi(s_clip.c_str());
+    for(unsigned int i=0;i<pieces.size();i++){
+      if(pieces[i]->getNum() == num)
+      {
+	pieces[i]->setClip(clip);
+	break;
+      }
+      lastMove.clear();
+    }
+  }//If- CLIP
   else
   {
     cerr << "Unknown command received:" << msg << endl;
@@ -908,21 +950,21 @@ void drawAura(coord spot, string name)
   if(name == "Nrook"){
 
     if(c->board[spot.x][spot.y+1] == NULL and c->isValid(spot.x,spot.y+1))
-      apply_surface((spot.x)*64, (spot.y+1)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x)*64, (spot.y+1)*64, pieceSheet3, screen, &clips[25]);
     if(c->board[spot.x][spot.y-1] == NULL and c->isValid(spot.x,spot.y-1))
-      apply_surface((spot.x)*64, (spot.y-1)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x)*64, (spot.y-1)*64, pieceSheet3, screen, &clips[25]);
     if(c->board[spot.x+1][spot.y] == NULL and c->isValid(spot.x+1,spot.y))
-      apply_surface((spot.x+1)*64, (spot.y)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x+1)*64, (spot.y)*64, pieceSheet3, screen, &clips[25]);
     if(c->board[spot.x+1][spot.y+1] == NULL and c->isValid(spot.x+1,spot.y+1))
-      apply_surface((spot.x+1)*64, (spot.y+1)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x+1)*64, (spot.y+1)*64, pieceSheet3, screen, &clips[25]);
     if(c->board[spot.x+1][spot.y-1] == NULL and c->isValid(spot.x+1,spot.y-1))
-      apply_surface((spot.x+1)*64, (spot.y-1)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x+1)*64, (spot.y-1)*64, pieceSheet3, screen, &clips[25]);
     if(c->board[spot.x-1][spot.y] == NULL and c->isValid(spot.x-1,spot.y))
-      apply_surface((spot.x-1)*64, (spot.y)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x-1)*64, (spot.y)*64, pieceSheet3, screen, &clips[25]);
     if(c->board[spot.x-1][spot.y+1] == NULL and c->isValid(spot.x-1,spot.y+1))
-      apply_surface((spot.x-1)*64, (spot.y+1)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x-1)*64, (spot.y+1)*64, pieceSheet3, screen, &clips[25]);
     if(c->board[spot.x-1][spot.y-1] == NULL and c->isValid(spot.x-1,spot.y-1))
-      apply_surface((spot.x-1)*64, (spot.y-1)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x-1)*64, (spot.y-1)*64, pieceSheet3, screen, &clips[25]);
   }
   else if (name == "Bitten")
   {
