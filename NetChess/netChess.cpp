@@ -22,6 +22,7 @@ SDL_Surface *pieceSheet1 = NULL; //Player 1
 SDL_Surface *pieceSheet2 = NULL; //Player 2
 SDL_Surface *pieceSheet3 = NULL; //Player 3
 SDL_Surface *pieceSheet4 = NULL; //Player 4
+SDL_Surface *graveSheet = NULL; //Gravestones
 SDL_Surface *ghostSheet = NULL;
 SDL_Surface *highlight = NULL;
 SDL_Surface *screen = NULL;
@@ -51,6 +52,7 @@ vector<Piece*> pieces;
 int player_num; //Our player num relevent to the current game
 int player_turn = 1;
 bool game_start = false;
+bool alive = true; //Am i currently alive?
 
 //Chat Variables
 StringInput chat;
@@ -233,6 +235,7 @@ bool load_files()
   pieceSheet2 = load_image("Graphic_Assets/basicPieces642.png");
   pieceSheet3 = load_image("Graphic_Assets/basicPieces643.png");
   pieceSheet4 = load_image("Graphic_Assets/basicPieces644-better.png");
+  graveSheet = load_image("Graphic_Assets/graves.png");
   ghostSheet = load_image("Graphic_Assets/ghostPieces64.png");
   highlight = load_image("Graphic_Assets/highlight.png");
   textBack = load_image("Graphic_Assets/textBackground.png");
@@ -248,8 +251,8 @@ bool load_files()
     return false;
   }
 
-  else if(ghostSheet == NULL){
-    cerr << "No ghost sheet" << endl;
+  else if(ghostSheet == NULL || graveSheet == NULL){
+    cerr << "No ghost/grave sheet" << endl;
     return false;
   }
 
@@ -901,6 +904,33 @@ void netProcess(string msg)
       lastMove.clear();
     }
   }//If- CLIP
+  else if(cmd == "DEAD")//CLIP <player num>
+  {
+    string s_num = snip(msg,index);
+    int num = atoi(s_num.c_str());
+    cout << "Player:" << num << " has died" << endl;
+    if(num == 1){
+      pieceSheet1 = graveSheet;
+    }
+    else if(num == 2){
+      pieceSheet2 = graveSheet;
+    }
+    else if(num == 3){
+      pieceSheet3 = graveSheet;
+    }
+    else if(num == 4){
+      pieceSheet4 = graveSheet;
+    }
+    if(num == player_num)
+    {
+      cout << "YOU LOSE" << endl;
+      stringstream ss;
+      ss.str("");
+      ss << "NetChess - " << player_num << " - You Are Dead";
+      SDL_WM_SetCaption(ss.str().c_str(), NULL);
+      alive = false;
+    }
+  }//If- DEAD
   else
   {
     cerr << "Unknown command received:" << msg << endl;
@@ -1016,7 +1046,7 @@ int main ( int argc, char* argv[] )
     //// SDL EVENTS
     //// ----------
     //While theres an event to handle
-    while(SDL_PollEvent(&event))
+    while(SDL_PollEvent(&event) && alive)
     {
       Uint8 *keystates = SDL_GetKeyState(NULL);
       //This wont let us do anything until the game starts
@@ -1102,7 +1132,10 @@ int main ( int argc, char* argv[] )
 
 		//If captured unit has additional effects (See Necro)
 		if(capicing != "DEFAULT")
-		  ss << capicing;
+		{  
+		  cerr << "[DEBUG] Capicing returned not default:" << capicing << endl;
+		  ss.str(ss.str() + capicing);
+		}
 
 		capture = true;
 		break;

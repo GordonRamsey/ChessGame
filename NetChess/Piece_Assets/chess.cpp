@@ -83,7 +83,13 @@ bool Chess::isCapturable(coord a_spot, coord d_spot, string &capicing)
     }
   }
 
-  //Run checks o3o
+  //Run King checks o3o
+  if(defending->debug_name.find("king") != string::npos)
+  {
+    stringstream ss;
+    ss << "DEAD " << defending->getTeam() << " ~";
+    capicing = ss.str();
+  }
 
   //Cannot capture walls!
   //if(defending->debug_name == "wall")

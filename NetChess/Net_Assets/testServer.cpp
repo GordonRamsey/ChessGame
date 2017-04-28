@@ -7,6 +7,7 @@ struct player{
   Socket sock;
   int number;
   int team = -1;
+  bool alive = true;
 };
 
 Socket listener;
@@ -33,8 +34,14 @@ void startGame(SocketSet socs)
 void nextPlayer()
 {
   current_player++;
-  if(current_player == 5)
+  
+  if(current_player > players.size())
     current_player = 1;
+  
+  if(players[current_player-1].alive == false){  
+    cerr << "Player " << current_player << " is ded" << endl;
+    nextPlayer();
+  }
 
   cerr << "[CURRENT PLAYER] = " << current_player << endl;
   ss.str("");
@@ -197,7 +204,36 @@ int main(int argc, char* argv[])
 		cerr << "CLIP Command recognized" << endl;
 		for(int j=0;j<sockets.size(); ++j)
 		  sockets[j].writeString(msg);
-	      }else //Anything that isnt a command
+	      }
+	      else if(strncmp(msg.c_str(), "DEAD", 4) == 0)
+	      {
+		cerr << "DEAD Command recognized" << endl;
+		for(int j=0;j<sockets.size(); ++j)
+		  sockets[j].writeString(msg);
+
+		string s_num = "";
+		s_num += msg[5];
+		int num = atoi(s_num.c_str());
+		cout << "Player:" << s_num << " is DEAD" << endl;
+		//remove player turn
+		if(players.size() == 1)
+		{
+		  for(int j=0;j<sockets.size(); ++j)
+		    sockets[j].writeString("WINN ~");
+		  //XXX Issue WIN command
+		}
+		for(int i=0;i<players.size();i++){
+		  cerr << "[DEBUG] Player:" << endl << "num:" << players[i].number << endl << "team:" << players[i].team << endl << "alive:" << players[i].alive << endl;
+		  if(players[i].number == num){
+		     players[i].alive = false;
+		     cerr << "Found dead player:" << num << " Now checking whos turn it is:" << endl << "cur player:" << current_player << " dead num:" << num << endl;
+		     if(current_player == num)
+		       nextPlayer();
+		     break;
+		  }
+		}
+	      } 
+	      else //Anything that isnt a command
 	      {
 		cerr << "Sending unknown message to clients:" << msg << endl;
 		for(int j=0;j<sockets.size(); ++j){

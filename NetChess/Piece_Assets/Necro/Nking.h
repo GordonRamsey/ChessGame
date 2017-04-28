@@ -10,6 +10,7 @@ class NKing : public King
     string Move(coord newpos);
     vector<coord> validSpots(Chess* c);
     string processClicks(vector<coord> clickedOn, Chess* c); 
-    string MakeRocks(Chess* c);
+    vector<coord> validSLoc(Chess* c);
+    bool isValid(vector<coord> validSLoc, vector<coord> clickedOn, Chess* c);
 };
 #endif
