@@ -177,6 +177,10 @@ void Piece::setTeam(int x)
     sheet = pieceSheet4;
     owner = 4;
   }
+  else if(x == 4){ //Dead players
+    sheet = graveSheet;
+    owner = -1;
+  }
 }
 
 SDL_Surface *load_image( std::string filename )
@@ -235,7 +239,7 @@ bool load_files()
   pieceSheet2 = load_image("Graphic_Assets/basicPieces642.png");
   pieceSheet3 = load_image("Graphic_Assets/basicPieces643.png");
   pieceSheet4 = load_image("Graphic_Assets/basicPieces644-better.png");
-  graveSheet = load_image("Graphic_Assets/graves.png");
+  graveSheet = load_image("Graphic_Assets/Graves.png");
   ghostSheet = load_image("Graphic_Assets/ghostPieces64.png");
   highlight = load_image("Graphic_Assets/highlight.png");
   textBack = load_image("Graphic_Assets/textBackground.png");
@@ -281,6 +285,7 @@ void clean_up()
   SDL_FreeSurface(pieceSheet2);
   SDL_FreeSurface(pieceSheet3);
   SDL_FreeSurface(pieceSheet4);
+  SDL_FreeSurface(graveSheet);
   SDL_FreeSurface(ghostSheet);
   SDL_FreeSurface(highlight);
   SDL_FreeSurface(textBack);
@@ -667,6 +672,19 @@ int connectServer(int argc, char* argv[])
   return -1;
 }
 
+void killPieces(int team)
+{
+  for(unsigned int i=0;i<pieces.size();i++)
+  {
+    if(pieces[i]->getTeam() == team)
+    { 
+      pieces[i]->setTeam(4);
+      pieces[i]->debug_name = "dead";
+    }
+
+  }
+}
+
 string snip_to_end(string msg, int &cursor)
 {
   int last = cursor;
@@ -766,10 +784,18 @@ void netProcess(string msg)
       if(pieces[i]->getNum() == number){
 	//Need to perform a strange check on c->board bc the movement commands come in first
 	//If our removed piece still exists on the board, make its board spot NULL
+	stringstream ss;
+	ss.str("DEFAULT");
 	if(c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y]->getNum() == pieces[i]->getNum())
 	  c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y] = NULL;
+	if(pieces[i]->debug_name.find("king") != string::npos){
+	  ss.str("");
+	  ss << "DEAD " << pieces[i]->getTeam() << " ~";
+	}
 	pieces[i] = pieces[pieces.size()-1];
 	pieces.pop_back();
+	if(ss.str() != "DEFAULT")
+	  netProcess(ss.str());
 	break;
       }
     }
@@ -909,17 +935,17 @@ void netProcess(string msg)
     string s_num = snip(msg,index);
     int num = atoi(s_num.c_str());
     cout << "Player:" << num << " has died" << endl;
-    if(num == 1){
-      pieceSheet1 = graveSheet;
+    if(s_num == "1"){
+      killPieces(1); 
     }
-    else if(num == 2){
-      pieceSheet2 = graveSheet;
+    else if(s_num == "2"){
+      killPieces(2); 
     }
-    else if(num == 3){
-      pieceSheet3 = graveSheet;
+    else if(s_num == "3"){
+      killPieces(3); 
     }
-    else if(num == 4){
-      pieceSheet4 = graveSheet;
+    else if(s_num == "4"){
+      killPieces(4); 
     }
     if(num == player_num)
     {
@@ -931,6 +957,22 @@ void netProcess(string msg)
       alive = false;
     }
   }//If- DEAD
+  else if(cmd == "WINN")//WINN <player num>
+  {
+    string s_num = snip(msg,index);
+    int num = atoi(s_num.c_str());
+    if(player_num == num)
+    {
+      cout << "You win!" << endl;
+      //Win and stuff
+    }
+    else
+    {
+      cout << "you lose!" << endl;
+      //Lose and stuff
+    }
+
+  }//If- WINN 
   else
   {
     cerr << "Unknown command received:" << msg << endl;
@@ -1046,8 +1088,16 @@ int main ( int argc, char* argv[] )
     //// SDL EVENTS
     //// ----------
     //While theres an event to handle
-    while(SDL_PollEvent(&event) && alive)
+    while(SDL_PollEvent(&event))
     {
+      if(event.type == SDL_QUIT)
+      {
+	quit = true;
+      }
+
+      if(!alive)
+	continue;
+      
       Uint8 *keystates = SDL_GetKeyState(NULL);
       //This wont let us do anything until the game starts
       if(game_start){ 
@@ -1241,10 +1291,6 @@ int main ( int argc, char* argv[] )
 
       }//If- game start
 
-      if(event.type == SDL_QUIT)
-      {
-	quit = true;
-      }
 
     }//While- SDL_PollEvent
 

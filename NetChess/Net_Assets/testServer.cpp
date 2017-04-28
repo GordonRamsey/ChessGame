@@ -17,6 +17,7 @@ stringstream ss;
 
 bool game_start = false;
 int current_player = 1;
+int alive_players = -1;
 
 void startGame(SocketSet socs)
 {
@@ -24,6 +25,7 @@ void startGame(SocketSet socs)
   cerr << "[CURRENT PLAYER] = " << current_player << endl;
   socs.wait(2);
   game_start = true;
+  alive_players = 4;
   ss.str("");
   ss << "STRT ~";
   for(unsigned int i=0;i<sockets.size();i++){
@@ -215,22 +217,32 @@ int main(int argc, char* argv[])
 		s_num += msg[5];
 		int num = atoi(s_num.c_str());
 		cout << "Player:" << s_num << " is DEAD" << endl;
+		
 		//remove player turn
-		if(players.size() == 1)
-		{
-		  for(int j=0;j<sockets.size(); ++j)
-		    sockets[j].writeString("WINN ~");
-		  //XXX Issue WIN command
-		}
-		for(int i=0;i<players.size();i++){
-		  cerr << "[DEBUG] Player:" << endl << "num:" << players[i].number << endl << "team:" << players[i].team << endl << "alive:" << players[i].alive << endl;
-		  if(players[i].number == num){
-		     players[i].alive = false;
-		     cerr << "Found dead player:" << num << " Now checking whos turn it is:" << endl << "cur player:" << current_player << " dead num:" << num << endl;
-		     if(current_player == num)
-		       nextPlayer();
-		     break;
+		for(int k=0;k<players.size();k++){
+		  if(players[k].number == num){
+		    players[k].alive = false;
+		    if(current_player == num)
+		      nextPlayer();
+		    break;
 		  }
+		}
+		//check win
+		alive_players--;
+		if(alive_players == 1)
+		{
+		  int winner_num;
+		  for(int k=0;k<players.size();k++){
+		    if(players[k].alive == true)
+		      winner_num = players[k].number;
+		  }
+		  ss.str("");
+		  ss << "WINN " << winner_num << " ~";
+		  for(int j=0;j<sockets.size(); ++j)
+		    sockets[j].writeString(ss.str());
+
+		  cout << "Player " << winner_num  << " won, thanks for playing!" << endl;
+		  exit(0);
 		}
 	      } 
 	      else //Anything that isnt a command
@@ -243,12 +255,63 @@ int main(int argc, char* argv[])
 	      }
 	    }//for each snipped element of msg
 	  }//if- socket is not closed
-	  else{
+	  else{//If there is no connection with the socket
 	    cout << "Socket has been closed" << endl;
 	    Socket sock = sockets[i];
 	    sockets[i] = sockets[sockets.size()-1];
 	    sockets.pop_back();
 	    cout << "Socket:" << sock.toString() << " removed." << endl;
+	    for(unsigned int i=0;i<players.size();i++){	
+	      if(players[i].sock == sock){
+		if(game_start){
+		  stringstream ss;
+		  ss << "DEAD " << players[i].number << " ~";
+
+		  for(int j=0;j<sockets.size(); ++j)
+		    sockets[j].writeString(ss.str());
+
+		  cout << "Player:" << players[i].number << " disconnected and is DEAD" << endl;
+
+		  //remove player turn
+		  int num = players[i].number;
+		  for(int k=0;k<players.size();k++){
+		    if(players[k].number == num){
+		      players[k].alive = false;
+		      if(current_player == num)
+			nextPlayer();
+		      break;
+		    }
+		  }
+		  //check win
+		  alive_players--;
+		  if(alive_players == 1)
+		  {
+		    int winner_num;
+		    for(int k=0;k<players.size();k++){
+		      if(players[k].alive == true)
+			winner_num = players[k].number;
+		    }
+		    ss.str("");
+		    ss <<  "WINN " << winner_num << " ~";
+		    for(int j=0;j<sockets.size(); ++j)
+		      sockets[j].writeString(ss.str());
+
+		    cout << "Player " << winner_num  << " won, thanks for playing!" << endl;
+		    exit(0);
+		  } 
+		  break;
+		}//if game start
+		else
+		{
+		  players[i] = players[players.size()-1];
+		  players.pop_back();
+		  player_num--;
+		  cout << "Removed prospective player from queue" << endl;
+		  cout << "Num players in queue:" << player_num << endl;
+		  break;
+		}
+	      }//if player socket found
+	    }//for all players
 
 	  }//else - if socket is closed
 	}//if- socket has event
