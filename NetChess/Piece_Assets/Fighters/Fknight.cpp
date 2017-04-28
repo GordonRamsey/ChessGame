@@ -347,6 +347,7 @@ vector<coord> FKnight::validSpots(Chess* c)
 	  ss.str("");
 	  ss << "MOVE " << getNum() << " " << seek.x*64 << " " << (seek.y-1)*64 << " ~";
 	  ss << "REMV " << c->board[seek.x][seek.y]->getNum() << " ~";
+      captureMap[seek] = ss.str();
 	}
       }
     }
