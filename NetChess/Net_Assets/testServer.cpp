@@ -113,7 +113,32 @@ int main(int argc, char* argv[])
 	      msg = snipped[s];
 	      cerr << "Processing message:" << msg << endl;
 
-	      if(strncmp(msg.c_str(),"MOVE",4) == 0)
+	      if(strncmp(msg.c_str(),"REDY",4) == 0)
+	      {
+		cerr << "REDY command recognized" << endl;
+		string s_fact = "";
+		s_fact += msg[5];
+		int fact = atoi(s_fact.c_str());
+		bool good = true;
+		int index;
+		//check if team already in use
+		for(int i=0;i<players.size();i++){
+		  if(players[i].team == fact){
+		    sockets[i].writeString("BADD");
+		    good = false;
+		    break;
+		  }
+		  if(players[i].sock == sockets[i])
+		    index = i;
+		}
+		if(good)//If open, assign to player
+		{
+		  players[index].team = fact;
+		  sockets[i].writeString("GOOD");
+		}
+
+	      }//REDY state
+	      else if(strncmp(msg.c_str(),"MOVE",4) == 0)
 	      {
 		bool success = false;
 		cerr << "MOVE command recognized" << endl;

@@ -3,12 +3,12 @@
 #include "../knight.h"
 class WKnight : public Knight
 {
-	private:
-		string debug_name;
-	public:
-		WKnight(int x, int y, int it);
-		~WKnight();
-		string Move(coord newpos);
-		vector<coord> validSpots(Chess* c);
+  private:
+    string debug_name;
+  public:
+    WKnight(int x, int y, int it);
+    ~WKnight();
+    string Move(coord newpos);
+    vector<coord> validSpots(Chess* c);
 };
 #endif

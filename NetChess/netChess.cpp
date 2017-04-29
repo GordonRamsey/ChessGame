@@ -792,6 +792,7 @@ void netProcess(string msg)
 	  ss.str("");
 	  ss << "DEAD " << pieces[i]->getTeam() << " ~";
 	}
+	delete pieces[i];
 	pieces[i] = pieces[pieces.size()-1];
 	pieces.pop_back();
 	if(ss.str() != "DEFAULT")
@@ -815,6 +816,7 @@ void netProcess(string msg)
     //Remove piece 2*
     coord loc = pieces[d_index]->getPos();
 
+    delete pieces[d_index];
     pieces[d_index] = pieces[pieces.size()-1];
     pieces.pop_back();
 
@@ -930,6 +932,25 @@ void netProcess(string msg)
       lastMove.clear();
     }
   }//If- CLIP
+  else if(cmd == "SHOV")//SHOV <piece num> <x spot> <y spot>
+  {
+    string s_num = snip(msg,index);
+    string s_x = snip(msg,index);
+    string s_y = snip(msg,index);
+    int num = atoi(s_num.c_str());
+    int x = atoi(s_x.c_str());
+    int y = atoi(s_y.c_str());
+
+    for(unsigned int i=0;i<pieces.size();i++){
+      if(pieces[i]->getNum() == num)
+      {
+	c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y] = NULL;
+	pieces[i]->setPos(x*64,y*64);
+	c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y] = pieces[i];
+	break;
+      }
+    }
+  }//If- SHOV
   else if(cmd == "DEAD")//CLIP <player num>
   {
     string s_num = snip(msg,index);
@@ -1050,6 +1071,46 @@ void drawAura(coord spot, string name)
 // Main Game Functions
 // -------------------
 
+void runStartMenu()
+{
+  while(true){
+    //Creation
+    //running return
+    int faction; 
+    //= run;
+    stringstream ss;
+    ss << "REDY " << faction << " ~";
+    s_socket.writeString(ss.str());
+    socketSet.wait(0);
+    bool flag = false;
+    while(true){
+      if(s_socket.hasEvent())
+      {
+	//Do appropriate things with server message
+	string msg = "DEFAULT";
+	int bytes = s_socket.readString(msg,256);
+	if(bytes == 256){
+	  cerr << "[ERROR] Read too large (> 256)" << endl;
+	}
+
+	if(msg == "GOOD")
+	{
+	  break;
+	  flag = true;
+	}
+	else if(msg == "BADD")
+	  break;
+	else
+	  cerr << "[ERROR] Unknown response from server" << endl;
+      }//if- socket has event
+    }
+    if(flag)
+      break;
+  }
+}
+
+
+
 int main ( int argc, char* argv[] )
 {
   bool quit = false;
@@ -1080,6 +1141,7 @@ int main ( int argc, char* argv[] )
   //// --------------
   //// MAIN GAME LOOP
   //// --------------
+
   //While the user hasn't quit
   while(quit == false)
   {
@@ -1097,7 +1159,7 @@ int main ( int argc, char* argv[] )
 
       if(!alive)
 	continue;
-      
+
       Uint8 *keystates = SDL_GetKeyState(NULL);
       //This wont let us do anything until the game starts
       if(game_start){ 
@@ -1226,7 +1288,10 @@ int main ( int argc, char* argv[] )
 	    if(player_num == player_turn){ 
 	      string icing;//Icing on the MOVE/CAPT cake
 	      cerr << "[DEBUG] Calling Piece movement func" << endl;
-	      icing = selected->Move(spot);
+	      //if(selected->debug_name == "Wknight")//wurm edge case
+		//icing = selected->Move(spot,c);
+	      //else
+	        icing = selected->Move(spot);
 	      if(icing != "DEFAULT")
 		ss.str(ss.str() + icing);
 	    }
