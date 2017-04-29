@@ -272,44 +272,44 @@ vector<coord> FKnight::validSpots(Chess* c)
   seek = getSpot();
   seek.x-=2;
   seek.y-=1;
-  if(seek.x <= 0 && seek.y <= 0)
+  if(seek.x >= 0 && seek.y >= 0)
   {
     if(c->validspots[seek.x][seek.y] != 0)
     {
       if(c->board[seek.x][seek.y] != NULL)
       {
-	if(c->board[seek.x][seek.y]->getTeam() != getTeam())
-	{
-	  spots.push_back(seek);
-	  ss.str("");
-	  ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
-	  if((c->validspots[seek.x][seek.y-1] != 0) && (c->board[seek.x][seek.y-1] != NULL))
-	  {
-	    if(c->board[seek.x][seek.y-1]->getTeam() != getTeam())
-	      ss << "REMV " << c->board[seek.x][seek.y-1]->getNum() << " ~";
-	  }
-	  captureMap[seek] = ss.str();
-	}
-      }
-    }
+	    if(c->board[seek.x][seek.y]->getTeam() != getTeam())
+	    {
+	        spots.push_back(seek);
+	        ss.str("");
+	        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	        if((c->validspots[seek.x][seek.y-1] != 0) && (c->board[seek.x][seek.y-1] != NULL))
+	        {
+	            if(c->board[seek.x][seek.y-1]->getTeam() != getTeam())
+	                ss << "REMV " << c->board[seek.x][seek.y-1]->getNum() << " ~";
+	        }
+	        captureMap[seek] = ss.str();
+	    }
+      } 
     else
     {
       spots.push_back(seek);
       if((c->validspots[seek.x][seek.y-1] != 0) && (c->board[seek.x][seek.y-1] != NULL))
       {
-	if(c->board[seek.x][seek.y] != NULL)
-	{
-	  if(c->board[seek.x][seek.y-1]->getTeam() != getTeam())
-	  {
-	    seek.y -= 1;
-	    ss.str("");
-	    ss << "MOVE " << getNum() << " " << seek.x*64 << " " << (seek.y+1)*64 << " ~";
-	    ss << "REMV " << c->board[seek.x][seek.y]->getNum() << " ~";
-	    captureMap[seek] = ss.str();
-	  }
-	}
+	    if(c->board[seek.x][seek.y] != NULL)
+	    {
+	        if(c->board[seek.x][seek.y-1]->getTeam() != getTeam())
+	        {
+	            seek.y -= 1;
+	            ss.str("");
+	            ss << "MOVE " << getNum() << " " << seek.x*64 << " " << (seek.y+1)*64 << " ~";
+	            ss << "REMV " << c->board[seek.x][seek.y]->getNum() << " ~";
+	            captureMap[seek] = ss.str();
+	        }
+	    }
       }
     }
+   }
   }
 
   //Check West/South
@@ -335,7 +335,6 @@ vector<coord> FKnight::validSpots(Chess* c)
 	  captureMap[seek] = ss.str();
 	}
       }
-    }
     else
     {
       spots.push_back(seek);
@@ -351,6 +350,7 @@ vector<coord> FKnight::validSpots(Chess* c)
 	}
       }
     }
+   }
   }
   return spots;
 }
