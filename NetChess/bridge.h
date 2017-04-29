@@ -47,7 +47,8 @@
 //Game object includes
 #include "Piece_Assets/chess.h"
 
-
+//Menu include
+#include "Menu_Assets/menu.h"
 
 //This is meant to be a flexible header file
 //Change it according to where you will be locally running the program

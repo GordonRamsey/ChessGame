@@ -961,6 +961,10 @@ int main ( int argc, char* argv[] )
     return 1;
   if(load_files() == false)
     return 1;
+
+//  Menu menu(screen);
+//  menu.run_menu(screen);
+
   generatePieces();
 
   //// --------------
