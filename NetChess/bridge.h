@@ -44,6 +44,15 @@
 #include "Piece_Assets/Necro/Nking.h"
 #include "Piece_Assets/Necro/Nqueen.h"
 
+//Portal includes
+#include "Piece_Assets/Portal/Ppawn.h"
+#include "Piece_Assets/Portal/Prook.h"
+#include "Piece_Assets/Portal/Pknight.h"
+#include "Piece_Assets/Portal/Pbishop.h"
+#include "Piece_Assets/Portal/Pking.h"
+#include "Piece_Assets/Portal/Pqueen.h"
+
+
 //Game object includes
 #include "Piece_Assets/chess.h"
 

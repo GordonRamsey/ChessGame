@@ -8,12 +8,15 @@ GOLEM_SOURCES = ./Piece_Assets/Golem/Grook.cpp ./Piece_Assets/Golem/Gknight.cpp 
 NECRO_SOURCES = ./Piece_Assets/Necro/Nrook.cpp ./Piece_Assets/Necro/Nknight.cpp ./Piece_Assets/Necro/Nbishop.cpp ./Piece_Assets/Necro/Nqueen.cpp ./Piece_Assets/Necro/Nking.cpp ./Piece_Assets/Necro/Npawn.cpp
 CLIENT_SOURCES = netChess.cpp
 MENU_SOURCES = ./Menu_Assets/menu.cpp
+PORTAL_SOURCES = ./Piece_Assets/Portal/Prook.cpp ./Piece_Assets/Portal/Pknight.cpp ./Piece_Assets/Portal/Pbishop.cpp ./Piece_Assets/Portal/Pqueen.cpp ./Piece_Assets/Portal/Pking.cpp ./Piece_Assets/Portal/Ppawn.cpp
+CLIENT_SOURCES=netChess.cpp
 
 COMMON_OBJECTS=$(COMMON_SOURCES:.cpp=.o)
 PIECE_OBJECTS=$(PIECE_SOURCES:.cpp=.o)  
 FIGHTER_OBJECTS=$(FIGHTER_SOURCES:.cpp=.o)  
 GOLEM_OBJECTS=$(GOLEM_SOURCES:.cpp=.o)  
 NECRO_OBJECTS=$(NECRO_SOURCES:.cpp=.o)  
+PORTAL_OBJECTS=$(PORTAL_SOURCES:.cpp=.o)  
 CLIENT_OBJECTS=$(CLIENT_SOURCES:.cpp=.o)
 MENU_OBJECTS=$(MENU_SOURCES:.cpp=.o)
 CLIENT_EXECUTABLE=NetChess
@@ -24,7 +27,7 @@ all: Client
 
 Client: $(CLIENT_EXECUTABLE)
 
-$(CLIENT_EXECUTABLE): $(COMMON_OBJECTS) $(CLIENT_OBJECTS) $(PIECE_OBJECTS) $(MENU_OBJECTS) $(FIGHTER_OBJECTS) $(GOLEM_OBJECTS) $(NECRO_OBJECTS)
+$(CLIENT_EXECUTABLE): $(COMMON_OBJECTS) $(CLIENT_OBJECTS) $(PIECE_OBJECTS) $(MENU_OBJECTS) $(FIGHTER_OBJECTS) $(GOLEM_OBJECTS) $(NECRO_OBJECTS) $(NECRO_OBJECTS)
 	$(CC) $(LDFLAGS) $^ -o $@
 
 .cpp.o:
@@ -36,5 +39,6 @@ clean:
 	./Piece_Assets/*.o          \
 	./Piece_Assets/Fighters/*.o \
 	./Piece_Assets/Golem/*.o    \
-	./Piece_Assets/Necro/*.o
+	./Piece_Assets/Necro/*.o    \
+	./Piece_Assets/Portal/*.o
   	

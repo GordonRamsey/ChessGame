@@ -22,6 +22,7 @@ SDL_Surface *pieceSheet1 = NULL; //Player 1
 SDL_Surface *pieceSheet2 = NULL; //Player 2
 SDL_Surface *pieceSheet3 = NULL; //Player 3
 SDL_Surface *pieceSheet4 = NULL; //Player 4
+SDL_Surface *graveSheet = NULL; //Gravestones
 SDL_Surface *ghostSheet = NULL;
 SDL_Surface *highlight = NULL;
 SDL_Surface *screen = NULL;
@@ -51,6 +52,7 @@ vector<Piece*> pieces;
 int player_num; //Our player num relevent to the current game
 int player_turn = 1;
 bool game_start = false;
+bool alive = true; //Am i currently alive?
 
 //Chat Variables
 StringInput chat;
@@ -175,6 +177,10 @@ void Piece::setTeam(int x)
     sheet = pieceSheet4;
     owner = 4;
   }
+  else if(x == 4){ //Dead players
+    sheet = graveSheet;
+    owner = -1;
+  }
 }
 
 SDL_Surface *load_image( std::string filename )
@@ -233,6 +239,7 @@ bool load_files()
   pieceSheet2 = load_image("Graphic_Assets/basicPieces642.png");
   pieceSheet3 = load_image("Graphic_Assets/basicPieces643.png");
   pieceSheet4 = load_image("Graphic_Assets/basicPieces644-better.png");
+  graveSheet = load_image("Graphic_Assets/Graves.png");
   ghostSheet = load_image("Graphic_Assets/ghostPieces64.png");
   highlight = load_image("Graphic_Assets/highlight.png");
   textBack = load_image("Graphic_Assets/textBackground.png");
@@ -248,8 +255,8 @@ bool load_files()
     return false;
   }
 
-  else if(ghostSheet == NULL){
-    cerr << "No ghost sheet" << endl;
+  else if(ghostSheet == NULL || graveSheet == NULL){
+    cerr << "No ghost/grave sheet" << endl;
     return false;
   }
 
@@ -278,6 +285,7 @@ void clean_up()
   SDL_FreeSurface(pieceSheet2);
   SDL_FreeSurface(pieceSheet3);
   SDL_FreeSurface(pieceSheet4);
+  SDL_FreeSurface(graveSheet);
   SDL_FreeSurface(ghostSheet);
   SDL_FreeSurface(highlight);
   SDL_FreeSurface(textBack);
@@ -429,28 +437,28 @@ void generatePieces()
       int num = it;
       if(j == 0)
       {
-	newPiece = new Pawn(x,y,num,'W');
+	newPiece = new PPawn(x,y,num,'W');
 	newPiece->setClip(CLIP_PAWN);
       }
       else{
 	if(i==0 || i ==7){  
-	  newPiece = new Rook(x,y,num);
+	  newPiece = new PRook(x,y,num);
 	  newPiece->setClip(CLIP_ROOK);
 	}
 	else if(i==1 || i ==6){ 
-	  newPiece = new Knight(x,y,num);
+	  newPiece = new PKnight(x,y,num);
 	  newPiece->setClip(CLIP_KNIGHT);
 	}
 	else if(i==2 || i ==5){  
-	  newPiece = new Bishop(x,y,num);
+	  newPiece = new PBishop(x,y,num);
 	  newPiece->setClip(CLIP_BISHOP);
 	}
 	else if(i==4){  
-	  newPiece = new King(x,y,num);
+	  newPiece = new PKing(x,y,num);
 	  newPiece->setClip(CLIP_KING);
 	}
 	else if(i==3){ 
-	  newPiece = new Queen(x,y,num);
+	  newPiece = new PQueen(x,y,num);
 	  newPiece->setClip(CLIP_QUEEN);
 	}
       }
@@ -604,6 +612,36 @@ void pieceSpawn(string name, int x, int y, int team)
     newPiece = new NQueen(coordx, coordy, c->it);
     newPiece->setClip(CLIP_QUEEN);
   } 
+  else if(name == "Ppawn")
+  {
+    newPiece = new PPawn(coordx, coordy, c->it, dir);
+    newPiece->setClip(CLIP_PAWN);
+  }
+  else if(name == "Prook")
+  {
+    newPiece = new PRook(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_ROOK);
+  }
+  else if(name == "Pbishop")
+  {
+    newPiece = new PBishop(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_BISHOP);
+  }
+  else if(name == "Pknight")
+  {
+    newPiece = new PKnight(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_KNIGHT);
+  }
+  else if(name == "Pking")
+  {
+    newPiece = new PKing(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_KING);
+  }
+  else if(name == "Pqueen")
+  {
+    newPiece = new PQueen(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_QUEEN);
+  }
   else if(name == "")
   {
 
@@ -632,6 +670,19 @@ int connectServer(int argc, char* argv[])
     return 0;
   printf("Cannot establish connection to server\n");
   return -1;
+}
+
+void killPieces(int team)
+{
+  for(unsigned int i=0;i<pieces.size();i++)
+  {
+    if(pieces[i]->getTeam() == team)
+    { 
+      pieces[i]->setTeam(4);
+      pieces[i]->debug_name = "dead";
+    }
+
+  }
 }
 
 string snip_to_end(string msg, int &cursor)
@@ -733,10 +784,19 @@ void netProcess(string msg)
       if(pieces[i]->getNum() == number){
 	//Need to perform a strange check on c->board bc the movement commands come in first
 	//If our removed piece still exists on the board, make its board spot NULL
+	stringstream ss;
+	ss.str("DEFAULT");
 	if(c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y]->getNum() == pieces[i]->getNum())
 	  c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y] = NULL;
+	if(pieces[i]->debug_name.find("king") != string::npos){
+	  ss.str("");
+	  ss << "DEAD " << pieces[i]->getTeam() << " ~";
+	}
+	delete pieces[i];
 	pieces[i] = pieces[pieces.size()-1];
 	pieces.pop_back();
+	if(ss.str() != "DEFAULT")
+	  netProcess(ss.str());
 	break;
       }
     }
@@ -756,6 +816,7 @@ void netProcess(string msg)
     //Remove piece 2*
     coord loc = pieces[d_index]->getPos();
 
+    delete pieces[d_index];
     pieces[d_index] = pieces[pieces.size()-1];
     pieces.pop_back();
 
@@ -839,14 +900,11 @@ void netProcess(string msg)
       if(pieces[i]->getNum() == num)
       {
 	pieces[i]->Rock();
-	//c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y]->Rock();
-	cerr << "rocked piece:" << num << endl;
-	cerr << pieces[i]->isRock() << endl;
 	break;
       }
     }
   }//If- ROCK
-  else if(cmd == "BITE")//ROCK <piece num>
+  else if(cmd == "BITE")//BITE <piece num>
   {
     string s_num = snip(msg,index);
     int num = atoi(s_num.c_str());
@@ -858,7 +916,84 @@ void netProcess(string msg)
 	break;
       }
     }
-  }//If- ROCK
+  }//If- BITE
+  else if(cmd == "CLIP")//CLIP <piece num> <clip num>
+  {
+    string s_num = snip(msg,index);
+    string s_clip = snip(msg,index);
+    int num = atoi(s_num.c_str());
+    int clip = atoi(s_clip.c_str());
+    for(unsigned int i=0;i<pieces.size();i++){
+      if(pieces[i]->getNum() == num)
+      {
+	pieces[i]->setClip(clip);
+	break;
+      }
+      lastMove.clear();
+    }
+  }//If- CLIP
+  else if(cmd == "SHOV")//SHOV <piece num> <x spot> <y spot>
+  {
+    string s_num = snip(msg,index);
+    string s_x = snip(msg,index);
+    string s_y = snip(msg,index);
+    int num = atoi(s_num.c_str());
+    int x = atoi(s_x.c_str());
+    int y = atoi(s_y.c_str());
+
+    for(unsigned int i=0;i<pieces.size();i++){
+      if(pieces[i]->getNum() == num)
+      {
+	c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y] = NULL;
+	pieces[i]->setPos(x*64,y*64);
+	c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y] = pieces[i];
+	break;
+      }
+    }
+  }//If- SHOV
+  else if(cmd == "DEAD")//CLIP <player num>
+  {
+    string s_num = snip(msg,index);
+    int num = atoi(s_num.c_str());
+    cout << "Player:" << num << " has died" << endl;
+    if(s_num == "1"){
+      killPieces(1); 
+    }
+    else if(s_num == "2"){
+      killPieces(2); 
+    }
+    else if(s_num == "3"){
+      killPieces(3); 
+    }
+    else if(s_num == "4"){
+      killPieces(4); 
+    }
+    if(num == player_num)
+    {
+      cout << "YOU LOSE" << endl;
+      stringstream ss;
+      ss.str("");
+      ss << "NetChess - " << player_num << " - You Are Dead";
+      SDL_WM_SetCaption(ss.str().c_str(), NULL);
+      alive = false;
+    }
+  }//If- DEAD
+  else if(cmd == "WINN")//WINN <player num>
+  {
+    string s_num = snip(msg,index);
+    int num = atoi(s_num.c_str());
+    if(player_num == num)
+    {
+      cout << "You win!" << endl;
+      //Win and stuff
+    }
+    else
+    {
+      cout << "you lose!" << endl;
+      //Lose and stuff
+    }
+
+  }//If- WINN 
   else
   {
     cerr << "Unknown command received:" << msg << endl;
@@ -908,21 +1043,21 @@ void drawAura(coord spot, string name)
   if(name == "Nrook"){
 
     if(c->board[spot.x][spot.y+1] == NULL and c->isValid(spot.x,spot.y+1))
-      apply_surface((spot.x)*64, (spot.y+1)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x)*64, (spot.y+1)*64, pieceSheet3, screen, &clips[25]);
     if(c->board[spot.x][spot.y-1] == NULL and c->isValid(spot.x,spot.y-1))
-      apply_surface((spot.x)*64, (spot.y-1)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x)*64, (spot.y-1)*64, pieceSheet3, screen, &clips[25]);
     if(c->board[spot.x+1][spot.y] == NULL and c->isValid(spot.x+1,spot.y))
-      apply_surface((spot.x+1)*64, (spot.y)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x+1)*64, (spot.y)*64, pieceSheet3, screen, &clips[25]);
     if(c->board[spot.x+1][spot.y+1] == NULL and c->isValid(spot.x+1,spot.y+1))
-      apply_surface((spot.x+1)*64, (spot.y+1)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x+1)*64, (spot.y+1)*64, pieceSheet3, screen, &clips[25]);
     if(c->board[spot.x+1][spot.y-1] == NULL and c->isValid(spot.x+1,spot.y-1))
-      apply_surface((spot.x+1)*64, (spot.y-1)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x+1)*64, (spot.y-1)*64, pieceSheet3, screen, &clips[25]);
     if(c->board[spot.x-1][spot.y] == NULL and c->isValid(spot.x-1,spot.y))
-      apply_surface((spot.x-1)*64, (spot.y)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x-1)*64, (spot.y)*64, pieceSheet3, screen, &clips[25]);
     if(c->board[spot.x-1][spot.y+1] == NULL and c->isValid(spot.x-1,spot.y+1))
-      apply_surface((spot.x-1)*64, (spot.y+1)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x-1)*64, (spot.y+1)*64, pieceSheet3, screen, &clips[25]);
     if(c->board[spot.x-1][spot.y-1] == NULL and c->isValid(spot.x-1,spot.y-1))
-      apply_surface((spot.x-1)*64, (spot.y-1)*64, pieceSheet3, screen, &clips    [25]);
+      apply_surface((spot.x-1)*64, (spot.y-1)*64, pieceSheet3, screen, &clips[25]);
   }
   else if (name == "Bitten")
   {
@@ -935,6 +1070,46 @@ void drawAura(coord spot, string name)
 // -------------------
 // Main Game Functions
 // -------------------
+
+void runStartMenu()
+{
+  while(true){
+    //Creation
+    //running return
+    int faction; 
+    //= run;
+    stringstream ss;
+    ss << "REDY " << faction << " ~";
+    s_socket.writeString(ss.str());
+    socketSet.wait(0);
+    bool flag = false;
+    while(true){
+      if(s_socket.hasEvent())
+      {
+	//Do appropriate things with server message
+	string msg = "DEFAULT";
+	int bytes = s_socket.readString(msg,256);
+	if(bytes == 256){
+	  cerr << "[ERROR] Read too large (> 256)" << endl;
+	}
+
+	if(msg == "GOOD")
+	{
+	  break;
+	  flag = true;
+	}
+	else if(msg == "BADD")
+	  break;
+	else
+	  cerr << "[ERROR] Unknown response from server" << endl;
+      }//if- socket has event
+    }
+    if(flag)
+      break;
+  }
+}
+
+
 
 int main ( int argc, char* argv[] )
 {
@@ -970,6 +1145,7 @@ int main ( int argc, char* argv[] )
   //// --------------
   //// MAIN GAME LOOP
   //// --------------
+
   //While the user hasn't quit
   while(quit == false)
   {
@@ -980,6 +1156,14 @@ int main ( int argc, char* argv[] )
     //While theres an event to handle
     while(SDL_PollEvent(&event))
     {
+      if(event.type == SDL_QUIT)
+      {
+	quit = true;
+      }
+
+      if(!alive)
+	continue;
+
       Uint8 *keystates = SDL_GetKeyState(NULL);
       //This wont let us do anything until the game starts
       if(game_start){ 
@@ -1064,7 +1248,10 @@ int main ( int argc, char* argv[] )
 
 		//If captured unit has additional effects (See Necro)
 		if(capicing != "DEFAULT")
-		  ss << capicing;
+		{  
+		  cerr << "[DEBUG] Capicing returned not default:" << capicing << endl;
+		  ss.str(ss.str() + capicing);
+		}
 
 		capture = true;
 		break;
@@ -1105,7 +1292,10 @@ int main ( int argc, char* argv[] )
 	    if(player_num == player_turn){ 
 	      string icing;//Icing on the MOVE/CAPT cake
 	      cerr << "[DEBUG] Calling Piece movement func" << endl;
-	      icing = selected->Move(spot);
+	      //if(selected->debug_name == "Wknight")//wurm edge case
+		//icing = selected->Move(spot,c);
+	      //else
+	        icing = selected->Move(spot);
 	      if(icing != "DEFAULT")
 		ss.str(ss.str() + icing);
 	    }
@@ -1170,10 +1360,6 @@ int main ( int argc, char* argv[] )
 
       }//If- game start
 
-      if(event.type == SDL_QUIT)
-      {
-	quit = true;
-      }
 
     }//While- SDL_PollEvent
 
