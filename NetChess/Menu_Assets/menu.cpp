@@ -3,30 +3,6 @@
 
 using namespace std;
 
-Menu::Menu(SDL_Surface *passedScreen)
-{
-  menuScreen = passedScreen;
-}
-
-class Button
-{
-  private:
-    int dfclip =-1;
-    int faction = -1;
-    SDL_Rect box;
-
-  public:
-
-    Button(int x, int y, int w, int h, int passedClip);
-    int menuClipNum;
-    SDL_Rect* menuClip;
-    void set_faction(int x);
-    void set_button_clip(int x);
-    void show_button();
-    int get_button_clip();
-    void handle_button_events();
-};
-
 const int MENU_CLIP_WIDTH = 350;
 const int MENU_CLIP_HEIGHT = 150;
 
@@ -55,6 +31,28 @@ SDL_Surface *menu = NULL;
 SDL_Event menuEvent;
 
 vector<SDL_Rect> menuClips;
+
+
+
+class Button
+{
+  private:
+    int dfclip =-1;
+    int faction = -1;
+    SDL_Rect box;
+
+  public:
+
+    Button(int x, int y, int w, int h, int passedClip);
+    int menuClipNum;
+    SDL_Rect* menuClip;
+    void set_faction(int x);
+    void set_button_clip(int x);
+    void show_button();
+    int get_button_clip();
+    bool handle_button_events();
+    bool active = false;
+};
 
 void set_button_clips()
 {
@@ -269,10 +267,9 @@ int Button::get_button_clip()
   return menuClipNum;
 }
 
-void Button::handle_button_events()
+bool Button::handle_button_events()
 {
   int x = 0, y = 0;
-  int tmp = -1;
   if(menuEvent.type == SDL_MOUSEMOTION){
     x = menuEvent.motion.x;
     y = menuEvent.motion.y;
@@ -280,11 +277,10 @@ void Button::handle_button_events()
 
     if((x > box.x) and (x < box.x + box.w) and (y > box.y) and (y < box.y +box.h)){
       if(this->get_button_clip() %3 == 0)
-        this->set_button_clip(this->get_button_clip()+1);
+	this->set_button_clip(this->get_button_clip()+1);
     }
     else
       this->set_button_clip(dfclip);
-
   }
   if(menuEvent.type == SDL_MOUSEBUTTONDOWN){
     if(menuEvent.button.button == SDL_BUTTON_LEFT){
@@ -292,18 +288,19 @@ void Button::handle_button_events()
       y = menuEvent.button.y;
 
       if((x > box.x) and (x < box.x + box.w) and (y > box.y) and (y < box.y +box.h)){
-        if((this->get_button_clip() -1) %3 == 0){
+	if((this->get_button_clip() -1) %3 == 0){
 	  this->set_button_clip(this->get_button_clip()+1);
-	  //wurmButton->dfclip = STD_WURM;
-	  //portalButton->dfclip = STD_PORTAL;
-	  //fighterButton->dfclip = STD_FIGHTER;
-	  //golemButton->dfclip = STD_GOLEM;
-	  //necroButton->dfclip = STD_NECRO;
 	  this-> dfclip  = this->get_button_clip();
 	}
       }
     }
   }
+  return false;
+}
+
+Menu::Menu(SDL_Surface *passedScreen)
+{
+  menuScreen = passedScreen;
 }
 
 //Make the magic happen
@@ -324,6 +321,8 @@ int Menu::run_menu(SDL_Surface *screen)
   Button *submitButton = new  Button(MENU_CLIP_WIDTH, MENU_CLIP_HEIGHT*2, MENU_CLIP_WIDTH, MENU_CLIP_HEIGHT, STD_SUBMIT);
 
   bool runMenu = true;
+  int return_var = -1;
+  Button *buttons [] = {wurmButton, portalButton, fighterButton, golemButton, necroButton, submitButton  };
   while(runMenu == true){
 
     apply_menu_surface(0,0, menu, screen, wurmButton->menuClip);
@@ -334,33 +333,34 @@ int Menu::run_menu(SDL_Surface *screen)
     apply_menu_surface(MENU_CLIP_WIDTH,MENU_CLIP_HEIGHT*2, menu, screen, submitButton->menuClip);
 
     if(SDL_PollEvent(&menuEvent)){
-      wurmButton->handle_button_events();
-      portalButton->handle_button_events();
-      fighterButton->handle_button_events();
-      golemButton->handle_button_events();
-      necroButton->handle_button_events();
-      submitButton->handle_button_events();
+      for(int i=0;i<6;i++)
+      {
+	if(buttons[i]->handle_button_events())
+	  break;
+      }
 
       if(menuEvent.type == SDL_QUIT){
 	runMenu = false;
       }
-    }
-    if(submitButton->get_button_clip() == LOCK_SUBMIT){
-      if(wurmButton->get_button_clip() == LOCK_WURM)
-	return 1;
-      else if(portalButton->get_button_clip() == LOCK_PORTAL)
-	return 2;
-      else if(fighterButton->get_button_clip() == LOCK_FIGHTER)
-	return 3;
-      else if(golemButton->get_button_clip() == LOCK_GOLEM)
-	return 4;
-      else if(necroButton->get_button_clip() == LOCK_NECRO)
-	return 5;
-      else
-	return -1;
-      runMenu = false;
+
+      if(submitButton->get_button_clip() == LOCK_SUBMIT){
+	if(wurmButton->get_button_clip() == LOCK_WURM)
+	  return_var =  1;
+	else if(portalButton->get_button_clip() == LOCK_PORTAL)
+	  return_var = 2;
+	else if(fighterButton->get_button_clip() == LOCK_FIGHTER)
+	  return_var = 3;
+	else if(golemButton->get_button_clip() == LOCK_GOLEM)
+	  return_var = 4;
+	else if(necroButton->get_button_clip() == LOCK_NECRO)
+	  return_var = 5;
+	else
+	  return_var = -1;
+	runMenu = false;
+      }
     }
     SDL_Flip(screen);
   }
   clean_up_menu();
+  return return_var;
 }

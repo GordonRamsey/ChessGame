@@ -52,6 +52,8 @@ vector<Piece*> pieces;
 int player_num; //Our player num relevent to the current game
 int player_turn = 1;
 bool game_start = false;
+bool handshake = false;
+bool handshake_2 = false;
 bool alive = true; //Am i currently alive?
 
 //Chat Variables
@@ -843,6 +845,7 @@ void netProcess(string msg)
     ss.str("");
     ss << "NetChess - " << player_num << " - Waiting for players...";
     SDL_WM_SetCaption(ss.str().c_str(), NULL);
+    handshake = true;
 
   }//If- REDY
   else if(cmd == "HOLD")//HOLD <clip> <x> <y>
@@ -1073,17 +1076,20 @@ void drawAura(coord spot, string name)
 
 void runStartMenu()
 {
+  Menu *menu = new Menu(screen);
   while(true){
-    //Creation
-    //running return
-    int faction; 
-    //= run;
+    int faction = menu->run_menu(screen);
+    
+    cerr << "[MENU] Faction:" << faction << endl; 
+    if(faction == -1)
+      exit(0);
+    
     stringstream ss;
-    ss << "REDY " << faction << " ~";
+    ss << "FACT " << faction << " ~";
     s_socket.writeString(ss.str());
-    socketSet.wait(0);
     bool flag = false;
     while(true){
+    socketSet.wait(0);
       if(s_socket.hasEvent())
       {
 	//Do appropriate things with server message
@@ -1093,20 +1099,26 @@ void runStartMenu()
 	  cerr << "[ERROR] Read too large (> 256)" << endl;
 	}
 
+	cerr << "Message received:" << msg << endl;
+	
 	if(msg == "GOOD")
 	{
-	  break;
 	  flag = true;
+	  handshake_2 = true;
+	  break;
 	}
 	else if(msg == "BADD")
 	  break;
 	else
-	  cerr << "[ERROR] Unknown response from server" << endl;
+	  cerr << "[ERROR] Unknown response from server:" << msg << endl;
       }//if- socket has event
+      if(s_socket.isClosed())
+	exit(0);
     }
     if(flag)
       break;
   }
+    delete menu;
 }
 
 
@@ -1137,8 +1149,6 @@ int main ( int argc, char* argv[] )
   if(load_files() == false)
     return 1;
 
-//  Menu menu(screen);
-//  menu.run_menu(screen);
 
   generatePieces();
 
@@ -1149,7 +1159,10 @@ int main ( int argc, char* argv[] )
   //While the user hasn't quit
   while(quit == false)
   {
+    if(handshake && !handshake_2)
+      runStartMenu();
 
+    
     //// ----------
     //// SDL EVENTS
     //// ----------

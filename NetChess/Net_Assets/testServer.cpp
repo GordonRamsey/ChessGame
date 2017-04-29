@@ -16,6 +16,7 @@ vector<player> players;
 stringstream ss;
 
 bool game_start = false;
+int faction_confirm = 0;
 int current_player = 1;
 int alive_players = -1;
 
@@ -84,8 +85,6 @@ int main(int argc, char* argv[])
       players.push_back(newplayer);
 
       player_num++;
-      if(player_num == 5)
-	startGame(socketSet);
     }
     else //Messages from client
     {
@@ -94,8 +93,8 @@ int main(int argc, char* argv[])
 	  int bytes = sockets[i].readString(msg,255);
 	  if(!sockets[i].isClosed())
 	  {
-	    cerr << msg << "\n";
-	    
+	    cerr << "[MESSAGE]" << msg << "\n";
+
 	    //Snip large messages so each command can be processed individually
 	    //Necessary incase of HOLD clobbering
 	    vector<string> snipped;
@@ -113,28 +112,37 @@ int main(int argc, char* argv[])
 	      msg = snipped[s];
 	      cerr << "Processing message:" << msg << endl;
 
-	      if(strncmp(msg.c_str(),"REDY",4) == 0)
+	      if(strncmp(msg.c_str(),"FACT",4) == 0)
 	      {
-		cerr << "REDY command recognized" << endl;
+		cerr << "FACT command recognized" << endl;
 		string s_fact = "";
 		s_fact += msg[5];
 		int fact = atoi(s_fact.c_str());
 		bool good = true;
 		int index;
 		//check if team already in use
-		for(int i=0;i<players.size();i++){
-		  if(players[i].team == fact){
+		for(int j=0;j<players.size();j++){
+		  if(players[j].sock == sockets[i])
+		  {  
+		    index = j;
+		  }
+		  
+		  if(players[j].team == fact){
+		    cerr << "Faction " << fact << " already in use" << endl;
 		    sockets[i].writeString("BADD");
 		    good = false;
 		    break;
 		  }
-		  if(players[i].sock == sockets[i])
-		    index = i;
 		}
 		if(good)//If open, assign to player
 		{
 		  players[index].team = fact;
 		  sockets[i].writeString("GOOD");
+		  cerr << "Player " << players[index].number << " faction set to " << fact << endl;
+		  faction_confirm++;
+		  if(faction_confirm == 4)
+		    startGame(socketSet);
+
 		}
 
 	      }//REDY state
@@ -242,7 +250,7 @@ int main(int argc, char* argv[])
 		s_num += msg[5];
 		int num = atoi(s_num.c_str());
 		cout << "Player:" << s_num << " is DEAD" << endl;
-		
+
 		//remove player turn
 		for(int k=0;k<players.size();k++){
 		  if(players[k].number == num){
