@@ -262,7 +262,7 @@ bool load_files()
   fighterSheet = load_image("Graphic_Assets/Fighter-Pieces.png");
   golemSheet = load_image("Graphic_Assets/basicPieces642.png");
   necroSheet = load_image("Graphic_Assets/basicPieces643.png");
-  wurmSheet = load_image("Graphic_Assets/basicPieces643.png");
+  wurmSheet = load_image("Graphic_Assets/basicPieces644.png");
   
   graveSheet = load_image("Graphic_Assets/Graves.png");
   ghostSheet = load_image("Graphic_Assets/ghostPieces64.png");
@@ -737,6 +737,7 @@ void printChat()
     //render surface
     int bar = SCREEN_HEIGHT/30;
     apply_surface(896,bar*i, sideBar, screen);
+    SDL_FreeSurface(sideBar);
   }
 
 }
