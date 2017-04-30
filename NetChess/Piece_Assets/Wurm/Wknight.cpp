@@ -10,7 +10,7 @@ WKnight::~WKnight()
 
 }
 
-string checkAdjacent(coord spot, Chess* c)
+string WKnight::checkAdjacent(coord spot, Chess* c)
 {
   stringstream result;
   stringstream ss;

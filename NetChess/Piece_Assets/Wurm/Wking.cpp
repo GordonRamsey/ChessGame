@@ -15,6 +15,15 @@ string WKing::Move(coord newpos)
 	return ss.str();
 }
 
+string WKing::createCrater(coord spot, Chess* c)
+{
+	stringstream result;
+	stringstream ss;
+
+	//Check North:
+	
+}
+
 vector<coord> WKing::validSpots(Chess* c)
 {
 	return King::validSpots(c); //according to whoever wrote Fking, this returns normal king movements.
