@@ -27,6 +27,13 @@ SDL_Surface *ghostSheet = NULL;
 SDL_Surface *highlight = NULL;
 SDL_Surface *screen = NULL;
 
+//Player surfaces
+SDL_Surface *portalSheet = NULL;
+SDL_Surface *fighterSheet = NULL;
+SDL_Surface *golemSheet = NULL;
+SDL_Surface *necroSheet = NULL;
+SDL_Surface *wurmSheet = NULL;
+
 //Text input
 SDL_Surface *text = NULL;
 SDL_Surface *sideBar = NULL;
@@ -52,9 +59,18 @@ vector<Piece*> pieces;
 int player_num; //Our player num relevent to the current game
 int player_turn = 1;
 bool game_start = false;
+bool alive = true; //Am i currently alive?
+
+//Start screen variables
 bool handshake = false;
 bool handshake_2 = false;
-bool alive = true; //Am i currently alive?
+bool handshake_3 = false;
+
+//STRT game variables
+int p1_team = -1;
+int p2_team = -1;
+int p3_team = -1;
+int p4_team = -1;
 
 //Chat Variables
 StringInput chat;
@@ -236,11 +252,18 @@ bool load_files()
 {
   //Load the image
   board = load_image("Graphic_Assets/fourPlayerBoard64.png");
-  //pieceSheet1 = load_image("Graphic_Assets/basicPieces64.png");
-  pieceSheet1 = load_image("Graphic_Assets/Fighter-Pieces.png");
-  pieceSheet2 = load_image("Graphic_Assets/basicPieces642.png");
-  pieceSheet3 = load_image("Graphic_Assets/basicPieces643.png");
-  pieceSheet4 = load_image("Graphic_Assets/basicPieces644-better.png");
+  
+  //pieceSheet1 = load_image("Graphic_Assets/Fighter-Pieces.png");
+  //pieceSheet2 = load_image("Graphic_Assets/basicPieces642.png");
+  //pieceSheet3 = load_image("Graphic_Assets/basicPieces643.png");
+  //pieceSheet4 = load_image("Graphic_Assets/basicPieces644-better.png");
+  
+  portalSheet = load_image("Graphic_Assets/portalPieces.png");
+  fighterSheet = load_image("Graphic_Assets/Fighter-Pieces.png");
+  golemSheet = load_image("Graphic_Assets/basicPieces642.png");
+  necroSheet = load_image("Graphic_Assets/basicPieces643.png");
+  wurmSheet = load_image("Graphic_Assets/basicPieces643.png");
+  
   graveSheet = load_image("Graphic_Assets/Graves.png");
   ghostSheet = load_image("Graphic_Assets/ghostPieces64.png");
   highlight = load_image("Graphic_Assets/highlight.png");
@@ -252,7 +275,7 @@ bool load_files()
     return false;
   }
 
-  else if (pieceSheet1 == NULL || pieceSheet2 == NULL || pieceSheet3 == NULL || pieceSheet4 == NULL){
+  else if (portalSheet == NULL || fighterSheet == NULL || golemSheet == NULL || necroSheet == NULL || wurmSheet == NULL){
     cerr << "No piece sheets" << endl;
     return false;
   }
@@ -287,6 +310,13 @@ void clean_up()
   SDL_FreeSurface(pieceSheet2);
   SDL_FreeSurface(pieceSheet3);
   SDL_FreeSurface(pieceSheet4);
+  
+  SDL_FreeSurface(fighterSheet);
+  SDL_FreeSurface(portalSheet);
+  SDL_FreeSurface(golemSheet);
+  SDL_FreeSurface(necroSheet);
+  SDL_FreeSurface(wurmSheet);
+  
   SDL_FreeSurface(graveSheet);
   SDL_FreeSurface(ghostSheet);
   SDL_FreeSurface(highlight);
@@ -306,6 +336,12 @@ void generatePieces()
   ghostPiece.setTeam(-1);
   ghostPiece.setClip(0);
 
+  cerr << "=Teams=" << endl;
+  cerr << "1." << p1_team << endl;
+  cerr << "2." << p2_team << endl;
+  cerr << "3." << p3_team << endl;
+  cerr << "4." << p4_team << endl;
+
   //Player 1 gen 
   for(int j=0;j<2;j++){
     for(int i=0;i<8;i++){
@@ -316,28 +352,82 @@ void generatePieces()
       int num = it;
       if(j == 1)
       {
-	newPiece = new FPawn(x,y,num,'S');
+	if(p1_team == 1)
+	  newPiece = new FPawn(x,y,num,'S');
+	if(p1_team == 2)
+	  newPiece = new PPawn(x,y,num,'S');
+	if(p1_team == 3)
+	  newPiece = new FPawn(x,y,num,'S');
+	if(p1_team == 4)
+	  newPiece = new GPawn(x,y,num,'S');
+	if(p1_team == 5)
+	  newPiece = new NPawn(x,y,num,'S');
 	newPiece->setClip(CLIP_PAWN);
       }
       else{
 	if(i==0 || i ==7){  
-	  newPiece = new FRook(x,y,num);
+	  if(p1_team == 1)
+	    newPiece = new FRook(x,y,num);
+	  if(p1_team == 2)
+	    newPiece = new PRook(x,y,num);
+	  if(p1_team == 3)
+	    newPiece = new FRook(x,y,num);
+	  if(p1_team == 4)
+	    newPiece = new GRook(x,y,num);
+	  if(p1_team == 5)
+	    newPiece = new NRook(x,y,num);
 	  newPiece->setClip(CLIP_ROOK);
 	}
 	else if(i==1 || i ==6){ 
-	  newPiece = new FKnight(x,y,num);
+	  if(p1_team == 1)
+	    newPiece = new FKnight(x,y,num);
+	  if(p1_team == 2)
+	    newPiece = new PKnight(x,y,num);
+	  if(p1_team == 3)
+	    newPiece = new FKnight(x,y,num);
+	  if(p1_team == 4)
+	    newPiece = new GKnight(x,y,num);
+	  if(p1_team == 5)
+	    newPiece = new NKnight(x,y,num);
 	  newPiece->setClip(CLIP_KNIGHT);
 	}
 	else if(i==2 || i ==5){  
-	  newPiece = new FBishop(x,y,num);
+	  if(p1_team == 1)
+	    newPiece = new FBishop(x,y,num);
+	  if(p1_team == 2)
+	    newPiece = new PBishop(x,y,num);
+	  if(p1_team == 3)
+	    newPiece = new FBishop(x,y,num);
+	  if(p1_team == 4)
+	    newPiece = new GBishop(x,y,num);
+	  if(p1_team == 5)
+	    newPiece = new NBishop(x,y,num);
 	  newPiece->setClip(CLIP_BISHOP);
 	}
 	else if(i==4){  
-	  newPiece = new FKing(x,y,num);
+	  if(p1_team == 1)
+	    newPiece = new FKing(x,y,num);
+	  if(p1_team == 2)
+	    newPiece = new PKing(x,y,num);
+	  if(p1_team == 3)
+	    newPiece = new FKing(x,y,num);
+	  if(p1_team == 4)
+	    newPiece = new GKing(x,y,num);
+	  if(p1_team == 5)
+	    newPiece = new NKing(x,y,num);
 	  newPiece->setClip(CLIP_KING);
 	}
 	else if(i==3){ 
-	  newPiece = new FQueen(x,y,num);
+	  if(p1_team == 1)
+	    newPiece = new FQueen(x,y,num);
+	  if(p1_team == 2)
+	    newPiece = new PQueen(x,y,num);
+	  if(p1_team == 3)
+	    newPiece = new FQueen(x,y,num);
+	  if(p1_team == 4)
+	    newPiece = new GQueen(x,y,num);
+	  if(p1_team == 5)
+	    newPiece = new NQueen(x,y,num);
 	  newPiece->setClip(CLIP_QUEEN);
 	}
       }
@@ -357,30 +447,84 @@ void generatePieces()
       int num = it;
       if(j == 0)
       {
-	newPiece = new GPawn(x,y,num,'N');
+	if(p2_team == 1)
+	  newPiece = new FPawn(x,y,num,'N');
+	if(p2_team == 2)
+	  newPiece = new PPawn(x,y,num,'N');
+	if(p2_team == 3)
+	  newPiece = new FPawn(x,y,num,'N');
+	if(p2_team == 4)
+	  newPiece = new GPawn(x,y,num,'N');
+	if(p2_team == 5)
+	  newPiece = new NPawn(x,y,num,'N');
 	newPiece->setClip(CLIP_PAWN);
       }
       else{
 	if(i==0 || i ==7){  
-	  newPiece = new GRook(x,y,num);
+	  if(p2_team == 1)
+	    newPiece = new FRook(x,y,num);
+	  if(p2_team == 2)
+	    newPiece = new PRook(x,y,num);
+	  if(p2_team == 3)
+	    newPiece = new FRook(x,y,num);
+	  if(p2_team == 4)
+	    newPiece = new GRook(x,y,num);
+	  if(p2_team == 5)
+	    newPiece = new NRook(x,y,num);
 	  newPiece->setClip(CLIP_ROOK);
 	}
 	else if(i==1 || i ==6){ 
-	  newPiece = new GKnight(x,y,num);
+	  if(p2_team == 1)
+	    newPiece = new FKnight(x,y,num);
+	  if(p2_team == 2)
+	    newPiece = new PKnight(x,y,num);
+	  if(p2_team == 3)
+	    newPiece = new FKnight(x,y,num);
+	  if(p2_team == 4)
+	    newPiece = new GKnight(x,y,num);
+	  if(p2_team == 5)
+	    newPiece = new NKnight(x,y,num);
 	  newPiece->setClip(CLIP_KNIGHT);
 	}
 	else if(i==2 || i ==5){  
-	  newPiece = new GBishop(x,y,num);
+	  if(p2_team == 1)
+	    newPiece = new FBishop(x,y,num);
+	  if(p2_team == 2)
+	    newPiece = new PBishop(x,y,num);
+	  if(p2_team == 3)
+	    newPiece = new FBishop(x,y,num);
+	  if(p2_team == 4)
+	    newPiece = new GBishop(x,y,num);
+	  if(p2_team == 5)
+	    newPiece = new NBishop(x,y,num);
 	  newPiece->setClip(CLIP_BISHOP);
 	}
 	else if(i==4){  
-	  newPiece = new GKing(x,y,num);
+	  if(p2_team == 1)
+	    newPiece = new FKing(x,y,num);
+	  if(p2_team == 2)
+	    newPiece = new PKing(x,y,num);
+	  if(p2_team == 3)
+	    newPiece = new FKing(x,y,num);
+	  if(p2_team == 4)
+	    newPiece = new GKing(x,y,num);
+	  if(p2_team == 5)
+	    newPiece = new NKing(x,y,num);
 	  newPiece->setClip(CLIP_KING);
 	}
 	else if(i==3){ 
-	  newPiece = new GQueen(x,y,num);
+	  if(p2_team == 1)
+	    newPiece = new FQueen(x,y,num);
+	  if(p2_team == 2)
+	    newPiece = new PQueen(x,y,num);
+	  if(p2_team == 3)
+	    newPiece = new FQueen(x,y,num);
+	  if(p2_team == 4)
+	    newPiece = new GQueen(x,y,num);
+	  if(p2_team == 5)
+	    newPiece = new NQueen(x,y,num);
 	  newPiece->setClip(CLIP_QUEEN);
-	}
+	}      
       }
       newPiece->setTeam(1);
       c->board[newPiece->getSpot().x][newPiece->getSpot().y] = newPiece;
@@ -398,28 +542,82 @@ void generatePieces()
       int num = it;
       if(j == 1)
       {
-	newPiece = new NPawn(x,y,num,'E');
+	if(p3_team == 1)
+	  newPiece = new FPawn(x,y,num,'E');
+	if(p3_team == 2)
+	  newPiece = new PPawn(x,y,num,'E');
+	if(p3_team == 3)
+	  newPiece = new FPawn(x,y,num,'E');
+	if(p3_team == 4)
+	  newPiece = new GPawn(x,y,num,'E');
+	if(p3_team == 5)
+	  newPiece = new NPawn(x,y,num,'E');
 	newPiece->setClip(CLIP_PAWN);
       }
       else{
 	if(i==0 || i ==7){  
-	  newPiece = new NRook(x,y,num);
+	  if(p3_team == 1)
+	    newPiece = new FRook(x,y,num);
+	  if(p3_team == 2)
+	    newPiece = new PRook(x,y,num);
+	  if(p3_team == 3)
+	    newPiece = new FRook(x,y,num);
+	  if(p3_team == 4)
+	    newPiece = new GRook(x,y,num);
+	  if(p3_team == 5)
+	    newPiece = new NRook(x,y,num);
 	  newPiece->setClip(CLIP_ROOK);
 	}
 	else if(i==1 || i ==6){ 
-	  newPiece = new NKnight(x,y,num);
+	  if(p3_team == 1)
+	    newPiece = new FKnight(x,y,num);
+	  if(p3_team == 2)
+	    newPiece = new PKnight(x,y,num);
+	  if(p3_team == 3)
+	    newPiece = new FKnight(x,y,num);
+	  if(p3_team == 4)
+	    newPiece = new GKnight(x,y,num);
+	  if(p3_team == 5)
+	    newPiece = new NKnight(x,y,num);
 	  newPiece->setClip(CLIP_KNIGHT);
 	}
 	else if(i==2 || i ==5){  
-	  newPiece = new NBishop(x,y,num);
+	  if(p3_team == 1)
+	    newPiece = new FBishop(x,y,num);
+	  if(p3_team == 2)
+	    newPiece = new PBishop(x,y,num);
+	  if(p3_team == 3)
+	    newPiece = new FBishop(x,y,num);
+	  if(p3_team == 4)
+	    newPiece = new GBishop(x,y,num);
+	  if(p3_team == 5)
+	    newPiece = new NBishop(x,y,num);
 	  newPiece->setClip(CLIP_BISHOP);
 	}
 	else if(i==4){  
-	  newPiece = new NKing(x,y,num);
+	  if(p3_team == 1)
+	    newPiece = new FKing(x,y,num);
+	  if(p3_team == 2)
+	    newPiece = new PKing(x,y,num);
+	  if(p3_team == 3)
+	    newPiece = new FKing(x,y,num);
+	  if(p3_team == 4)
+	    newPiece = new GKing(x,y,num);
+	  if(p3_team == 5)
+	    newPiece = new NKing(x,y,num);
 	  newPiece->setClip(CLIP_KING);
 	}
 	else if(i==3){ 
-	  newPiece = new NQueen(x,y,num);
+	  if(p3_team == 1)
+	    newPiece = new FQueen(x,y,num);
+	  if(p3_team == 2)
+	    newPiece = new PQueen(x,y,num);
+	  if(p3_team == 3)
+	    newPiece = new FQueen(x,y,num);
+	  if(p3_team == 4)
+	    newPiece = new GQueen(x,y,num);
+	  if(p3_team == 5)
+	    newPiece = new NQueen(x,y,num);
 	  newPiece->setClip(CLIP_QUEEN);
 	}
       }
@@ -437,30 +635,84 @@ void generatePieces()
       y = i*SPRITE_SIZE+BORDER_SIZE+SPRITE_SIZE*3;
       x = j*SPRITE_SIZE+BORDER_SIZE+SPRITE_SIZE*12;
       int num = it;
-      if(j == 0)
+       if(j == 0)
       {
-	newPiece = new PPawn(x,y,num,'W');
+	if(p4_team == 1)
+	  newPiece = new FPawn(x,y,num,'W');
+	if(p4_team == 2)
+	  newPiece = new PPawn(x,y,num,'W');
+	if(p4_team == 3)
+	  newPiece = new FPawn(x,y,num,'W');
+	if(p4_team == 4)
+	  newPiece = new GPawn(x,y,num,'W');
+	if(p4_team == 5)
+	  newPiece = new NPawn(x,y,num,'W');
 	newPiece->setClip(CLIP_PAWN);
       }
       else{
 	if(i==0 || i ==7){  
-	  newPiece = new PRook(x,y,num);
+	  if(p4_team == 1)
+	    newPiece = new FRook(x,y,num);
+	  if(p4_team == 2)
+	    newPiece = new PRook(x,y,num);
+	  if(p4_team == 3)
+	    newPiece = new FRook(x,y,num);
+	  if(p4_team == 4)
+	    newPiece = new GRook(x,y,num);
+	  if(p4_team == 5)
+	    newPiece = new NRook(x,y,num);
 	  newPiece->setClip(CLIP_ROOK);
 	}
 	else if(i==1 || i ==6){ 
-	  newPiece = new PKnight(x,y,num);
+	  if(p4_team == 1)
+	    newPiece = new FKnight(x,y,num);
+	  if(p4_team == 2)
+	    newPiece = new PKnight(x,y,num);
+	  if(p4_team == 3)
+	    newPiece = new FKnight(x,y,num);
+	  if(p4_team == 4)
+	    newPiece = new GKnight(x,y,num);
+	  if(p4_team == 5)
+	    newPiece = new NKnight(x,y,num);
 	  newPiece->setClip(CLIP_KNIGHT);
 	}
 	else if(i==2 || i ==5){  
-	  newPiece = new PBishop(x,y,num);
+	  if(p4_team == 1)
+	    newPiece = new FBishop(x,y,num);
+	  if(p4_team == 2)
+	    newPiece = new PBishop(x,y,num);
+	  if(p4_team == 3)
+	    newPiece = new FBishop(x,y,num);
+	  if(p4_team == 4)
+	    newPiece = new GBishop(x,y,num);
+	  if(p4_team == 5)
+	    newPiece = new NBishop(x,y,num);
 	  newPiece->setClip(CLIP_BISHOP);
 	}
 	else if(i==4){  
-	  newPiece = new PKing(x,y,num);
+	  if(p4_team == 1)
+	    newPiece = new FKing(x,y,num);
+	  if(p4_team == 2)
+	    newPiece = new PKing(x,y,num);
+	  if(p4_team == 3)
+	    newPiece = new FKing(x,y,num);
+	  if(p4_team == 4)
+	    newPiece = new GKing(x,y,num);
+	  if(p4_team == 5)
+	    newPiece = new NKing(x,y,num);
 	  newPiece->setClip(CLIP_KING);
 	}
 	else if(i==3){ 
-	  newPiece = new PQueen(x,y,num);
+	  if(p4_team == 1)
+	    newPiece = new FQueen(x,y,num);
+	  if(p4_team == 2)
+	    newPiece = new PQueen(x,y,num);
+	  if(p4_team == 3)
+	    newPiece = new FQueen(x,y,num);
+	  if(p4_team == 4)
+	    newPiece = new GQueen(x,y,num);
+	  if(p4_team == 5)
+	    newPiece = new NQueen(x,y,num);
 	  newPiece->setClip(CLIP_QUEEN);
 	}
       }
@@ -716,6 +968,22 @@ string snip(string msg, int &cursor)
 
 void fullRotation();
 
+void setSheets()
+{
+  vector<SDL_Surface*> sheets;
+  sheets.push_back(wurmSheet);
+  sheets.push_back(wurmSheet);
+  sheets.push_back(portalSheet);
+  sheets.push_back(fighterSheet);
+  sheets.push_back(golemSheet);
+  sheets.push_back(necroSheet);
+  
+  pieceSheet1 = sheets[p1_team];
+  pieceSheet2 = sheets[p2_team];
+  pieceSheet3 = sheets[p3_team];
+  pieceSheet4 = sheets[p4_team];
+}
+
 //Processes messages from the server, necessary for game to work
 void netProcess(string msg)
 {
@@ -726,8 +994,20 @@ void netProcess(string msg)
   string cmd = msg.substr(0,index);
   index++;
 
-  if(cmd == "STRT")//STRT - Game start
+  if(cmd == "STRT")//STRT <p1 team> <p2 team> <p3 team> <p4 team>
   {
+    cerr << "[STRT]:" << msg << endl;
+    string num = snip(msg,index);
+    string num2 = snip(msg,index);
+    string num3 = snip(msg,index);
+    string num4 = snip(msg,index);
+    p1_team = atoi(num.c_str());
+    p2_team = atoi(num2.c_str());
+    p3_team = atoi(num3.c_str());
+    p4_team = atoi(num4.c_str());
+    
+    setSheets();
+    
     game_start = true;
     ss.str("");
     ss << "NetChess - " << player_num << " - Started";
@@ -794,7 +1074,7 @@ void netProcess(string msg)
 	  ss.str("");
 	  ss << "DEAD " << pieces[i]->getTeam() << " ~";
 	}
-	delete pieces[i];
+	//delete pieces[i];
 	pieces[i] = pieces[pieces.size()-1];
 	pieces.pop_back();
 	if(ss.str() != "DEFAULT")
@@ -818,7 +1098,7 @@ void netProcess(string msg)
     //Remove piece 2*
     coord loc = pieces[d_index]->getPos();
 
-    delete pieces[d_index];
+    //delete pieces[d_index];
     pieces[d_index] = pieces[pieces.size()-1];
     pieces.pop_back();
 
@@ -879,6 +1159,7 @@ void netProcess(string msg)
     player_turn = num;
     cerr << "[TURN] It is now the turn of player:" << player_turn << endl;
     cerr << "Bite turn:" << bitten_turn << endl;
+    addChat("@@ turn " + s_num + " @@");
     if(bitten_turn  == player_turn)
       fullRotation();
   }//If- TURN
@@ -1043,30 +1324,42 @@ void fullRotation()
 
 void drawAura(coord spot, string name)
 {
+  SDL_Surface *ground;
+  if(c->board[spot.x][spot.y]->getTeam() == 1)
+    ground = pieceSheet1;
+  else if(c->board[spot.x][spot.y]->getTeam() == 2)
+    ground = pieceSheet2;
+  else if(c->board[spot.x][spot.y]->getTeam() == 3)
+    ground = pieceSheet3;
+  else if(c->board[spot.x][spot.y]->getTeam() == 4)
+    ground = pieceSheet4;
+
   if(name == "Nrook"){
 
     if(c->board[spot.x][spot.y+1] == NULL and c->isValid(spot.x,spot.y+1))
-      apply_surface((spot.x)*64, (spot.y+1)*64, pieceSheet3, screen, &clips[25]);
+      apply_surface((spot.x)*64, (spot.y+1)*64, ground, screen, &clips[25]);
     if(c->board[spot.x][spot.y-1] == NULL and c->isValid(spot.x,spot.y-1))
-      apply_surface((spot.x)*64, (spot.y-1)*64, pieceSheet3, screen, &clips[25]);
+      apply_surface((spot.x)*64, (spot.y-1)*64, ground, screen, &clips[25]);
     if(c->board[spot.x+1][spot.y] == NULL and c->isValid(spot.x+1,spot.y))
-      apply_surface((spot.x+1)*64, (spot.y)*64, pieceSheet3, screen, &clips[25]);
+      apply_surface((spot.x+1)*64, (spot.y)*64, ground, screen, &clips[25]);
     if(c->board[spot.x+1][spot.y+1] == NULL and c->isValid(spot.x+1,spot.y+1))
-      apply_surface((spot.x+1)*64, (spot.y+1)*64, pieceSheet3, screen, &clips[25]);
+      apply_surface((spot.x+1)*64, (spot.y+1)*64, ground, screen, &clips[25]);
     if(c->board[spot.x+1][spot.y-1] == NULL and c->isValid(spot.x+1,spot.y-1))
-      apply_surface((spot.x+1)*64, (spot.y-1)*64, pieceSheet3, screen, &clips[25]);
+      apply_surface((spot.x+1)*64, (spot.y-1)*64, ground, screen, &clips[25]);
     if(c->board[spot.x-1][spot.y] == NULL and c->isValid(spot.x-1,spot.y))
-      apply_surface((spot.x-1)*64, (spot.y)*64, pieceSheet3, screen, &clips[25]);
+      apply_surface((spot.x-1)*64, (spot.y)*64, ground, screen, &clips[25]);
     if(c->board[spot.x-1][spot.y+1] == NULL and c->isValid(spot.x-1,spot.y+1))
-      apply_surface((spot.x-1)*64, (spot.y+1)*64, pieceSheet3, screen, &clips[25]);
+      apply_surface((spot.x-1)*64, (spot.y+1)*64, ground, screen, &clips[25]);
     if(c->board[spot.x-1][spot.y-1] == NULL and c->isValid(spot.x-1,spot.y-1))
-      apply_surface((spot.x-1)*64, (spot.y-1)*64, pieceSheet3, screen, &clips[25]);
+      apply_surface((spot.x-1)*64, (spot.y-1)*64, ground, screen, &clips[25]);
   }
   else if (name == "Bitten")
   {
-    apply_surface((spot.x)*64, (spot.y)*64, pieceSheet3, screen, &clips    [24]);
-
+    apply_surface((spot.x)*64, (spot.y)*64, ground, screen, &clips    [24]);
   }
+
+  //XXX Should this delete?
+  delete ground;
 } 
 
 
@@ -1149,9 +1442,6 @@ int main ( int argc, char* argv[] )
   if(load_files() == false)
     return 1;
 
-
-  generatePieces();
-
   //// --------------
   //// MAIN GAME LOOP
   //// --------------
@@ -1161,6 +1451,12 @@ int main ( int argc, char* argv[] )
   {
     if(handshake && !handshake_2)
       runStartMenu();
+
+    if(handshake_2 && game_start && !handshake_3)
+    {
+      generatePieces();
+      handshake_3 = true;
+    }
 
     
     //// ----------

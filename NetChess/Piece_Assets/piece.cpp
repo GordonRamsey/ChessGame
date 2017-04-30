@@ -133,6 +133,18 @@ void Piece::levelUp()
   {
     clicks = 1;
   }
+  else if(debug_name == "Pking")
+  {
+    clicks = 2;
+  }
+  else if(debug_name == "Pqueen")
+  {
+    clicks = 2;
+  }
+  else if(debug_name == "Pknight")
+  {
+    clicks = 2;
+  }
 }
 void Piece::Rock()
 {

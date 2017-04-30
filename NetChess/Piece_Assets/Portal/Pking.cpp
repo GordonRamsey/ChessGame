@@ -4,7 +4,6 @@ using namespace std;
 PKing::PKing(int x, int y, int it) : King(x, y, it)
 {
     debug_name = "Pking";
-    clicks = 2;
 }
 
 PKing::~PKing()
@@ -70,10 +69,10 @@ string PKing::processClicks(vector<coord> clickedOn, Chess* c)
   //If we swap places with out other piece
   Piece* o = c->board[x][y];
   string o_name = o->debug_name;
-  ss << "MOVE " << getNum() << " " << o->getPos().x << " " << o->getPos().y << " ~";
-  ss << "PLAC " << o->debug_name << " " << getSpot().x << " " << getSpot().y << " " << getTeam()-1 << " ~";
-  ss << "REMV " << o->getNum() << " ~";
-
+  coord o_spot = o->getSpot();
+  ss << "MOVE " << getNum() << " " << getPos().x << " " << getPos().y << " ~";
+  ss << "SHOV " << o->getNum() << " " << getSpot().x << " " << getSpot().y << " ~"; 
+  ss << "SHOV " << getNum() << " " << o_spot.x << " " << o_spot.y << " ~";
   return ss.str();
   
 }

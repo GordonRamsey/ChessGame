@@ -28,7 +28,11 @@ void startGame(SocketSet socs)
   game_start = true;
   alive_players = 4;
   ss.str("");
-  ss << "STRT ~";
+  ss << "STRT ";
+  for(int i=0;i<4;i++){
+    ss << players[i].team << " ";  
+  }
+  ss << "~";
   for(unsigned int i=0;i<sockets.size();i++){
     sockets[i].writeString(ss.str());
   }

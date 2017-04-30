@@ -198,20 +198,16 @@ SDL_Surface *load_menu_image(std::string filename)
   SDL_Surface* loadedImage = NULL;
   SDL_Surface* optimizedImage = NULL;
   loadedImage = IMG_Load(filename.c_str());
-  cerr << filename.c_str() <<endl;
-  cerr << loadedImage <<endl;
   if(loadedImage != NULL){
-    cerr << "Loaded Image is not NULL" <<endl;
+    cerr << "Image loaded correctly:" << filename << endl;
     optimizedImage = SDL_DisplayFormat(loadedImage);
+    cerr << "opt image:" << optimizedImage << endl;
     if(optimizedImage != NULL){
-      cerr << "Opt Image is not NULL" <<endl;
       Uint32 colorkey = SDL_MapRGB(optimizedImage->format, 0xFF, 0xFF, 0xFF);
       SDL_SetColorKey(optimizedImage, SDL_SRCCOLORKEY, colorkey);
     }
     SDL_FreeSurface(loadedImage);
   }
-  if(optimizedImage == NULL)
-    cerr << "Returning NULL Image" << endl;
   return optimizedImage;
 }
 
@@ -220,10 +216,8 @@ bool load_menu_files()
 {
   menu = load_menu_image("Graphic_Assets/Menu.png");
   if(menu == NULL){
-    cerr << "No Menu Loaded" <<endl;
     return false;
   }
-  cerr << "Menu Loaded" <<endl;
   return true;
 }
 
