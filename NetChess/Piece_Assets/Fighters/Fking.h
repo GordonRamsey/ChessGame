@@ -4,13 +4,13 @@
 #include <string>
 class FKing : public King
 {
-  private:
-	string debug_name;
   public:
     FKing(int x, int y, int it);
     ~FKing();
     string Move(coord newpos);
     vector<coord> validSpots(Chess* c);
-	void Morale(Chess* c);
+    string Morale(Chess* c);
+    string processClicks(vector<coord> clickedOn, Chess* c);
+    void levelUp();
 };
 #endif

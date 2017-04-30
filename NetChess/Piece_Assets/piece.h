@@ -1,3 +1,6 @@
+#ifndef PIECE_H
+#define PIECE_H
+
 #include <SDL/SDL.h>
 #include <vector>
 #include <string>
@@ -6,8 +9,6 @@
 #include <iostream>
 #include <map>
 
-#ifndef PIECE_H
-#define PIECE_H
 
 using namespace std;
 
@@ -21,9 +22,12 @@ class Piece {
 	int num; //Piece number, for network purposes
 	SDL_Surface* sheet;
 	int owner;
-
+    
+    protected:
+	bool rock = false;
+    
     public:
-        
+    bool undead = false;         
 	bool m_level = false;
     Piece(int x, int y, int num); //Constructor
     ~Piece();//Deconstructor
@@ -58,7 +62,10 @@ class Piece {
 
 
         //Used in Moving and Capturing
-    virtual vector<coord> validSpots(Chess* c) { };
+    virtual vector<coord> validSpots(Chess* c) 
+      { vector<coord> empty;
+        return empty; }
+
 	string getCaptCmd(coord spot);
 
 	//Used for special unit commands
@@ -68,10 +75,13 @@ class Piece {
       { return "DEFAULT"; }
 
 	int isLevel() { return m_level; }
-	void levelUp() { 
-	  if(!isLevel())
-	    setClip(getClip()+12);
-	  m_level = true; }
+	void levelUp();
 
+	//For golems
+	bool isRock(){ return rock; }
+        void Rock();	
+
+	//For necros and walls
+        string turnPass() { return "DEFAULT"; }
 };
 #endif

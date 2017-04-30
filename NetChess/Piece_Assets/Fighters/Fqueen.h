@@ -4,12 +4,12 @@
 
 class FQueen : public Queen 
 {
-  private:
-    string debug_name;
   public:
     FQueen(int x, int y, int it);
     ~FQueen();
     string Move(coord newpos);
     vector<coord> validSpots(Chess* c);
+    string processClicks(vector<coord> clickedOn, Chess* c)
+      { return "DEFAULT"; }
 };
 #endif

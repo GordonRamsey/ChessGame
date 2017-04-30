@@ -97,3 +97,64 @@ string Piece::getCaptCmd(coord spot)
   return captureMap[spot];
 }
 
+void Piece::levelUp() 
+{ 
+  if(m_level)
+    return;
+  
+  m_level = true;
+  
+  if(debug_name.find("pawn") == string::npos)
+    setClip(getClip()+12);
+  
+  cerr << "Level up piece name:" << debug_name << endl;
+  if(debug_name == "Fking")
+  { 
+    cerr << "OOH WEE UPGRADED FKING" << endl; 
+    clicks = 1;
+  }
+  else if(debug_name == "Nking")
+  {
+    clicks = 3;
+  }
+  else if(debug_name == "Nknight")
+  {
+    clicks = 1;
+  }
+  else if(debug_name == "Nqueen")
+  {
+    clicks = 2;
+  }
+  else if(debug_name == "Nbishop")
+  {
+    clicks = 2;
+  }
+  else if(debug_name == "Gking")
+  {
+    clicks = 1;
+  }
+  else if(debug_name == "Pking")
+  {
+    clicks = 2;
+  }
+  else if(debug_name == "Pqueen")
+  {
+    clicks = 2;
+  }
+  else if(debug_name == "Pknight")
+  {
+    clicks = 2;
+  }
+}
+void Piece::Rock()
+{
+  if (rock){  
+    rock = false;
+    setClip(getClip()-24);
+  }
+  else{
+    rock = true;
+    setClip(getClip()+24);
+  }
+  cerr << "[ROCK] Piece num:" << getNum() << " Rock:" << isRock() << " Clip:" << getClip() << endl;
+}

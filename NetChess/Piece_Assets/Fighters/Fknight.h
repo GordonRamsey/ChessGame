@@ -4,12 +4,12 @@
 
 class FKnight : public Knight 
 {
-  private:
-        string debug_name
   public:
     FKnight(int x, int y, int it);
     ~FKnight();
     string Move(coord newpos);
     vector<coord> validSpots(Chess* c);
+    string processClicks(vector<coord> clickedOn, Chess* c)
+      { return "DEFAULT"; }
 };
 #endif

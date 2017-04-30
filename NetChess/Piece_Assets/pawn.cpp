@@ -1,13 +1,10 @@
 #include "pawn.h"
 
-//XXX:Need to find a way to mark first move
-
 Pawn::Pawn(int x, int y, int it, char state) : Piece(x, y, it)
 {
   dir = state;
   debug_name = "pawn";
   clicks = 0;
-  // :)
 }
 
 Pawn::~Pawn()
@@ -19,9 +16,6 @@ string Pawn::Move(coord newpos)
 {
   if(first_move == true)
     first_move = false;
-  stringstream ss;
-  ss << "PLAC pawn " << getSpot().x << " " << getSpot().y << " " << getTeam()-1 << " ~";
-  return ss.str();
   
   return "DEFAULT";
 }
@@ -29,7 +23,6 @@ string Pawn::Move(coord newpos)
 
 vector<coord> Pawn::validSpots(Chess* c)
 {
-  cerr << "Inside pawn valid spots" << endl;
   stringstream ss;
 
   //c->board
@@ -141,22 +134,22 @@ vector<coord> Pawn::validSpots(Chess* c)
   {
     if(dir == 'N'){
       seek.y -= 2;
-      if(c->board[seek.x][seek.y] == NULL)
+      if(c->board[seek.x][seek.y] == NULL && c->board[seek.x][seek.y-1] == NULL)
         spots.push_back(seek);
     }
     if(dir == 'S'){
       seek.y += 2;
-      if(c->board[seek.x][seek.y] == NULL)
+      if(c->board[seek.x][seek.y] == NULL && c->board[seek.x][seek.y+1] == NULL)
 	spots.push_back(seek);
     }
     if(dir == 'E'){
       seek.x += 2;
-      if(c->board[seek.x][seek.y] == NULL)
+      if(c->board[seek.x][seek.y] == NULL && c->board[seek.x+1][seek.y] == NULL)
 	spots.push_back(seek);
     }
     if(dir == 'W'){
       seek.x -= 2;
-      if(c->board[seek.x][seek.y] == NULL)
+      if(c->board[seek.x][seek.y] == NULL && c->board[seek.x-1][seek.y] == NULL)
 	spots.push_back(seek);
     }
   }

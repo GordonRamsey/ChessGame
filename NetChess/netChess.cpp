@@ -4,43 +4,13 @@
 #include <queue>
 #include <sstream>
 #include "bridge.h"
+#include "util.cpp"
 
 using namespace std;
 
 const int SCREEN_WIDTH = 1216;
 const int SCREEN_HEIGHT = 896;
 const int SCREEN_BPP = 32;
-const int SPRITE_SIZE = 64;
-const int BORDER_SIZE = 0;
-
-//Slices for our sprite sheet
-int CLIP_PAWN = 0;
-int CLIP_ROOK = 1;
-int CLIP_BISHOP = 2;
-int CLIP_KNIGHT = 3;
-int CLIP_QUEEN = 4;
-int CLIP_KING = 5;
-
-int CLIP_PAWN_SELECT = 6;
-int CLIP_ROOK_SELECT = 7;
-int CLIP_BISHOP_SELECT = 8;
-int CLIP_KNIGHT_SELECT = 9;
-int CLIP_QUEEN_SELECT = 10;
-int CLIP_KING_SELECT = 11;
-
-int CLIP_PAWN_UPGRADE = 12;
-int CLIP_ROOK_UPGRADE = 13;
-int CLIP_BISHOP_UPGRADE= 14;
-int CLIP_KNIGHT_UPGRADE = 15;
-int CLIP_QUEEN_UPGRADE = 16;
-int CLIP_KING_UPGRADE = 17;
-
-int CLIP_PAWN_UPGRADE_SELECT = 18;
-int CLIP_ROOK_UPGRADE_SELECT = 19;
-int CLIP_BISHOP_UPGRADE_SELECT = 20;
-int CLIP_KNIGHT_UPGRADE_SELECT = 21;
-int CLIP_QUEEN_UPGRADE_SELECT = 22;
-int CLIP_KING_UPGRADE_SELECT = 23;
 
 //Our connection to the server
 Socket s_socket;
@@ -52,9 +22,17 @@ SDL_Surface *pieceSheet1 = NULL; //Player 1
 SDL_Surface *pieceSheet2 = NULL; //Player 2
 SDL_Surface *pieceSheet3 = NULL; //Player 3
 SDL_Surface *pieceSheet4 = NULL; //Player 4
+SDL_Surface *graveSheet = NULL; //Gravestones
 SDL_Surface *ghostSheet = NULL;
 SDL_Surface *highlight = NULL;
 SDL_Surface *screen = NULL;
+
+//Player surfaces
+SDL_Surface *portalSheet = NULL;
+SDL_Surface *fighterSheet = NULL;
+SDL_Surface *golemSheet = NULL;
+SDL_Surface *necroSheet = NULL;
+SDL_Surface *wurmSheet = NULL;
 
 //Text input
 SDL_Surface *text = NULL;
@@ -64,7 +42,7 @@ SDL_Surface *textBack = NULL;
 //The event structure
 SDL_Event event;
 
-SDL_Rect clips[24];
+SDL_Rect clips[48];
 
 //Our "held" piece
 Piece* selected = NULL;
@@ -81,6 +59,18 @@ vector<Piece*> pieces;
 int player_num; //Our player num relevent to the current game
 int player_turn = 1;
 bool game_start = false;
+bool alive = true; //Am i currently alive?
+
+//Start screen variables
+bool handshake = false;
+bool handshake_2 = false;
+bool handshake_3 = false;
+
+//STRT game variables
+int p1_team = -1;
+int p2_team = -1;
+int p3_team = -1;
+int p4_team = -1;
 
 //Chat Variables
 StringInput chat;
@@ -99,6 +89,10 @@ Piece ghostPiece = Piece(-1,-64,-64);
 
 //array to store locations for lastMove highlighting
 vector<coord> lastMove;
+
+//Necro variables
+Piece* bitten = NULL;
+int bitten_turn = -1;
 
 void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL)
 {
@@ -201,135 +195,10 @@ void Piece::setTeam(int x)
     sheet = pieceSheet4;
     owner = 4;
   }
-}
-
-void set_clips()
-{
-  //Clip range for pawn
-  clips[CLIP_PAWN].x = 0;
-  clips[CLIP_PAWN].y = 0;
-  clips[CLIP_PAWN].w = SPRITE_SIZE;
-  clips[CLIP_PAWN].h = SPRITE_SIZE;
-
-  clips[CLIP_PAWN_SELECT].x = 0;
-  clips[CLIP_PAWN_SELECT].y = SPRITE_SIZE;
-  clips[CLIP_PAWN_SELECT].w = SPRITE_SIZE;
-  clips[CLIP_PAWN_SELECT].h = SPRITE_SIZE;
-
-  clips[CLIP_PAWN_UPGRADE].x = 0;
-  clips[CLIP_PAWN_UPGRADE].y = SPRITE_SIZE*2;
-  clips[CLIP_PAWN_UPGRADE].w = SPRITE_SIZE;
-  clips[CLIP_PAWN_UPGRADE].h = SPRITE_SIZE;
-
-  clips[CLIP_PAWN_UPGRADE_SELECT].x = 0;
-  clips[CLIP_PAWN_UPGRADE_SELECT].y = SPRITE_SIZE*3;
-  clips[CLIP_PAWN_UPGRADE_SELECT].w = SPRITE_SIZE;
-  clips[CLIP_PAWN_UPGRADE_SELECT].h = SPRITE_SIZE;
-
-  //clip range for the rook
-  clips[CLIP_ROOK].x = SPRITE_SIZE;
-  clips[CLIP_ROOK].y = 0;
-  clips[CLIP_ROOK].w = SPRITE_SIZE;
-  clips[CLIP_ROOK].h = SPRITE_SIZE;
-
-  clips[CLIP_ROOK_SELECT].x = SPRITE_SIZE;
-  clips[CLIP_ROOK_SELECT].y = SPRITE_SIZE;
-  clips[CLIP_ROOK_SELECT].w = SPRITE_SIZE;
-  clips[CLIP_ROOK_SELECT].h = SPRITE_SIZE;
-
-  clips[CLIP_ROOK_UPGRADE].x = SPRITE_SIZE;
-  clips[CLIP_ROOK_UPGRADE].y = SPRITE_SIZE*2;
-  clips[CLIP_ROOK_UPGRADE].w = SPRITE_SIZE;
-  clips[CLIP_ROOK_UPGRADE].h = SPRITE_SIZE;
-
-  clips[CLIP_ROOK_UPGRADE_SELECT].x = SPRITE_SIZE;
-  clips[CLIP_ROOK_UPGRADE_SELECT].y = SPRITE_SIZE*3;
-  clips[CLIP_ROOK_UPGRADE_SELECT].w = SPRITE_SIZE;
-  clips[CLIP_ROOK_UPGRADE_SELECT].h = SPRITE_SIZE;
-
-  //clip range for the bishop
-  clips[CLIP_BISHOP].x = SPRITE_SIZE*2;
-  clips[CLIP_BISHOP].y = 0;
-  clips[CLIP_BISHOP].w = SPRITE_SIZE;
-  clips[CLIP_BISHOP].h = SPRITE_SIZE;
-
-  clips[CLIP_BISHOP_SELECT].x = SPRITE_SIZE*2;
-  clips[CLIP_BISHOP_SELECT].y = SPRITE_SIZE;
-  clips[CLIP_BISHOP_SELECT].w = SPRITE_SIZE;
-  clips[CLIP_BISHOP_SELECT].h = SPRITE_SIZE;
-
-  clips[CLIP_BISHOP_UPGRADE].x = SPRITE_SIZE*2;
-  clips[CLIP_BISHOP_UPGRADE].y = SPRITE_SIZE*2;
-  clips[CLIP_BISHOP_UPGRADE].w = SPRITE_SIZE;
-  clips[CLIP_BISHOP_UPGRADE].h = SPRITE_SIZE;
-
-  clips[CLIP_BISHOP_UPGRADE_SELECT].x = SPRITE_SIZE*2;
-  clips[CLIP_BISHOP_UPGRADE_SELECT].y = SPRITE_SIZE*3;
-  clips[CLIP_BISHOP_UPGRADE_SELECT].w = SPRITE_SIZE;
-  clips[CLIP_BISHOP_UPGRADE_SELECT].h = SPRITE_SIZE;
-
-  //clip range for the knight
-  clips[CLIP_KNIGHT].x = SPRITE_SIZE*3;
-  clips[CLIP_KNIGHT].y = 0;
-  clips[CLIP_KNIGHT].w = SPRITE_SIZE;
-  clips[CLIP_KNIGHT].h = SPRITE_SIZE;
-
-  clips[CLIP_KNIGHT_SELECT].x = SPRITE_SIZE*3;
-  clips[CLIP_KNIGHT_SELECT].y = SPRITE_SIZE;
-  clips[CLIP_KNIGHT_SELECT].w = SPRITE_SIZE;
-  clips[CLIP_KNIGHT_SELECT].h = SPRITE_SIZE;
-
-  clips[CLIP_KNIGHT_UPGRADE].x = SPRITE_SIZE*3;
-  clips[CLIP_KNIGHT_UPGRADE].y = SPRITE_SIZE*2;
-  clips[CLIP_KNIGHT_UPGRADE].w = SPRITE_SIZE;
-  clips[CLIP_KNIGHT_UPGRADE].h = SPRITE_SIZE;
-
-  clips[CLIP_KNIGHT_UPGRADE_SELECT].x = SPRITE_SIZE*3;
-  clips[CLIP_KNIGHT_UPGRADE_SELECT].y = SPRITE_SIZE*3;
-  clips[CLIP_KNIGHT_UPGRADE_SELECT].w = SPRITE_SIZE;
-  clips[CLIP_KNIGHT_UPGRADE_SELECT].h = SPRITE_SIZE;
-
-  //clip range for the queen
-  clips[CLIP_QUEEN].x = SPRITE_SIZE*4;
-  clips[CLIP_QUEEN].y = 0;
-  clips[CLIP_QUEEN].w = SPRITE_SIZE;
-  clips[CLIP_QUEEN].h = SPRITE_SIZE;
-
-  clips[CLIP_QUEEN_SELECT].x = SPRITE_SIZE*4;
-  clips[CLIP_QUEEN_SELECT].y = SPRITE_SIZE;
-  clips[CLIP_QUEEN_SELECT].w = SPRITE_SIZE;
-  clips[CLIP_QUEEN_SELECT].h = SPRITE_SIZE;
-
-  clips[CLIP_QUEEN_UPGRADE].x = SPRITE_SIZE*4;
-  clips[CLIP_QUEEN_UPGRADE].y = SPRITE_SIZE*2;
-  clips[CLIP_QUEEN_UPGRADE].w = SPRITE_SIZE;
-  clips[CLIP_QUEEN_UPGRADE].h = SPRITE_SIZE;
-
-  clips[CLIP_QUEEN_UPGRADE_SELECT].x = SPRITE_SIZE*4;
-  clips[CLIP_QUEEN_UPGRADE_SELECT].y = SPRITE_SIZE*3;
-  clips[CLIP_QUEEN_UPGRADE_SELECT].w = SPRITE_SIZE;
-  clips[CLIP_QUEEN_UPGRADE_SELECT].h = SPRITE_SIZE;
-
-  //clip range for the king
-  clips[CLIP_KING].x = SPRITE_SIZE*5;
-  clips[CLIP_KING].y = 0;
-  clips[CLIP_KING].w = SPRITE_SIZE;
-  clips[CLIP_KING].h = SPRITE_SIZE;
-
-  clips[CLIP_KING_SELECT].x = SPRITE_SIZE*5;
-  clips[CLIP_KING_SELECT].y = SPRITE_SIZE;
-  clips[CLIP_KING_SELECT].w = SPRITE_SIZE;
-  clips[CLIP_KING_SELECT].h = SPRITE_SIZE;
-
-  clips[CLIP_KING_UPGRADE].x = SPRITE_SIZE*5;
-  clips[CLIP_KING_UPGRADE].y = SPRITE_SIZE*2;
-  clips[CLIP_KING_UPGRADE].w = SPRITE_SIZE;
-  clips[CLIP_KING_UPGRADE].h = SPRITE_SIZE;
-
-  clips[CLIP_KING_UPGRADE_SELECT].x = SPRITE_SIZE*5;
-  clips[CLIP_KING_UPGRADE_SELECT].y = SPRITE_SIZE*3;
-  clips[CLIP_KING_UPGRADE_SELECT].w = SPRITE_SIZE;
-  clips[CLIP_KING_UPGRADE_SELECT].h = SPRITE_SIZE;
+  else if(x == 4){ //Dead players
+    sheet = graveSheet;
+    owner = -1;
+  }
 }
 
 SDL_Surface *load_image( std::string filename )
@@ -374,6 +243,7 @@ bool init()
   }
 
   SDL_WM_SetCaption("NetChess", NULL);
+  util_set_clips(clips);
 
   return true;
 }
@@ -382,10 +252,19 @@ bool load_files()
 {
   //Load the image
   board = load_image("Graphic_Assets/fourPlayerBoard64.png");
-  pieceSheet1 = load_image("Graphic_Assets/basicPieces64.png");
-  pieceSheet2 = load_image("Graphic_Assets/basicPieces642.png");
-  pieceSheet3 = load_image("Graphic_Assets/basicPieces643.png");
-  pieceSheet4 = load_image("Graphic_Assets/basicPieces644.png");
+  
+  //pieceSheet1 = load_image("Graphic_Assets/Fighter-Pieces.png");
+  //pieceSheet2 = load_image("Graphic_Assets/basicPieces642.png");
+  //pieceSheet3 = load_image("Graphic_Assets/basicPieces643.png");
+  //pieceSheet4 = load_image("Graphic_Assets/basicPieces644-better.png");
+  
+  portalSheet = load_image("Graphic_Assets/portalPieces.png");
+  fighterSheet = load_image("Graphic_Assets/Fighter-Pieces.png");
+  golemSheet = load_image("Graphic_Assets/basicPieces642.png");
+  necroSheet = load_image("Graphic_Assets/basicPieces643.png");
+  wurmSheet = load_image("Graphic_Assets/basicPieces643.png");
+  
+  graveSheet = load_image("Graphic_Assets/Graves.png");
   ghostSheet = load_image("Graphic_Assets/ghostPieces64.png");
   highlight = load_image("Graphic_Assets/highlight.png");
   textBack = load_image("Graphic_Assets/textBackground.png");
@@ -396,13 +275,13 @@ bool load_files()
     return false;
   }
 
-  else if (pieceSheet1 == NULL || pieceSheet2 == NULL || pieceSheet3 == NULL || pieceSheet4 == NULL){
+  else if (portalSheet == NULL || fighterSheet == NULL || golemSheet == NULL || necroSheet == NULL || wurmSheet == NULL){
     cerr << "No piece sheets" << endl;
     return false;
   }
 
-  else if(ghostSheet == NULL){
-    cerr << "No ghost sheet" << endl;
+  else if(ghostSheet == NULL || graveSheet == NULL){
+    cerr << "No ghost/grave sheet" << endl;
     return false;
   }
 
@@ -427,10 +306,14 @@ bool load_files()
 void clean_up()
 {
   SDL_FreeSurface(board);
-  SDL_FreeSurface(pieceSheet1);
-  SDL_FreeSurface(pieceSheet2);
-  SDL_FreeSurface(pieceSheet3);
-  SDL_FreeSurface(pieceSheet4);
+  
+  SDL_FreeSurface(fighterSheet);
+  SDL_FreeSurface(portalSheet);
+  SDL_FreeSurface(golemSheet);
+  SDL_FreeSurface(necroSheet);
+  SDL_FreeSurface(wurmSheet);
+  
+  SDL_FreeSurface(graveSheet);
   SDL_FreeSurface(ghostSheet);
   SDL_FreeSurface(highlight);
   SDL_FreeSurface(textBack);
@@ -449,6 +332,12 @@ void generatePieces()
   ghostPiece.setTeam(-1);
   ghostPiece.setClip(0);
 
+  cerr << "=Teams=" << endl;
+  cerr << "1." << p1_team << endl;
+  cerr << "2." << p2_team << endl;
+  cerr << "3." << p3_team << endl;
+  cerr << "4." << p4_team << endl;
+
   //Player 1 gen 
   for(int j=0;j<2;j++){
     for(int i=0;i<8;i++){
@@ -459,28 +348,82 @@ void generatePieces()
       int num = it;
       if(j == 1)
       {
-	newPiece = new Pawn(x,y,num,'S');
+	if(p1_team == 1)
+	  newPiece = new FPawn(x,y,num,'S');
+	if(p1_team == 2)
+	  newPiece = new PPawn(x,y,num,'S');
+	if(p1_team == 3)
+	  newPiece = new FPawn(x,y,num,'S');
+	if(p1_team == 4)
+	  newPiece = new GPawn(x,y,num,'S');
+	if(p1_team == 5)
+	  newPiece = new NPawn(x,y,num,'S');
 	newPiece->setClip(CLIP_PAWN);
       }
       else{
 	if(i==0 || i ==7){  
-	  newPiece = new Rook(x,y,num);
+	  if(p1_team == 1)
+	    newPiece = new FRook(x,y,num);
+	  if(p1_team == 2)
+	    newPiece = new PRook(x,y,num);
+	  if(p1_team == 3)
+	    newPiece = new FRook(x,y,num);
+	  if(p1_team == 4)
+	    newPiece = new GRook(x,y,num);
+	  if(p1_team == 5)
+	    newPiece = new NRook(x,y,num);
 	  newPiece->setClip(CLIP_ROOK);
 	}
 	else if(i==1 || i ==6){ 
-	  newPiece = new Knight(x,y,num);
+	  if(p1_team == 1)
+	    newPiece = new FKnight(x,y,num);
+	  if(p1_team == 2)
+	    newPiece = new PKnight(x,y,num);
+	  if(p1_team == 3)
+	    newPiece = new FKnight(x,y,num);
+	  if(p1_team == 4)
+	    newPiece = new GKnight(x,y,num);
+	  if(p1_team == 5)
+	    newPiece = new NKnight(x,y,num);
 	  newPiece->setClip(CLIP_KNIGHT);
 	}
 	else if(i==2 || i ==5){  
-	  newPiece = new Bishop(x,y,num);
+	  if(p1_team == 1)
+	    newPiece = new FBishop(x,y,num);
+	  if(p1_team == 2)
+	    newPiece = new PBishop(x,y,num);
+	  if(p1_team == 3)
+	    newPiece = new FBishop(x,y,num);
+	  if(p1_team == 4)
+	    newPiece = new GBishop(x,y,num);
+	  if(p1_team == 5)
+	    newPiece = new NBishop(x,y,num);
 	  newPiece->setClip(CLIP_BISHOP);
 	}
 	else if(i==4){  
-	  newPiece = new King(x,y,num);
+	  if(p1_team == 1)
+	    newPiece = new FKing(x,y,num);
+	  if(p1_team == 2)
+	    newPiece = new PKing(x,y,num);
+	  if(p1_team == 3)
+	    newPiece = new FKing(x,y,num);
+	  if(p1_team == 4)
+	    newPiece = new GKing(x,y,num);
+	  if(p1_team == 5)
+	    newPiece = new NKing(x,y,num);
 	  newPiece->setClip(CLIP_KING);
 	}
 	else if(i==3){ 
-	  newPiece = new Queen(x,y,num);
+	  if(p1_team == 1)
+	    newPiece = new FQueen(x,y,num);
+	  if(p1_team == 2)
+	    newPiece = new PQueen(x,y,num);
+	  if(p1_team == 3)
+	    newPiece = new FQueen(x,y,num);
+	  if(p1_team == 4)
+	    newPiece = new GQueen(x,y,num);
+	  if(p1_team == 5)
+	    newPiece = new NQueen(x,y,num);
 	  newPiece->setClip(CLIP_QUEEN);
 	}
       }
@@ -500,30 +443,84 @@ void generatePieces()
       int num = it;
       if(j == 0)
       {
-	newPiece = new Pawn(x,y,num,'N');
+	if(p2_team == 1)
+	  newPiece = new FPawn(x,y,num,'N');
+	if(p2_team == 2)
+	  newPiece = new PPawn(x,y,num,'N');
+	if(p2_team == 3)
+	  newPiece = new FPawn(x,y,num,'N');
+	if(p2_team == 4)
+	  newPiece = new GPawn(x,y,num,'N');
+	if(p2_team == 5)
+	  newPiece = new NPawn(x,y,num,'N');
 	newPiece->setClip(CLIP_PAWN);
       }
       else{
 	if(i==0 || i ==7){  
-	  newPiece = new Rook(x,y,num);
+	  if(p2_team == 1)
+	    newPiece = new FRook(x,y,num);
+	  if(p2_team == 2)
+	    newPiece = new PRook(x,y,num);
+	  if(p2_team == 3)
+	    newPiece = new FRook(x,y,num);
+	  if(p2_team == 4)
+	    newPiece = new GRook(x,y,num);
+	  if(p2_team == 5)
+	    newPiece = new NRook(x,y,num);
 	  newPiece->setClip(CLIP_ROOK);
 	}
 	else if(i==1 || i ==6){ 
-	  newPiece = new Knight(x,y,num);
+	  if(p2_team == 1)
+	    newPiece = new FKnight(x,y,num);
+	  if(p2_team == 2)
+	    newPiece = new PKnight(x,y,num);
+	  if(p2_team == 3)
+	    newPiece = new FKnight(x,y,num);
+	  if(p2_team == 4)
+	    newPiece = new GKnight(x,y,num);
+	  if(p2_team == 5)
+	    newPiece = new NKnight(x,y,num);
 	  newPiece->setClip(CLIP_KNIGHT);
 	}
 	else if(i==2 || i ==5){  
-	  newPiece = new Bishop(x,y,num);
+	  if(p2_team == 1)
+	    newPiece = new FBishop(x,y,num);
+	  if(p2_team == 2)
+	    newPiece = new PBishop(x,y,num);
+	  if(p2_team == 3)
+	    newPiece = new FBishop(x,y,num);
+	  if(p2_team == 4)
+	    newPiece = new GBishop(x,y,num);
+	  if(p2_team == 5)
+	    newPiece = new NBishop(x,y,num);
 	  newPiece->setClip(CLIP_BISHOP);
 	}
 	else if(i==4){  
-	  newPiece = new King(x,y,num);
+	  if(p2_team == 1)
+	    newPiece = new FKing(x,y,num);
+	  if(p2_team == 2)
+	    newPiece = new PKing(x,y,num);
+	  if(p2_team == 3)
+	    newPiece = new FKing(x,y,num);
+	  if(p2_team == 4)
+	    newPiece = new GKing(x,y,num);
+	  if(p2_team == 5)
+	    newPiece = new NKing(x,y,num);
 	  newPiece->setClip(CLIP_KING);
 	}
 	else if(i==3){ 
-	  newPiece = new Queen(x,y,num);
+	  if(p2_team == 1)
+	    newPiece = new FQueen(x,y,num);
+	  if(p2_team == 2)
+	    newPiece = new PQueen(x,y,num);
+	  if(p2_team == 3)
+	    newPiece = new FQueen(x,y,num);
+	  if(p2_team == 4)
+	    newPiece = new GQueen(x,y,num);
+	  if(p2_team == 5)
+	    newPiece = new NQueen(x,y,num);
 	  newPiece->setClip(CLIP_QUEEN);
-	}
+	}      
       }
       newPiece->setTeam(1);
       c->board[newPiece->getSpot().x][newPiece->getSpot().y] = newPiece;
@@ -541,28 +538,82 @@ void generatePieces()
       int num = it;
       if(j == 1)
       {
-	newPiece = new Pawn(x,y,num,'E');
+	if(p3_team == 1)
+	  newPiece = new FPawn(x,y,num,'E');
+	if(p3_team == 2)
+	  newPiece = new PPawn(x,y,num,'E');
+	if(p3_team == 3)
+	  newPiece = new FPawn(x,y,num,'E');
+	if(p3_team == 4)
+	  newPiece = new GPawn(x,y,num,'E');
+	if(p3_team == 5)
+	  newPiece = new NPawn(x,y,num,'E');
 	newPiece->setClip(CLIP_PAWN);
       }
       else{
 	if(i==0 || i ==7){  
-	  newPiece = new Rook(x,y,num);
+	  if(p3_team == 1)
+	    newPiece = new FRook(x,y,num);
+	  if(p3_team == 2)
+	    newPiece = new PRook(x,y,num);
+	  if(p3_team == 3)
+	    newPiece = new FRook(x,y,num);
+	  if(p3_team == 4)
+	    newPiece = new GRook(x,y,num);
+	  if(p3_team == 5)
+	    newPiece = new NRook(x,y,num);
 	  newPiece->setClip(CLIP_ROOK);
 	}
 	else if(i==1 || i ==6){ 
-	  newPiece = new Knight(x,y,num);
+	  if(p3_team == 1)
+	    newPiece = new FKnight(x,y,num);
+	  if(p3_team == 2)
+	    newPiece = new PKnight(x,y,num);
+	  if(p3_team == 3)
+	    newPiece = new FKnight(x,y,num);
+	  if(p3_team == 4)
+	    newPiece = new GKnight(x,y,num);
+	  if(p3_team == 5)
+	    newPiece = new NKnight(x,y,num);
 	  newPiece->setClip(CLIP_KNIGHT);
 	}
 	else if(i==2 || i ==5){  
-	  newPiece = new Bishop(x,y,num);
+	  if(p3_team == 1)
+	    newPiece = new FBishop(x,y,num);
+	  if(p3_team == 2)
+	    newPiece = new PBishop(x,y,num);
+	  if(p3_team == 3)
+	    newPiece = new FBishop(x,y,num);
+	  if(p3_team == 4)
+	    newPiece = new GBishop(x,y,num);
+	  if(p3_team == 5)
+	    newPiece = new NBishop(x,y,num);
 	  newPiece->setClip(CLIP_BISHOP);
 	}
 	else if(i==4){  
-	  newPiece = new King(x,y,num);
+	  if(p3_team == 1)
+	    newPiece = new FKing(x,y,num);
+	  if(p3_team == 2)
+	    newPiece = new PKing(x,y,num);
+	  if(p3_team == 3)
+	    newPiece = new FKing(x,y,num);
+	  if(p3_team == 4)
+	    newPiece = new GKing(x,y,num);
+	  if(p3_team == 5)
+	    newPiece = new NKing(x,y,num);
 	  newPiece->setClip(CLIP_KING);
 	}
 	else if(i==3){ 
-	  newPiece = new Queen(x,y,num);
+	  if(p3_team == 1)
+	    newPiece = new FQueen(x,y,num);
+	  if(p3_team == 2)
+	    newPiece = new PQueen(x,y,num);
+	  if(p3_team == 3)
+	    newPiece = new FQueen(x,y,num);
+	  if(p3_team == 4)
+	    newPiece = new GQueen(x,y,num);
+	  if(p3_team == 5)
+	    newPiece = new NQueen(x,y,num);
 	  newPiece->setClip(CLIP_QUEEN);
 	}
       }
@@ -580,30 +631,84 @@ void generatePieces()
       y = i*SPRITE_SIZE+BORDER_SIZE+SPRITE_SIZE*3;
       x = j*SPRITE_SIZE+BORDER_SIZE+SPRITE_SIZE*12;
       int num = it;
-      if(j == 0)
+       if(j == 0)
       {
-	newPiece = new Pawn(x,y,num,'W');
+	if(p4_team == 1)
+	  newPiece = new FPawn(x,y,num,'W');
+	if(p4_team == 2)
+	  newPiece = new PPawn(x,y,num,'W');
+	if(p4_team == 3)
+	  newPiece = new FPawn(x,y,num,'W');
+	if(p4_team == 4)
+	  newPiece = new GPawn(x,y,num,'W');
+	if(p4_team == 5)
+	  newPiece = new NPawn(x,y,num,'W');
 	newPiece->setClip(CLIP_PAWN);
       }
       else{
 	if(i==0 || i ==7){  
-	  newPiece = new Rook(x,y,num);
+	  if(p4_team == 1)
+	    newPiece = new FRook(x,y,num);
+	  if(p4_team == 2)
+	    newPiece = new PRook(x,y,num);
+	  if(p4_team == 3)
+	    newPiece = new FRook(x,y,num);
+	  if(p4_team == 4)
+	    newPiece = new GRook(x,y,num);
+	  if(p4_team == 5)
+	    newPiece = new NRook(x,y,num);
 	  newPiece->setClip(CLIP_ROOK);
 	}
 	else if(i==1 || i ==6){ 
-	  newPiece = new Knight(x,y,num);
+	  if(p4_team == 1)
+	    newPiece = new FKnight(x,y,num);
+	  if(p4_team == 2)
+	    newPiece = new PKnight(x,y,num);
+	  if(p4_team == 3)
+	    newPiece = new FKnight(x,y,num);
+	  if(p4_team == 4)
+	    newPiece = new GKnight(x,y,num);
+	  if(p4_team == 5)
+	    newPiece = new NKnight(x,y,num);
 	  newPiece->setClip(CLIP_KNIGHT);
 	}
 	else if(i==2 || i ==5){  
-	  newPiece = new Bishop(x,y,num);
+	  if(p4_team == 1)
+	    newPiece = new FBishop(x,y,num);
+	  if(p4_team == 2)
+	    newPiece = new PBishop(x,y,num);
+	  if(p4_team == 3)
+	    newPiece = new FBishop(x,y,num);
+	  if(p4_team == 4)
+	    newPiece = new GBishop(x,y,num);
+	  if(p4_team == 5)
+	    newPiece = new NBishop(x,y,num);
 	  newPiece->setClip(CLIP_BISHOP);
 	}
 	else if(i==4){  
-	  newPiece = new King(x,y,num);
+	  if(p4_team == 1)
+	    newPiece = new FKing(x,y,num);
+	  if(p4_team == 2)
+	    newPiece = new PKing(x,y,num);
+	  if(p4_team == 3)
+	    newPiece = new FKing(x,y,num);
+	  if(p4_team == 4)
+	    newPiece = new GKing(x,y,num);
+	  if(p4_team == 5)
+	    newPiece = new NKing(x,y,num);
 	  newPiece->setClip(CLIP_KING);
 	}
 	else if(i==3){ 
-	  newPiece = new Queen(x,y,num);
+	  if(p4_team == 1)
+	    newPiece = new FQueen(x,y,num);
+	  if(p4_team == 2)
+	    newPiece = new PQueen(x,y,num);
+	  if(p4_team == 3)
+	    newPiece = new FQueen(x,y,num);
+	  if(p4_team == 4)
+	    newPiece = new GQueen(x,y,num);
+	  if(p4_team == 5)
+	    newPiece = new NQueen(x,y,num);
 	  newPiece->setClip(CLIP_QUEEN);
 	}
       }
@@ -654,20 +759,21 @@ void addChat(string msg)
 void pieceSpawn(string name, int x, int y, int team)
 {
   //PLAC <name> <x> <y> <team>
-  int coordx = x*64;
+  char dir; //S-N-E-W | 0-1-2-3
+  if(team == 0)
+    dir = 'S';
+  else if(team == 1)
+    dir = 'N';
+  else if(team == 2)
+    dir = 'E';
+  else if(team == 3)
+    dir = 'W';
+  
+  int coordx = x*64;  
   int coordy = y*64;
   Piece* newPiece = NULL;
   if(name == "pawn")
   {
-    char dir; //S-N-E-W | 0-1-2-3
-    if(team == 0)
-      dir = 'S';
-    else if(team == 1)
-      dir = 'N';
-    else if(team == 2)
-      dir = 'E';
-    else if(team == 3)
-      dir = 'W';
     newPiece = new Pawn(coordx, coordy, c->it, dir);
     newPiece->setClip(CLIP_PAWN);
   }
@@ -696,6 +802,96 @@ void pieceSpawn(string name, int x, int y, int team)
     newPiece = new Queen(coordx, coordy, c->it);
     newPiece->setClip(CLIP_QUEEN);
   }
+  else if(name == "Fpawn")
+  {
+    newPiece = new FPawn(coordx, coordy, c->it, dir);
+    newPiece->setClip(CLIP_PAWN);
+  }
+  else if(name == "Frook")
+  {
+    newPiece = new FRook(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_ROOK);
+  }
+  else if(name == "Fbishop")
+  {
+    newPiece = new FBishop(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_BISHOP);
+  }
+  else if(name == "Fknight")
+  {
+    newPiece = new FKnight(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_KNIGHT);
+  }
+  else if(name == "Fking")
+  {
+    newPiece = new FKing(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_KING);
+  }
+  else if(name == "Fqueen")
+  {
+    newPiece = new FQueen(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_QUEEN);
+  }
+  else if(name == "Npawn")
+  {
+    newPiece = new NPawn(coordx, coordy, c->it, dir);
+    newPiece->setClip(CLIP_PAWN);
+  }
+  else if(name == "Nrook")
+  {
+    newPiece = new NRook(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_ROOK);
+  }
+  else if(name == "Nbishop")
+  {
+    newPiece = new NBishop(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_BISHOP);
+  }
+  else if(name == "Nknight")
+  {
+    newPiece = new NKnight(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_KNIGHT);
+  }
+  else if(name == "Nking")
+  {
+    newPiece = new NKing(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_KING);
+  }
+  else if(name == "Nqueen")
+  {
+    newPiece = new NQueen(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_QUEEN);
+  } 
+  else if(name == "Ppawn")
+  {
+    newPiece = new PPawn(coordx, coordy, c->it, dir);
+    newPiece->setClip(CLIP_PAWN);
+  }
+  else if(name == "Prook")
+  {
+    newPiece = new PRook(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_ROOK);
+  }
+  else if(name == "Pbishop")
+  {
+    newPiece = new PBishop(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_BISHOP);
+  }
+  else if(name == "Pknight")
+  {
+    newPiece = new PKnight(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_KNIGHT);
+  }
+  else if(name == "Pking")
+  {
+    newPiece = new PKing(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_KING);
+  }
+  else if(name == "Pqueen")
+  {
+    newPiece = new PQueen(coordx, coordy, c->it);
+    newPiece->setClip(CLIP_QUEEN);
+  }
   else if(name == "")
   {
 
@@ -714,9 +910,6 @@ void pieceSpawn(string name, int x, int y, int team)
 
 }
 
-
-
-
 //Connect to the server Whoaaaa!
 int connectServer(int argc, char* argv[])
 {
@@ -727,6 +920,19 @@ int connectServer(int argc, char* argv[])
     return 0;
   printf("Cannot establish connection to server\n");
   return -1;
+}
+
+void killPieces(int team)
+{
+  for(unsigned int i=0;i<pieces.size();i++)
+  {
+    if(pieces[i]->getTeam() == team)
+    { 
+      pieces[i]->setTeam(4);
+      pieces[i]->debug_name = "dead";
+    }
+
+  }
 }
 
 string snip_to_end(string msg, int &cursor)
@@ -756,6 +962,24 @@ string snip(string msg, int &cursor)
   return ret;
 }
 
+void fullRotation();
+
+void setSheets()
+{
+  vector<SDL_Surface*> sheets;
+  sheets.push_back(wurmSheet);
+  sheets.push_back(wurmSheet);
+  sheets.push_back(portalSheet);
+  sheets.push_back(fighterSheet);
+  sheets.push_back(golemSheet);
+  sheets.push_back(necroSheet);
+  
+  pieceSheet1 = sheets[p1_team];
+  pieceSheet2 = sheets[p2_team];
+  pieceSheet3 = sheets[p3_team];
+  pieceSheet4 = sheets[p4_team];
+}
+
 //Processes messages from the server, necessary for game to work
 void netProcess(string msg)
 {
@@ -766,12 +990,25 @@ void netProcess(string msg)
   string cmd = msg.substr(0,index);
   index++;
 
-  if(cmd == "STRT")//STRT - Game start
+  if(cmd == "STRT")//STRT <p1 team> <p2 team> <p3 team> <p4 team>
   {
+    cerr << "[STRT]:" << msg << endl;
+    string num = snip(msg,index);
+    string num2 = snip(msg,index);
+    string num3 = snip(msg,index);
+    string num4 = snip(msg,index);
+    p1_team = atoi(num.c_str());
+    p2_team = atoi(num2.c_str());
+    p3_team = atoi(num3.c_str());
+    p4_team = atoi(num4.c_str());
+    
+    setSheets();
+    
     game_start = true;
     ss.str("");
     ss << "NetChess - " << player_num << " - Started";
     SDL_WM_SetCaption(ss.str().c_str(), NULL);
+    cerr << "[GAME START] Player turn:" << player_turn << endl;
     return;
   }
 
@@ -825,10 +1062,19 @@ void netProcess(string msg)
       if(pieces[i]->getNum() == number){
 	//Need to perform a strange check on c->board bc the movement commands come in first
 	//If our removed piece still exists on the board, make its board spot NULL
+	stringstream ss;
+	ss.str("DEFAULT");
 	if(c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y]->getNum() == pieces[i]->getNum())
 	  c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y] = NULL;
+	if(pieces[i]->debug_name.find("king") != string::npos){
+	  ss.str("");
+	  ss << "DEAD " << pieces[i]->getTeam() << " ~";
+	}
+	//delete pieces[i];
 	pieces[i] = pieces[pieces.size()-1];
 	pieces.pop_back();
+	if(ss.str() != "DEFAULT")
+	  netProcess(ss.str());
 	break;
       }
     }
@@ -848,6 +1094,7 @@ void netProcess(string msg)
     //Remove piece 2*
     coord loc = pieces[d_index]->getPos();
 
+    //delete pieces[d_index];
     pieces[d_index] = pieces[pieces.size()-1];
     pieces.pop_back();
 
@@ -874,6 +1121,7 @@ void netProcess(string msg)
     ss.str("");
     ss << "NetChess - " << player_num << " - Waiting for players...";
     SDL_WM_SetCaption(ss.str().c_str(), NULL);
+    handshake = true;
 
   }//If- REDY
   else if(cmd == "HOLD")//HOLD <clip> <x> <y>
@@ -906,7 +1154,126 @@ void netProcess(string msg)
     int num = atoi(s_num.c_str());
     player_turn = num;
     cerr << "[TURN] It is now the turn of player:" << player_turn << endl;
+    cerr << "Bite turn:" << bitten_turn << endl;
+    addChat("@@ turn " + s_num + " @@");
+    if(bitten_turn  == player_turn)
+      fullRotation();
   }//If- TURN
+  else if(cmd == "LVUP")//LVUP <piece num>
+  {
+    string s_num = snip(msg,index);
+    int num = atoi(s_num.c_str());
+    for(unsigned int i=0;i<pieces.size();i++){
+      if(pieces[i]->getNum() == num)
+      {
+	pieces[i]->levelUp();
+	c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y]->levelUp();
+	break;
+      }
+    }
+  }//If- LVUP
+  else if(cmd == "ROCK")//ROCK <piece num>
+  {
+    string s_num = snip(msg,index);
+    int num = atoi(s_num.c_str());
+    for(unsigned int i=0;i<pieces.size();i++){
+      if(pieces[i]->getNum() == num)
+      {
+	pieces[i]->Rock();
+	break;
+      }
+    }
+  }//If- ROCK
+  else if(cmd == "BITE")//BITE <piece num>
+  {
+    string s_num = snip(msg,index);
+    int num = atoi(s_num.c_str());
+    for(unsigned int i=0;i<pieces.size();i++){
+      if(pieces[i]->getNum() == num)
+      {
+	bitten = pieces[i];
+	bitten_turn = player_turn;
+	break;
+      }
+    }
+  }//If- BITE
+  else if(cmd == "CLIP")//CLIP <piece num> <clip num>
+  {
+    string s_num = snip(msg,index);
+    string s_clip = snip(msg,index);
+    int num = atoi(s_num.c_str());
+    int clip = atoi(s_clip.c_str());
+    for(unsigned int i=0;i<pieces.size();i++){
+      if(pieces[i]->getNum() == num)
+      {
+	pieces[i]->setClip(clip);
+	break;
+      }
+      lastMove.clear();
+    }
+  }//If- CLIP
+  else if(cmd == "SHOV")//SHOV <piece num> <x spot> <y spot>
+  {
+    string s_num = snip(msg,index);
+    string s_x = snip(msg,index);
+    string s_y = snip(msg,index);
+    int num = atoi(s_num.c_str());
+    int x = atoi(s_x.c_str());
+    int y = atoi(s_y.c_str());
+
+    for(unsigned int i=0;i<pieces.size();i++){
+      if(pieces[i]->getNum() == num)
+      {
+	c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y] = NULL;
+	pieces[i]->setPos(x*64,y*64);
+	c->board[pieces[i]->getSpot().x][pieces[i]->getSpot().y] = pieces[i];
+	break;
+      }
+    }
+  }//If- SHOV
+  else if(cmd == "DEAD")//CLIP <player num>
+  {
+    string s_num = snip(msg,index);
+    int num = atoi(s_num.c_str());
+    cout << "Player:" << num << " has died" << endl;
+    if(s_num == "1"){
+      killPieces(1); 
+    }
+    else if(s_num == "2"){
+      killPieces(2); 
+    }
+    else if(s_num == "3"){
+      killPieces(3); 
+    }
+    else if(s_num == "4"){
+      killPieces(4); 
+    }
+    if(num == player_num)
+    {
+      cout << "YOU LOSE" << endl;
+      stringstream ss;
+      ss.str("");
+      ss << "NetChess - " << player_num << " - You Are Dead";
+      SDL_WM_SetCaption(ss.str().c_str(), NULL);
+      alive = false;
+    }
+  }//If- DEAD
+  else if(cmd == "WINN")//WINN <player num>
+  {
+    string s_num = snip(msg,index);
+    int num = atoi(s_num.c_str());
+    if(player_num == num)
+    {
+      cout << "You win!" << endl;
+      //Win and stuff
+    }
+    else
+    {
+      cout << "you lose!" << endl;
+      //Lose and stuff
+    }
+
+  }//If- WINN 
   else
   {
     cerr << "Unknown command received:" << msg << endl;
@@ -926,11 +1293,124 @@ void netProcess(string msg)
 
   if(msg.size() > (unsigned)index)//If message is greater than ending char ~
   {
-    //cerr << "[LONG STRING] Recursing with string:" << msg.substr(index,msg.size()-index) << endl;;
     netProcess(msg.substr(index,msg.size()-index));
   }
 
 }
+
+//currently used only with necro pawn
+void fullRotation()
+{
+  //XXX
+  if(bitten != NULL){
+    stringstream ss;
+    ss << "REMV " << bitten->getNum() << " ~";
+    ss << "PLAC Npawn " << bitten->getSpot().x << " " << bitten->getSpot().y << " " << bitten_turn-1 << " ~";
+    netProcess(ss.str());
+    bitten = NULL;
+    bitten_turn = -1;
+  }
+}
+
+
+
+// ------------------------
+// Drawing Helper Functions
+// ------------------------
+
+void drawAura(coord spot, string name)
+{
+  SDL_Surface *ground;
+  if(c->board[spot.x][spot.y]->getTeam() == 1)
+    ground = pieceSheet1;
+  else if(c->board[spot.x][spot.y]->getTeam() == 2)
+    ground = pieceSheet2;
+  else if(c->board[spot.x][spot.y]->getTeam() == 3)
+    ground = pieceSheet3;
+  else if(c->board[spot.x][spot.y]->getTeam() == 4)
+    ground = pieceSheet4;
+
+  if(name == "Nrook"){
+
+    if(c->board[spot.x][spot.y+1] == NULL and c->isValid(spot.x,spot.y+1))
+      apply_surface((spot.x)*64, (spot.y+1)*64, ground, screen, &clips[25]);
+    if(c->board[spot.x][spot.y-1] == NULL and c->isValid(spot.x,spot.y-1))
+      apply_surface((spot.x)*64, (spot.y-1)*64, ground, screen, &clips[25]);
+    if(c->board[spot.x+1][spot.y] == NULL and c->isValid(spot.x+1,spot.y))
+      apply_surface((spot.x+1)*64, (spot.y)*64, ground, screen, &clips[25]);
+    if(c->board[spot.x+1][spot.y+1] == NULL and c->isValid(spot.x+1,spot.y+1))
+      apply_surface((spot.x+1)*64, (spot.y+1)*64, ground, screen, &clips[25]);
+    if(c->board[spot.x+1][spot.y-1] == NULL and c->isValid(spot.x+1,spot.y-1))
+      apply_surface((spot.x+1)*64, (spot.y-1)*64, ground, screen, &clips[25]);
+    if(c->board[spot.x-1][spot.y] == NULL and c->isValid(spot.x-1,spot.y))
+      apply_surface((spot.x-1)*64, (spot.y)*64, ground, screen, &clips[25]);
+    if(c->board[spot.x-1][spot.y+1] == NULL and c->isValid(spot.x-1,spot.y+1))
+      apply_surface((spot.x-1)*64, (spot.y+1)*64, ground, screen, &clips[25]);
+    if(c->board[spot.x-1][spot.y-1] == NULL and c->isValid(spot.x-1,spot.y-1))
+      apply_surface((spot.x-1)*64, (spot.y-1)*64, ground, screen, &clips[25]);
+  }
+  else if (name == "Bitten")
+  {
+    apply_surface((spot.x)*64, (spot.y)*64, ground, screen, &clips    [24]);
+  }
+
+  //XXX Should this delete?
+  delete ground;
+} 
+
+
+// -------------------
+// Main Game Functions
+// -------------------
+
+void runStartMenu()
+{
+  Menu *menu = new Menu(screen);
+  while(true){
+    int faction = menu->run_menu(screen);
+    
+    cerr << "[MENU] Faction:" << faction << endl; 
+    if(faction == -1)
+      exit(0);
+    
+    stringstream ss;
+    ss << "FACT " << faction << " ~";
+    s_socket.writeString(ss.str());
+    bool flag = false;
+    while(true){
+    socketSet.wait(0);
+      if(s_socket.hasEvent())
+      {
+	//Do appropriate things with server message
+	string msg = "DEFAULT";
+	int bytes = s_socket.readString(msg,256);
+	if(bytes == 256){
+	  cerr << "[ERROR] Read too large (> 256)" << endl;
+	}
+
+	cerr << "Message received:" << msg << endl;
+	
+	if(msg == "GOOD")
+	{
+	  flag = true;
+	  handshake_2 = true;
+	  break;
+	}
+	else if(msg == "BADD")
+	  break;
+	else
+	  cerr << "[ERROR] Unknown response from server:" << msg << endl;
+      }//if- socket has event
+      if(s_socket.isClosed())
+	exit(0);
+    }
+    if(flag)
+      break;
+  }
+    delete menu;
+}
+
+
 
 int main ( int argc, char* argv[] )
 {
@@ -957,22 +1437,38 @@ int main ( int argc, char* argv[] )
     return 1;
   if(load_files() == false)
     return 1;
-  set_clips();
-  generatePieces();
 
   //// --------------
   //// MAIN GAME LOOP
   //// --------------
+
   //While the user hasn't quit
   while(quit == false)
   {
+    if(handshake && !handshake_2)
+      runStartMenu();
 
+    if(handshake_2 && game_start && !handshake_3)
+    {
+      generatePieces();
+      handshake_3 = true;
+    }
+
+    
     //// ----------
     //// SDL EVENTS
     //// ----------
     //While theres an event to handle
     while(SDL_PollEvent(&event))
     {
+      if(event.type == SDL_QUIT)
+      {
+	quit = true;
+      }
+
+      if(!alive)
+	continue;
+
       Uint8 *keystates = SDL_GetKeyState(NULL);
       //This wont let us do anything until the game starts
       if(game_start){ 
@@ -1007,16 +1503,16 @@ int main ( int argc, char* argv[] )
 	      clicked_spots.clear();
 
 	      if(result == "ERROR"){
-		cerr << "[ERROR] Something was clicked incorrectly" << endl;
+		cerr << "[ERROR] ERROR return, something was clicked incorrectly" << endl;
 		continue;
 	      }
 	      if(result == "DEFAULT"){
-		cerr << "[ERROR] DEFAULT return value" << endl;
+		cerr << "[DEBUG] DEFAULT return value" << endl;
 		continue;
 	      }
 
 	      if(player_num == player_turn)
-	        s_socket.writeString(result);
+		s_socket.writeString(result);
 	      continue;
 	    }
 	  }
@@ -1049,8 +1545,19 @@ int main ( int argc, char* argv[] )
 		coord help = { x/64, y/64 };
 		cerr << "[DEBUG] Command:" << selected->getCaptCmd(help) << endl;
 		ss.str(selected->getCaptCmd(pieces[i]->getSpot()));
-		//check if the piece is allowed to be captured at all (For the sake of golems and such
-		failure = !(c->isCapturable(selected->getSpot(), pieces[i]->getSpot()));//IsCapturable returns true if its a good case, we dont want failure to be true if its a good case
+		//check if the piece is allowed to be captured at all (For the sake of golems and such)
+		//IsCapturable returns true if its a good case, we dont want failure to be true if its a good case
+		string capicing = "DEFAULT";
+
+		failure = !(c->isCapturable(selected->getSpot(), pieces[i]->getSpot(), capicing));
+
+		//If captured unit has additional effects (See Necro)
+		if(capicing != "DEFAULT")
+		{  
+		  cerr << "[DEBUG] Capicing returned not default:" << capicing << endl;
+		  ss.str(ss.str() + capicing);
+		}
+
 		capture = true;
 		break;
 	      }
@@ -1086,24 +1593,26 @@ int main ( int argc, char* argv[] )
 	    }
 
 	    //FINALLY- We know our move is valid, perform faction checks
-	    cerr << "Move message from selected piece:" << selected->Move(spot) << " | Piece name:" << selected->debug_name << endl;
-	    //TODO: This is where we perform faction checks through Move and *isCapturable
-	    string icing;//Icing on the MOVE/CAPT cake
-	    icing = selected->Move(spot);
 
-	    cerr << "ss before icing:" << ss.str() << endl;
-
-	    if(icing != "DEFAULT"){
-	      ss.str(ss.str() + icing);
+	    if(player_num == player_turn){ 
+	      string icing;//Icing on the MOVE/CAPT cake
+	      cerr << "[DEBUG] Calling Piece movement func" << endl;
+	      //if(selected->debug_name == "Wknight")//wurm edge case
+		//icing = selected->Move(spot,c);
+	      //else
+	        icing = selected->Move(spot);
+	      if(icing != "DEFAULT")
+		ss.str(ss.str() + icing);
 	    }
-
-	    cerr << "[DEBUG] Sending message:" << ss.str() << endl;
 
 	    selected = NULL;
 	    lastMove.clear();
 
-	    if(player_num == player_turn)
-  	      s_socket.writeString(ss.str());
+
+	    if(player_num == player_turn){
+	      cerr << "[DEBUG] Sending message:" << ss.str() << endl;
+	      s_socket.writeString(ss.str());
+	    }
 
 	    continue;
 	  }//If- Selected != null
@@ -1156,16 +1665,12 @@ int main ( int argc, char* argv[] )
 
       }//If- game start
 
-      if(event.type == SDL_QUIT)
-      {
-	quit = true;
-      }
 
     }//While- SDL_PollEvent
 
-//// ------------------
-//// NETWORK CONNECTION
-//// ------------------
+    //// ------------------
+    //// NETWORK CONNECTION
+    //// ------------------
     if(s_socket.isClosed()){
       printf("Lost connection with server\n");
       return 1;
@@ -1177,26 +1682,39 @@ int main ( int argc, char* argv[] )
       //Do appropriate things with server message
       string msg = "DEFAULT";
       int bytes = s_socket.readString(msg,256);
+      if(bytes == 256){
+	cerr << "[ERROR] Read too large (> 256)" << endl;
+      }
 
       netProcess(msg);
     }//if- socket has event
 
-//// -------
-//// DRAWING
-//// -------
+    //// -------
+    //// DRAWING
+    //// -------
     //Make window white instead of black - obselete
     SDL_FillRect(screen, &screen->clip_rect, SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF));
 
     //Apply the board to the screen
     apply_surface(0, 0, board, screen, NULL);
 
+    //Next apply last move highlight
     for(unsigned int i=lastMove.size()-2;i<lastMove.size();i++){
       apply_surface(lastMove[i].x*64, lastMove[i].y*64, highlight, screen, &clips[2]);
     }
 
     //Show() pieces
     for(unsigned int i=0;i<pieces.size();i++)
+    {
+      //Draw auras first
+      if(pieces[i]->debug_name == "Nrook")
+	if(pieces[i]->isLevel())
+	  drawAura(pieces[i]->getSpot(), "Nrook");
+      if(bitten != NULL)
+	drawAura(bitten->getSpot(), "Bitten");
+
       pieces[i]->show();
+    }
 
     ghostPiece.show();
 
