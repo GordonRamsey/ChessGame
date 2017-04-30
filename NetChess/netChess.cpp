@@ -737,6 +737,7 @@ void printChat()
     //render surface
     int bar = SCREEN_HEIGHT/30;
     apply_surface(896,bar*i, sideBar, screen);
+    SDL_FreeSurface(sideBar);
   }
 
 }
