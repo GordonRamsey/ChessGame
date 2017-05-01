@@ -6,6 +6,10 @@ using namespace std;
 const int MENU_CLIP_WIDTH = 350;
 const int MENU_CLIP_HEIGHT = 150;
 
+const int MB = 48; // Menu Boarder
+const int BB = 50; // Button Boarder
+const int BG = 175; // Button Gap
+
 const int STD_SUBMIT = 0;
 const int STD_NECRO = 3;
 const int STD_WURM = 6;
@@ -28,15 +32,18 @@ const int LOCK_FIGHTER = 14;
 const int LOCK_GOLEM = 17;
 
 SDL_Surface *menu = NULL;
+SDL_Surface *menuBg = NULL;
+SDL_Surface *menuText = NULL;
 SDL_Event menuEvent;
 
 vector<SDL_Rect> menuClips;
 
-
+int clicked = -1;
 
 class Button
 {
   private:
+
     int dfclip =-1;
     int faction = -1;
     SDL_Rect box;
@@ -52,6 +59,7 @@ class Button
     int get_button_clip();
     bool handle_button_events();
     bool active = false;
+    void set_clicked(int &clicked, int click);
 };
 
 void set_button_clips()
@@ -199,9 +207,7 @@ SDL_Surface *load_menu_image(std::string filename)
   SDL_Surface* optimizedImage = NULL;
   loadedImage = IMG_Load(filename.c_str());
   if(loadedImage != NULL){
-    cerr << "Image loaded correctly:" << filename << endl;
     optimizedImage = SDL_DisplayFormat(loadedImage);
-    cerr << "opt image:" << optimizedImage << endl;
     if(optimizedImage != NULL){
       Uint32 colorkey = SDL_MapRGB(optimizedImage->format, 0xFF, 0xFF, 0xFF);
       SDL_SetColorKey(optimizedImage, SDL_SRCCOLORKEY, colorkey);
@@ -215,9 +221,17 @@ SDL_Surface *load_menu_image(std::string filename)
 bool load_menu_files()
 {
   menu = load_menu_image("Graphic_Assets/Menu.png");
-  if(menu == NULL){
+  if(menu == NULL)
     return false;
-  }
+  
+  menuBg = load_menu_image("Graphic_Assets/fourPlayerBoard64.png");
+  if(menuBg == NULL)
+    return false;
+
+  menuText = load_menu_image("Graphic_Assets/textBackground.png");
+  if(menuText == NULL)
+    return false;
+
   return true;
 }
 
@@ -225,6 +239,8 @@ bool load_menu_files()
 void clean_up_menu()
 {
   SDL_FreeSurface(menu);
+  SDL_FreeSurface(menuBg);
+  SDL_FreeSurface(menuText);
 }
 
 /**** Start of Button class functions  *****/
@@ -251,6 +267,11 @@ void Button::set_button_clip(int x)
   menuClipNum = x;
 }
 
+void Button::set_clicked(int &clicked, int click)
+{
+  clicked = click;
+}
+
 void Button::show_button()
 {
 //  apply_menu_surface(box.x, box.y, menu, screen, menuClip);
@@ -270,8 +291,9 @@ bool Button::handle_button_events()
 
 
     if((x > box.x) and (x < box.x + box.w) and (y > box.y) and (y < box.y +box.h)){
-      if(this->get_button_clip() %3 == 0)
+      if(this->get_button_clip() %3 == 0){
 	this->set_button_clip(this->get_button_clip()+1);
+      }
     }
     else
       this->set_button_clip(dfclip);
@@ -285,6 +307,7 @@ bool Button::handle_button_events()
 	if((this->get_button_clip() -1) %3 == 0){
 	  this->set_button_clip(this->get_button_clip()+1);
 	  this-> dfclip  = this->get_button_clip();
+	  set_clicked(clicked, get_button_clip());
 	}
       }
     }
@@ -307,31 +330,43 @@ int Menu::run_menu(SDL_Surface *screen)
   load_menu_files();
   set_button_clips();
 
-  Button *wurmButton = new Button(0, 0, MENU_CLIP_WIDTH, MENU_CLIP_HEIGHT, STD_WURM);
-  Button *portalButton = new Button(MENU_CLIP_WIDTH, 0, MENU_CLIP_WIDTH, MENU_CLIP_HEIGHT, STD_PORTAL);
-  Button *fighterButton = new Button(0, MENU_CLIP_HEIGHT, MENU_CLIP_WIDTH, MENU_CLIP_HEIGHT, STD_FIGHTER);
-  Button *golemButton = new Button(MENU_CLIP_WIDTH, MENU_CLIP_HEIGHT, MENU_CLIP_WIDTH, MENU_CLIP_HEIGHT, STD_GOLEM);
-  Button *necroButton = new Button(0, MENU_CLIP_HEIGHT*2, MENU_CLIP_WIDTH, MENU_CLIP_HEIGHT, STD_NECRO);
-  Button *submitButton = new  Button(MENU_CLIP_WIDTH, MENU_CLIP_HEIGHT*2, MENU_CLIP_WIDTH, MENU_CLIP_HEIGHT, STD_SUBMIT);
+  Button *wurmButton = new Button(MB+BB, MB+BB, MENU_CLIP_WIDTH, MENU_CLIP_HEIGHT, STD_WURM);
+  Button *portalButton = new Button(MB+BB*2+MENU_CLIP_WIDTH,MB+BB, MENU_CLIP_WIDTH, MENU_CLIP_HEIGHT, STD_PORTAL);
+  Button *fighterButton = new Button(MB+BB,MB+BB*2+MENU_CLIP_HEIGHT, MENU_CLIP_WIDTH, MENU_CLIP_HEIGHT, STD_FIGHTER);
+  Button *golemButton = new Button(MB+BB*2+MENU_CLIP_WIDTH,MB+BB*2+MENU_CLIP_HEIGHT, MENU_CLIP_WIDTH, MENU_CLIP_HEIGHT, STD_GOLEM);
+  Button *necroButton = new Button(MB+BB+BG+BB/2,MB+BB*3+MENU_CLIP_HEIGHT*2, MENU_CLIP_WIDTH, MENU_CLIP_HEIGHT, STD_NECRO);
+  Button *submitButton = new  Button(MB+BB+BG+BB/2,MB+BB*4+MENU_CLIP_HEIGHT*3, MENU_CLIP_WIDTH, MENU_CLIP_HEIGHT, STD_SUBMIT);
 
   bool runMenu = true;
   int return_var = -1;
-  Button *buttons [] = {wurmButton, portalButton, fighterButton, golemButton, necroButton, submitButton  };
+
+  Button *buttons [] = { submitButton, necroButton, wurmButton, portalButton, fighterButton, golemButton };
+
+  apply_menu_surface(0, 0, menuBg, screen);
+  apply_menu_surface(896, 0, menuText, screen);
+
   while(runMenu == true){
 
-    apply_menu_surface(0,0, menu, screen, wurmButton->menuClip);
-    apply_menu_surface(MENU_CLIP_WIDTH,0, menu, screen, portalButton->menuClip);
-    apply_menu_surface(0,MENU_CLIP_HEIGHT, menu, screen, fighterButton->menuClip);
-    apply_menu_surface(MENU_CLIP_WIDTH,MENU_CLIP_HEIGHT, menu, screen, golemButton->menuClip);
-    apply_menu_surface(0,MENU_CLIP_HEIGHT*2, menu, screen, necroButton->menuClip);
-    apply_menu_surface(MENU_CLIP_WIDTH,MENU_CLIP_HEIGHT*2, menu, screen, submitButton->menuClip);
+    apply_menu_surface(MB+BB, MB+BB, menu, screen, wurmButton->menuClip);
+    apply_menu_surface(MB+BB*2+MENU_CLIP_WIDTH,MB+BB, menu, screen, portalButton->menuClip);
+    apply_menu_surface(MB+BB,MB+BB*2+MENU_CLIP_HEIGHT, menu, screen, fighterButton->menuClip);
+    apply_menu_surface(MB+BB*2+MENU_CLIP_WIDTH,MB+BB*2+MENU_CLIP_HEIGHT, menu, screen, golemButton->menuClip);
+    apply_menu_surface(MB+BB+BG+BB/2,MB+BB*3+MENU_CLIP_HEIGHT*2, menu, screen, necroButton->menuClip);
+    apply_menu_surface(MB+BB+BG+BB/2,MB+BB*4+MENU_CLIP_HEIGHT*3, menu, screen, submitButton->menuClip);
 
     if(SDL_PollEvent(&menuEvent)){
-      for(int i=0;i<6;i++)
-      {
-	if(buttons[i]->handle_button_events())
+      for(int i=0;i<6;i++){
+	if(buttons[i]->handle_button_events()){
 	  break;
-      }
+	}
+
+	  for(int j=0;j<6;j++){
+	    if(buttons[j]->get_button_clip() == 2)
+	      break;
+	    if((buttons[j]->get_button_clip() != clicked) and ((buttons[j]->get_button_clip()-2)%3 == 0))
+	      buttons[j]->set_button_clip(j*3);
+	  }
+	}
 
       if(menuEvent.type == SDL_QUIT){
 	runMenu = false;
@@ -355,6 +390,12 @@ int Menu::run_menu(SDL_Surface *screen)
     }
     SDL_Flip(screen);
   }
+  delete wurmButton;
+  delete portalButton;
+  delete fighterButton;
+  delete golemButton;
+  delete necroButton;
+  delete submitButton;
   clean_up_menu();
   return return_var;
 }
