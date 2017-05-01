@@ -10,14 +10,11 @@ WKing::~WKing()
 
 string WKing::Move(coord newpos)
 {
-	stringstream ss;
-	ss << "MOVE " << getNum() << " " << newpos.x*64 << newpos.y*64 << " ~";
-	return ss.str();
+	return king::Move(newpos);
 }
 
 string WKing::createCrater(coord spot, Chess* c)
 {
-	stringstream result;
 	stringstream ss;
 
 	//Check North:

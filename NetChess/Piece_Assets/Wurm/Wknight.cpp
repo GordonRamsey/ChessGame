@@ -1,4 +1,4 @@
-#include "knight.h"
+#include "Wknight.h"
 
 WKnight::WKnight(int x, int y, int it) : Piece(x, y, it)
 {
