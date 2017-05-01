@@ -8,6 +8,7 @@ struct player{
   int number;
   int team = -1;
   bool alive = true;
+  bool connected = false;
 };
 
 Socket listener;
@@ -66,6 +67,20 @@ int main(int argc, char* argv[])
   listener.joinGroup(&socketSet);
   string msg = "";
   cerr << "Server started, your IP information is:" << endl << listener.toString() << endl;
+  
+  //Init player slots
+  player newplayer;
+  player newplayer2;
+  player newplayer3;
+  player newplayer4;
+  newplayer.number = 1;
+  players.push_back(newplayer);
+  newplayer2.number = 2;
+  players.push_back(newplayer2);
+  newplayer3.number = 3;
+  players.push_back(newplayer3);
+  newplayer4.number = 4;
+  players.push_back(newplayer4);
 
   while(!listener.isClosed()){
     //XXX Dont know why this is here
@@ -78,17 +93,21 @@ int main(int argc, char* argv[])
       cout << sock.toString() << " has joined\n";
       sockets.push_back(sock);
       
+      for(int i=0;i<players.size();i++){
+	if(players[i].connected == false)
+	{  
+	  cerr << "checking slot:" << i << endl;
+	  player_num = players[i].number;
+          players[i].sock = sock;
+	  players[i].connected = true;
+	  break;
+	}
+      }
       ss.str("");
       ss << "REDY " << player_num << " ~";
       cerr << "Sending new Client player number:" << player_num << endl;
       sock.writeString(ss.str());
 
-      player newplayer;
-      newplayer.number = player_num;
-      newplayer.sock = sock;
-      players.push_back(newplayer);
-
-      player_num++;
     }
     else //Messages from client
     {
@@ -259,13 +278,18 @@ int main(int argc, char* argv[])
 		for(int k=0;k<players.size();k++){
 		  if(players[k].number == num){
 		    players[k].alive = false;
+		    alive_players--;
 		    if(current_player == num)
 		      nextPlayer();
 		    break;
 		  }
 		}
+		//Debug
+		for(int k=0;k<players.size();k++){
+		  cerr << players[k].number << "." << players[k].alive << endl;
+		}
+
 		//check win
-		alive_players--;
 		if(alive_players == 1)
 		{
 		  int winner_num;
@@ -312,7 +336,8 @@ int main(int argc, char* argv[])
 		  //remove player turn
 		  int num = players[i].number;
 		  for(int k=0;k<players.size();k++){
-		    if(players[k].number == num){
+		    if(players[k].number == num && players[k].alive == true){
+		     alive_players--;
 		      players[k].alive = false;
 		      if(current_player == num)
 			nextPlayer();
@@ -320,7 +345,6 @@ int main(int argc, char* argv[])
 		    }
 		  }
 		  //check win
-		  alive_players--;
 		  if(alive_players == 1)
 		  {
 		    int winner_num;
@@ -340,9 +364,9 @@ int main(int argc, char* argv[])
 		}//if game start
 		else
 		{
-		  players[i] = players[players.size()-1];
-		  players.pop_back();
-		  player_num--;
+		  players[i].connected = false;
+		  players[i].team = -1;
+		  faction_confirm--;
 		  cout << "Removed prospective player from queue" << endl;
 		  cout << "Num players in queue:" << player_num << endl;
 		  break;
