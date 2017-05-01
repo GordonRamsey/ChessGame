@@ -364,6 +364,7 @@ vector<coord> FPawn::validSpots(Chess* c)
 		ss.str("");
 		ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 		ss << "REMV " << c->board[seek.x-1][seek.y+1]->getNum() << " ~";
+        captureMap[seek] = ss.str();
 		seek.x--;
 		seek.y++;
 	      }
@@ -382,6 +383,7 @@ vector<coord> FPawn::validSpots(Chess* c)
 		ss.str("");
 		ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 		ss << "REMV " << c->board[seek.x-1][seek.y-1]->getNum() << " ~";
+        captureMap[seek] = ss.str();
 		seek.x--;
 		seek.y--;
 	      }
@@ -413,6 +415,7 @@ vector<coord> FPawn::validSpots(Chess* c)
 		ss.str("");
 		ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 		ss << "REMV " << c->board[seek.x-1][seek.y+1]->getNum() << " ~";
+        captureMap[seek] = ss.str();
 		seek.x--;
 		seek.y++;
 	      }
@@ -431,6 +434,7 @@ vector<coord> FPawn::validSpots(Chess* c)
 		ss.str("");
 		ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 		ss << "REMV " << c->board[seek.x-1][seek.y-1]->getNum() << " ~";
+        captureMap[seek] = ss.str();
 		seek.x--;
 		seek.y--;
 	      }

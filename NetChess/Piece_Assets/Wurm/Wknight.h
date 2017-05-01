@@ -8,6 +8,7 @@ class WKnight : public Knight
   public:
     WKnight(int x, int y, int it);
     ~WKnight();
+	string checkAdjacent(coord spot, Chess* c);
     string Move(coord newpos);
     vector<coord> validSpots(Chess* c);
 };

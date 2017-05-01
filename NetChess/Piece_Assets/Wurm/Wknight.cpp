@@ -1,4 +1,4 @@
-#include "knight.h"
+#include "Wknight.h"
 
 WKnight::WKnight(int x, int y, int it) : Piece(x, y, it)
 {
@@ -10,7 +10,7 @@ WKnight::~WKnight()
 
 }
 
-string checkAdjacent(coord spot, Chess* c)
+string WKnight::checkAdjacent(coord spot, Chess* c)
 {
   stringstream result;
   stringstream ss;

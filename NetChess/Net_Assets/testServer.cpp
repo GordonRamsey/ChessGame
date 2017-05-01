@@ -336,7 +336,8 @@ int main(int argc, char* argv[])
 		  //remove player turn
 		  int num = players[i].number;
 		  for(int k=0;k<players.size();k++){
-		    if(players[k].number == num){
+		    if(players[k].number == num && players[k].alive == true){
+		     alive_players--;
 		      players[k].alive = false;
 		      if(current_player == num)
 			nextPlayer();
@@ -344,7 +345,6 @@ int main(int argc, char* argv[])
 		    }
 		  }
 		  //check win
-		  alive_players--;
 		  if(alive_players == 1)
 		  {
 		    int winner_num;

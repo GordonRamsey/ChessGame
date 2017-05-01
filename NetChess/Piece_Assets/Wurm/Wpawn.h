@@ -1,7 +1,7 @@
 #ifndef WPAWN_H
 #define WPAWN_H
 #include "../pawn.h"
-class WPawn ; public Pawn
+class WPawn : public Pawn
 {
 	private:
 		string debug_name;
