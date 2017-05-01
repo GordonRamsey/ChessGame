@@ -1355,8 +1355,6 @@ void drawAura(coord spot, string name)
     apply_surface((spot.x)*64, (spot.y)*64, ground, screen, &clips    [24]);
   }
 
-  //XXX Should this delete?
-  delete ground;
 } 
 
 
