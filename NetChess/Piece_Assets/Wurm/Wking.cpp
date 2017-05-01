@@ -10,7 +10,7 @@ WKing::~WKing()
 
 string WKing::Move(coord newpos)
 {
-	return king::Move(newpos);
+	return King::Move(newpos);
 }
 
 string WKing::createCrater(coord spot, Chess* c)
