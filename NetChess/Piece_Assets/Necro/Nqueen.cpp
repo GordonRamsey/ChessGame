@@ -36,7 +36,7 @@ string NQueen::processClicks(vector<coord> clickedOn, Chess* c)
       if(c->board[clickedOn[1].x/64][clickedOn[1].y/64]->getTeam() == getTeam())
       {
 	ss.str(""); 
-	ss << "MOVE " << getNum() << " " << getPos().x << getPos().y << " ~"; 
+	ss << "MOVE " << getNum() << " " << getPos().x << " " << getPos().y << " ~"; 
 	ss << "REMV " << c->board[clickedOn[0].x/64][clickedOn[0].y/64]->getNum()<< " ~"; 
 	ss << "LVUP " << c->board[clickedOn[1].x/64][clickedOn[1].y/64]->getNum()<< " ~"; 
 	return ss.str(); 
