@@ -164,7 +164,7 @@ string NKing::processClicks(vector<coord> clickedOn, Chess* c)
   ss.str(""); 
   ss << "MOVE " << getNum() << " " << getPos().x << " " <<  getPos().y << " ~"; 
   for(int i = 0; i < count; ++i){
-    ss << "PLAC Npawn " << " " << clickedOn[i].x/64 << " " << clickedOn[i].y/64 << " " << getTeam()-1 << " ~"; 
+    ss << "PLAC Npawn " << clickedOn[i].x/64 << " " << clickedOn[i].y/64 << " " << getTeam()-1 << " ~"; 
   }
   return ss.str(); 
 
