@@ -149,10 +149,13 @@ string NKing::processClicks(vector<coord> clickedOn, Chess* c)
     if(c->board[clickedOn[2].x/64][clickedOn[2].y/64]->getNum() != getNum())
       return "ERROR";
 
-  if(clickedOn[1] == clickedOn[0])
+  coord click1 = clickedOn[1];
+  click1.x /= 64;
+  click1.y /= 64;
+  if(clickedOn[1] == clickedOn[0] && getSpot().x != click1.x && getSpot().y != click1.y)
     return "ERROR";
 
-  if(clickedOn[2] == clickedOn[1])
+  if(clickedOn[2] == clickedOn[1] && getSpot().x != click1.x && getSpot().y != click1.y)
     return "ERROR";
 
   vector<coord> tmp(validSLoc(c));  
