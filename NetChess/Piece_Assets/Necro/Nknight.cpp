@@ -43,31 +43,32 @@ string NKnight::processClicks(vector<coord> clickedOn, Chess* c)
     return "ERROR";
 
   stringstream ss;
+  ss << "MOVE " << getNum() << " " << getPos().x << " " << getPos().y << " ~";
+
   ss << "REMV " << c->board[x][y]->getNum() << " ~";
 
   if(soul.find("pawn") != string::npos)
     return "ERROR";
-  
+
   if(soul.find("king") != string::npos)
     return "ERROR";
-  
+
   if(soul.find("bishop") != string::npos)
     ss << "PLAC Nbishop " << x << " " << y << " " << getTeam()-1 << " ~";
-  
+
   if(soul.find("rook") != string::npos)
     ss << "PLAC Nrook " << x << " " << y << " " << getTeam()-1 << " ~";
-  
+
   if(soul.find("knight") != string::npos)
     ss << "PLAC Nknight " << x << " " << y << " " << getTeam()-1 << " ~";
-  
+
   if(soul.find("queen") != string::npos)
     ss << "PLAC Nqueen " << x << " " << y << " " << getTeam()-1 << " ~";
-  
+
   soul = "";
   setClip(15);
 
-  //ss << "MOVE " << getNum() << " " << getPos() << " " << getPos() << " ~";
-  
+
   return ss.str();
 }
 
