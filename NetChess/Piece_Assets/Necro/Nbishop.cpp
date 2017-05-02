@@ -96,9 +96,11 @@ string NBishop::processClicks(vector<coord> clickedOn, Chess* c)
     
     ss.str(""); 
     string type = c->board[clickedOn[0].x/64][clickedOn[0].y/64]->debug_name;
+    ss << "MOVE " << getNum() << " " << getPos().x << " " << getPos().y << " ~";
     ss << "PLAC " << type << " " << spotcheck.x << " " << spotcheck.y << " " << getTeam()-1 << " ~"; 
     return ss.str(); 
   }
+  return "ERROR";
 }
 
 vector<coord> NBishop::validSpots(Chess* c)

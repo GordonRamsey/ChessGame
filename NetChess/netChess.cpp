@@ -1328,13 +1328,13 @@ void fullRotation()
 void drawAura(coord spot, string name)
 {
   SDL_Surface *ground;
-  if(c->board[spot.x][spot.y]->getTeam() == 1)
+  if(p1_team == 5)
     ground = pieceSheet1;
-  else if(c->board[spot.x][spot.y]->getTeam() == 2)
+  else if(p2_team == 5)
     ground = pieceSheet2;
-  else if(c->board[spot.x][spot.y]->getTeam() == 3)
+  else if(p3_team == 5)
     ground = pieceSheet3;
-  else if(c->board[spot.x][spot.y]->getTeam() == 4)
+  else if(p4_team == 5)
     ground = pieceSheet4;
 
   if(name == "Nrook"){
