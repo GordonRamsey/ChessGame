@@ -52,6 +52,13 @@
 #include "Piece_Assets/Portal/Pking.h"
 #include "Piece_Assets/Portal/Pqueen.h"
 
+//Wurms includes
+#include "Piece_Assets/Wurm/Wpawn.h"
+#include "Piece_Assets/Wurm/Wrook.h"
+#include "Piece_Assets/Wurm/Wknight.h"
+#include "Piece_Assets/Wurm/Wbishop.h"
+#include "Piece_Assets/Wurm/Wking.h"
+#include "Piece_Assets/Wurm/Wqueen.h"
 
 //Game object includes
 #include "Piece_Assets/chess.h"

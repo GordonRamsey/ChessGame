@@ -5,10 +5,12 @@ class WKnight : public Knight
 {
   private:
     string debug_name;
+    Chess* priv_c;
   public:
     WKnight(int x, int y, int it);
     ~WKnight();
-	string checkAdjacent(coord spot, Chess* c);
+    string checkAdjacent(coord spot, Chess* c);
+    void wurmSpots(vector<coord> &spots, Chess* c);
     string Move(coord newpos);
     vector<coord> validSpots(Chess* c);
 };

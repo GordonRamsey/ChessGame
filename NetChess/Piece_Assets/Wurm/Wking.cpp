@@ -65,7 +65,7 @@ string WKing::createCrater(coord spot, Chess* c)
 
 }
 
-void wurmSpots(vector<coord> &spots, Chess* c)
+void WKing::wurmSpots(vector<coord> &spots, Chess* c)
 {
   for(int i=0;i<14;i++)
     for(int j=0;j<14;j++){
@@ -248,9 +248,12 @@ vector<coord> WKing::validSpots(Chess* c)
       }
     }
     else
+    {  
+      if(c->terrain[seek.x][seek.y] == 1)
+	wurmSpots(spots,c);
       spots.push_back(seek); 
+    }
   }
   return spots;
-
 
 }

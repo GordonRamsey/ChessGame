@@ -349,7 +349,7 @@ void generatePieces()
       if(j == 1)
       {
 	if(p1_team == 1)
-	  newPiece = new FPawn(x,y,num,'S');
+	  newPiece = new WPawn(x,y,num,'S');
 	if(p1_team == 2)
 	  newPiece = new PPawn(x,y,num,'S');
 	if(p1_team == 3)
@@ -363,7 +363,7 @@ void generatePieces()
       else{
 	if(i==0 || i ==7){  
 	  if(p1_team == 1)
-	    newPiece = new FRook(x,y,num);
+	    newPiece = new WRook(x,y,num);
 	  if(p1_team == 2)
 	    newPiece = new PRook(x,y,num);
 	  if(p1_team == 3)
@@ -376,7 +376,7 @@ void generatePieces()
 	}
 	else if(i==1 || i ==6){ 
 	  if(p1_team == 1)
-	    newPiece = new FKnight(x,y,num);
+	    newPiece = new WKnight(x,y,num);
 	  if(p1_team == 2)
 	    newPiece = new PKnight(x,y,num);
 	  if(p1_team == 3)
@@ -389,7 +389,7 @@ void generatePieces()
 	}
 	else if(i==2 || i ==5){  
 	  if(p1_team == 1)
-	    newPiece = new FBishop(x,y,num);
+	    newPiece = new WBishop(x,y,num);
 	  if(p1_team == 2)
 	    newPiece = new PBishop(x,y,num);
 	  if(p1_team == 3)
@@ -402,7 +402,7 @@ void generatePieces()
 	}
 	else if(i==4){  
 	  if(p1_team == 1)
-	    newPiece = new FKing(x,y,num);
+	    newPiece = new WKing(x,y,num);
 	  if(p1_team == 2)
 	    newPiece = new PKing(x,y,num);
 	  if(p1_team == 3)
@@ -415,7 +415,7 @@ void generatePieces()
 	}
 	else if(i==3){ 
 	  if(p1_team == 1)
-	    newPiece = new FQueen(x,y,num);
+	    newPiece = new WQueen(x,y,num);
 	  if(p1_team == 2)
 	    newPiece = new PQueen(x,y,num);
 	  if(p1_team == 3)
@@ -444,7 +444,7 @@ void generatePieces()
       if(j == 0)
       {
 	if(p2_team == 1)
-	  newPiece = new FPawn(x,y,num,'N');
+	  newPiece = new WPawn(x,y,num,'N');
 	if(p2_team == 2)
 	  newPiece = new PPawn(x,y,num,'N');
 	if(p2_team == 3)
@@ -458,7 +458,7 @@ void generatePieces()
       else{
 	if(i==0 || i ==7){  
 	  if(p2_team == 1)
-	    newPiece = new FRook(x,y,num);
+	    newPiece = new WRook(x,y,num);
 	  if(p2_team == 2)
 	    newPiece = new PRook(x,y,num);
 	  if(p2_team == 3)
@@ -471,7 +471,7 @@ void generatePieces()
 	}
 	else if(i==1 || i ==6){ 
 	  if(p2_team == 1)
-	    newPiece = new FKnight(x,y,num);
+	    newPiece = new WKnight(x,y,num);
 	  if(p2_team == 2)
 	    newPiece = new PKnight(x,y,num);
 	  if(p2_team == 3)
@@ -484,7 +484,7 @@ void generatePieces()
 	}
 	else if(i==2 || i ==5){  
 	  if(p2_team == 1)
-	    newPiece = new FBishop(x,y,num);
+	    newPiece = new WBishop(x,y,num);
 	  if(p2_team == 2)
 	    newPiece = new PBishop(x,y,num);
 	  if(p2_team == 3)
@@ -497,7 +497,7 @@ void generatePieces()
 	}
 	else if(i==4){  
 	  if(p2_team == 1)
-	    newPiece = new FKing(x,y,num);
+	    newPiece = new WKing(x,y,num);
 	  if(p2_team == 2)
 	    newPiece = new PKing(x,y,num);
 	  if(p2_team == 3)
@@ -510,7 +510,7 @@ void generatePieces()
 	}
 	else if(i==3){ 
 	  if(p2_team == 1)
-	    newPiece = new FQueen(x,y,num);
+	    newPiece = new WQueen(x,y,num);
 	  if(p2_team == 2)
 	    newPiece = new PQueen(x,y,num);
 	  if(p2_team == 3)
@@ -539,7 +539,7 @@ void generatePieces()
       if(j == 1)
       {
 	if(p3_team == 1)
-	  newPiece = new FPawn(x,y,num,'E');
+	  newPiece = new WPawn(x,y,num,'E');
 	if(p3_team == 2)
 	  newPiece = new PPawn(x,y,num,'E');
 	if(p3_team == 3)
@@ -553,7 +553,7 @@ void generatePieces()
       else{
 	if(i==0 || i ==7){  
 	  if(p3_team == 1)
-	    newPiece = new FRook(x,y,num);
+	    newPiece = new WRook(x,y,num);
 	  if(p3_team == 2)
 	    newPiece = new PRook(x,y,num);
 	  if(p3_team == 3)
@@ -566,7 +566,7 @@ void generatePieces()
 	}
 	else if(i==1 || i ==6){ 
 	  if(p3_team == 1)
-	    newPiece = new FKnight(x,y,num);
+	    newPiece = new WKnight(x,y,num);
 	  if(p3_team == 2)
 	    newPiece = new PKnight(x,y,num);
 	  if(p3_team == 3)
@@ -579,7 +579,7 @@ void generatePieces()
 	}
 	else if(i==2 || i ==5){  
 	  if(p3_team == 1)
-	    newPiece = new FBishop(x,y,num);
+	    newPiece = new WBishop(x,y,num);
 	  if(p3_team == 2)
 	    newPiece = new PBishop(x,y,num);
 	  if(p3_team == 3)
@@ -592,7 +592,7 @@ void generatePieces()
 	}
 	else if(i==4){  
 	  if(p3_team == 1)
-	    newPiece = new FKing(x,y,num);
+	    newPiece = new WKing(x,y,num);
 	  if(p3_team == 2)
 	    newPiece = new PKing(x,y,num);
 	  if(p3_team == 3)
@@ -605,7 +605,7 @@ void generatePieces()
 	}
 	else if(i==3){ 
 	  if(p3_team == 1)
-	    newPiece = new FQueen(x,y,num);
+	    newPiece = new WQueen(x,y,num);
 	  if(p3_team == 2)
 	    newPiece = new PQueen(x,y,num);
 	  if(p3_team == 3)
@@ -634,7 +634,7 @@ void generatePieces()
        if(j == 0)
       {
 	if(p4_team == 1)
-	  newPiece = new FPawn(x,y,num,'W');
+	  newPiece = new WPawn(x,y,num,'W');
 	if(p4_team == 2)
 	  newPiece = new PPawn(x,y,num,'W');
 	if(p4_team == 3)
@@ -648,7 +648,7 @@ void generatePieces()
       else{
 	if(i==0 || i ==7){  
 	  if(p4_team == 1)
-	    newPiece = new FRook(x,y,num);
+	    newPiece = new WRook(x,y,num);
 	  if(p4_team == 2)
 	    newPiece = new PRook(x,y,num);
 	  if(p4_team == 3)
@@ -661,7 +661,7 @@ void generatePieces()
 	}
 	else if(i==1 || i ==6){ 
 	  if(p4_team == 1)
-	    newPiece = new FKnight(x,y,num);
+	    newPiece = new WKnight(x,y,num);
 	  if(p4_team == 2)
 	    newPiece = new PKnight(x,y,num);
 	  if(p4_team == 3)
@@ -674,7 +674,7 @@ void generatePieces()
 	}
 	else if(i==2 || i ==5){  
 	  if(p4_team == 1)
-	    newPiece = new FBishop(x,y,num);
+	    newPiece = new WBishop(x,y,num);
 	  if(p4_team == 2)
 	    newPiece = new PBishop(x,y,num);
 	  if(p4_team == 3)
@@ -687,7 +687,7 @@ void generatePieces()
 	}
 	else if(i==4){  
 	  if(p4_team == 1)
-	    newPiece = new FKing(x,y,num);
+	    newPiece = new WKing(x,y,num);
 	  if(p4_team == 2)
 	    newPiece = new PKing(x,y,num);
 	  if(p4_team == 3)
@@ -700,7 +700,7 @@ void generatePieces()
 	}
 	else if(i==3){ 
 	  if(p4_team == 1)
-	    newPiece = new FQueen(x,y,num);
+	    newPiece = new WQueen(x,y,num);
 	  if(p4_team == 2)
 	    newPiece = new PQueen(x,y,num);
 	  if(p4_team == 3)

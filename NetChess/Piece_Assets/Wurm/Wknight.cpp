@@ -1,6 +1,6 @@
 #include "Wknight.h"
 
-WKnight::WKnight(int x, int y, int it) : Piece(x, y, it)
+WKnight::WKnight(int x, int y, int it) : Knight(x, y, it)
 {
   debug_name = "Wknight";
 }
@@ -29,7 +29,7 @@ string WKnight::checkAdjacent(coord spot, Chess* c)
   }
 
   //Check South
-  coord tmp = spot; ss.str("");
+   tmp = spot; ss.str("");
   if(c->board[tmp.x][tmp.y] != NULL)
   {
     //Check behind it
@@ -41,7 +41,7 @@ string WKnight::checkAdjacent(coord spot, Chess* c)
       }
   }
   //Check East
-  coord tmp = spot; ss.str("");
+   tmp = spot; ss.str("");
   if(c->board[tmp.x][tmp.y] != NULL)
   {
     //Check behind it
@@ -53,7 +53,7 @@ string WKnight::checkAdjacent(coord spot, Chess* c)
       }
   }
   //Check West
-  coord tmp = spot; ss.str("");
+   tmp = spot; ss.str("");
   if(c->board[tmp.x][tmp.y] != NULL)
   {
     //Check behind it
@@ -69,13 +69,26 @@ string WKnight::checkAdjacent(coord spot, Chess* c)
 
 }
 
-string WKnight::Move(coord newpos, Chess* c)
+void WKnight::wurmSpots(vector<coord> &spots, Chess* c)
+{
+  for(int i=0;i<14;i++)
+    for(int j=0;j<14;j++){
+      if(c->terrain[i][j] == 1)
+      {
+	vector<coord> newstuff = Knight::validSpots(c);
+	spots.insert(spots.end(), newstuff.begin(), newstuff.end());
+      }
+    }
+
+}
+
+string WKnight::Move(coord newpos)
 {
   if(m_level)
   {
     stringstream ss;
     ss.str("");
-    string result = checkAdjacent(newpos,c);
+    string result = checkAdjacent(newpos,priv_c);
     ss << result;
     return ss.str();
   }
@@ -86,6 +99,8 @@ string WKnight::Move(coord newpos, Chess* c)
 
 vector<coord> WKnight::validSpots(Chess* c)
 {
+  priv_c = c;
+  
   if(!m_level)
     return Knight::validSpots(c);
 
@@ -114,6 +129,8 @@ vector<coord> WKnight::validSpots(Chess* c)
       }
       else
       {
+	if(c->terrain[seek.x][seek.y] == 1)
+	  wurmSpots(spots,c);
 	spots.push_back(seek); //Empty spot, add it
       }
     }
@@ -140,6 +157,8 @@ vector<coord> WKnight::validSpots(Chess* c)
       }
       else
       {
+	if(c->terrain[seek.x][seek.y] == 1)
+	  wurmSpots(spots,c);
 	spots.push_back(seek);
       }
     }
@@ -166,6 +185,8 @@ vector<coord> WKnight::validSpots(Chess* c)
       }
       else
       {
+	if(c->terrain[seek.x][seek.y] == 1)
+	  wurmSpots(spots,c);
 	spots.push_back(seek);
       }
     }
@@ -192,6 +213,8 @@ vector<coord> WKnight::validSpots(Chess* c)
       }
       else
       {
+	if(c->terrain[seek.x][seek.y] == 1)
+	  wurmSpots(spots,c);
 	spots.push_back(seek);
       }
     }
@@ -218,6 +241,8 @@ vector<coord> WKnight::validSpots(Chess* c)
       }
       else
       {
+	if(c->terrain[seek.x][seek.y] == 1)
+	  wurmSpots(spots,c);
 	spots.push_back(seek);
       }
     }
@@ -244,6 +269,8 @@ vector<coord> WKnight::validSpots(Chess* c)
       }
       else
       {
+	if(c->terrain[seek.x][seek.y] == 1)
+	  wurmSpots(spots,c);
 	spots.push_back(seek);
       }
     }
@@ -271,6 +298,8 @@ vector<coord> WKnight::validSpots(Chess* c)
     }
     else
     {
+	if(c->terrain[seek.x][seek.y] == 1)
+	  wurmSpots(spots,c);
       spots.push_back(seek);
     }
   }
@@ -297,6 +326,8 @@ vector<coord> WKnight::validSpots(Chess* c)
     }
     else
     {
+	if(c->terrain[seek.x][seek.y] == 1)
+	  wurmSpots(spots,c);
       spots.push_back(seek);
     }
   }
