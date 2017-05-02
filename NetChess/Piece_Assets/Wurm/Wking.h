@@ -9,6 +9,7 @@ class WKing : public King
 		WKing(int x, int y, int it);
 		~WKing();
 		string createCrater(coord spot, Chess* c);//going to setup similar to checkAdjacent from WKnight
+		void wurmSpots(vector<coord> &spots, Chess* c);
 		string Move(coord newpos);
 		vector<coord> validSpots(Chess* c);
 };

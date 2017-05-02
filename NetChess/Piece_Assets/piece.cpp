@@ -145,6 +145,14 @@ void Piece::levelUp()
   {
     clicks = 2;
   }
+  else if(debug_name == "Wqueen")
+  {
+    clicks = 1;
+  }
+  else if(debug_name == "Wking")
+  {
+    clicks = 1;
+  }
 }
 void Piece::Rock()
 {

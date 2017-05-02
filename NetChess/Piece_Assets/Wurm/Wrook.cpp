@@ -2,7 +2,7 @@
 
 WRook::WRook(int x, int y, int it) : Rook(x, y, it)
 {
-	debug_name = "WRook";
+	debug_name = "Wrook";
 }
 
 WRook::~WRook()
@@ -12,15 +12,16 @@ string WRook::Move(coord newpos)
 {
 	if(m_level)
 	{
-		//Place a tunnel after you move
+	  stringstream ss;
+	  ss << "PLAC Tunnel " << newpos.x << " " << newpos.y << " -1 ~";
+	  ss << "PLAC Tunnel " << getSpot().x << " " << getSpot().y << " -1 ~";
+	  return ss.str();
 	}
 	else
-		return Rook::Move(newpos);
+	  return Rook::Move(newpos);
 }
 
 vector<coord> WRook::validSpots(Chess* c)
 {
-	//Can move through tunnels too, don't know how
-	return Rook::validSpots(c);
 
 }

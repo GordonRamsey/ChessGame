@@ -8,20 +8,21 @@ WBishop::WBishop(int x, int y, int it) : Bishop(x, y, it)
 WBishop::~WBishop()
 {}
 
-string WBishop::Move(coord newpost)
+string WBishop::Move(coord newpos)
 {
-	if(m_level)
-	{
-		//Place a tunnel where you've moved
-		//Does it decay over time?
-	}
-	else
-		return Bishop::Move(newpos);
-	
+  if(m_level)
+  {
+    stringstream ss;
+    ss << "PLAC Tunnel " << newpos.x << " " << newpos.y << " -1 ~";
+    ss << "PLAC Tunnel " << getSpot().x << " " << getSpot().y << " -1 ~";
+    return ss.str();  
+  }
+  else
+    return Bishop::Move(newpos);
+
 }
 
 vector<coord> WBishop:: validSpots(Chess* c)
 {
-	if(!m_level)
-		return Bishop::validSpots(c);
+  return Bishop::validSpots(c);
 }

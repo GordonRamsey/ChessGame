@@ -7,7 +7,7 @@ class FRook : public Rook
     FRook(int x, int y, int it);
     ~FRook();
     string Move(coord newpos);
-    vector<coord> validSpots(Chess* c);		
+    vector<coord> validSpots(Chess* c);	
     string processClicks(vector<coord> clickedOn, Chess* c)
       { return "DEFAULT"; }
 };

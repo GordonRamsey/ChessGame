@@ -893,6 +893,11 @@ void pieceSpawn(string name, int x, int y, int team)
     newPiece = new PQueen(coordx, coordy, c->it);
     newPiece->setClip(CLIP_QUEEN);
   }
+  else if(name == "Tunnel")
+  {
+    c->terrain[coordx][coordy] = 1;
+    c->it--;
+  }
   else if(name == "")
   {
 
