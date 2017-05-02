@@ -65,6 +65,17 @@ vector<coord> NKing::validSLoc(Chess* c)
   if(spot.x < 14 && spot.y < 14 && (c->validspots[spot.x][spot.y] != 0))
     validSpot.push_back(spot);
 
+  for(int i=0;i<14;i++)
+    for(int j=0;j<14;j++)
+      if(c->board[i][j]->debug_name == "Nrook")
+	if(c->board[i][j]->isLevel()){
+	  coord dad; dad.x = i; dad.y = j;
+
+
+	}
+
+    
+
 
   return validSpot; 
 }
@@ -111,7 +122,7 @@ string NKing::processClicks(vector<coord> clickedOn, Chess* c)
     }
   }
   ss.str(""); 
-  ss << "MOVE " << getNum() << " " << getPos().x << getPos().y << " ~"; 
+  ss << "MOVE " << getNum() << " " << getPos().x << " " <<  getPos().y << " ~"; 
   for(int i = 0; i < count; ++i){
     ss << "PLAC Npawn " << " " << clickedOn[i].x/64 << " " << clickedOn[i].y/64 << " " << getTeam()-1 << " ~"; 
   }
