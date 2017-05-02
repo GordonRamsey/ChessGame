@@ -44,12 +44,12 @@ class Button
 {
   private:
 
-    int dfclip =-1;
     int faction = -1;
     SDL_Rect box;
 
   public:
 
+    int dfclip =-1;
     Button(int x, int y, int w, int h, int passedClip);
     int menuClipNum;
     SDL_Rect* menuClip;
@@ -60,6 +60,7 @@ class Button
     bool handle_button_events();
     bool active = false;
     void set_clicked(int &clicked, int click);
+    void set_button_dfclip(int x);
 };
 
 void set_button_clips()
@@ -223,7 +224,7 @@ bool load_menu_files()
   menu = load_menu_image("Graphic_Assets/Menu.png");
   if(menu == NULL)
     return false;
-  
+
   menuBg = load_menu_image("Graphic_Assets/fourPlayerBoard64.png");
   if(menuBg == NULL)
     return false;
@@ -267,6 +268,11 @@ void Button::set_button_clip(int x)
   menuClipNum = x;
 }
 
+void Button::set_button_dfclip(int x)
+{
+  dfclip = x;
+}
+
 void Button::set_clicked(int &clicked, int click)
 {
   clicked = click;
@@ -274,7 +280,7 @@ void Button::set_clicked(int &clicked, int click)
 
 void Button::show_button()
 {
-//  apply_menu_surface(box.x, box.y, menu, screen, menuClip);
+  //  apply_menu_surface(box.x, box.y, menu, screen, menuClip);
 }
 
 int Button::get_button_clip()
@@ -361,32 +367,46 @@ int Menu::run_menu(SDL_Surface *screen)
 	  break;
 	}
 
-	  for(int j=0;j<6;j++){
-	    if(buttons[j]->get_button_clip() == 2)
-	      break;
-	    if((buttons[j]->get_button_clip() != clicked) and ((buttons[j]->get_button_clip()-2)%3 == 0))
-	      buttons[j]->set_button_clip(j*3);
-	  }
+	for(int j=0;j<6;j++){
+	  if(buttons[j]->get_button_clip() == 2)
+	    break;
+	  if((buttons[j]->get_button_clip() != clicked) and ((buttons[j]->get_button_clip()-2)%3 == 0))
+	    buttons[j]->set_button_clip(j*3);
 	}
+      }
 
       if(menuEvent.type == SDL_QUIT){
 	runMenu = false;
       }
 
       if(submitButton->get_button_clip() == LOCK_SUBMIT){
-	if(wurmButton->get_button_clip() == LOCK_WURM)
-	  return_var =  1;
-	else if(portalButton->get_button_clip() == LOCK_PORTAL)
-	  return_var = 2;
-	else if(fighterButton->get_button_clip() == LOCK_FIGHTER)
-	  return_var = 3;
-	else if(golemButton->get_button_clip() == LOCK_GOLEM)
-	  return_var = 4;
-	else if(necroButton->get_button_clip() == LOCK_NECRO)
-	  return_var = 5;
-	else
-	  return_var = -1;
-	runMenu = false;
+
+	wc = wurmButton->get_button_clip();
+	pc = portalButton->get_button_clip();
+	fc = fighterButton->get_button_clip();
+	gc = golemButton->get_button_clip();
+	nc = necroButton->get_button_clip();
+
+	if(wc == LOCK_WURM or pc == LOCK_PORTAL or fc == LOCK_FIGHTER or gc == LOCK_GOLEM or nc == LOCK_NECRO){
+	  if(wc == LOCK_WURM)
+	    return_var =  1;
+	  else if(pc == LOCK_PORTAL)
+	    return_var = 2;
+	  else if(fc == LOCK_FIGHTER)
+	    return_var = 3;
+	  else if(gc == LOCK_GOLEM)
+	    return_var = 4;
+	  else if(nc == LOCK_NECRO)
+	    return_var = 5;
+	  else
+	    return_var = -1;
+	  runMenu = false;
+	}
+	else{
+	  submitButton->set_button_clip(STD_SUBMIT);
+	  submitButton->set_button_dfclip(STD_SUBMIT);
+	}
+
       }
     }
     SDL_Flip(screen);
