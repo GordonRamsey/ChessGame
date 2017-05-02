@@ -15,7 +15,6 @@ string NKnight::Move(coord newpos)
     if(priv_c->board[newpos.x][newpos.y] != NULL)
     {
       soul = priv_c->board[newpos.x][newpos.y]->debug_name;
-      setClip(getClip()+12);
     }
   }
     
@@ -43,7 +42,6 @@ string NKnight::processClicks(vector<coord> clickedOn, Chess* c)
     return "ERROR";
 
   stringstream ss;
-  ss << "MOVE " << getNum() << " " << getPos().x << " " << getPos().y << " ~";
 
   ss << "REMV " << c->board[x][y]->getNum() << " ~";
 
@@ -66,8 +64,6 @@ string NKnight::processClicks(vector<coord> clickedOn, Chess* c)
     ss << "PLAC Nqueen " << x << " " << y << " " << getTeam()-1 << " ~";
 
   soul = "";
-  setClip(15);
-
 
   return ss.str();
 }
