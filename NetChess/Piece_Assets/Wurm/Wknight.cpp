@@ -293,7 +293,7 @@ vector<coord> WKnight::validSpots(Chess* c)
   seek = getSpot();
   seek.x-=2;
   seek.y-=1;
-  if(seek.x <= 0 && seek.y <= 0)
+  if(seek.x >= 0 && seek.y >= 0)
   {
     if(c->validspots[seek.x][seek.y] != 0)
     {
