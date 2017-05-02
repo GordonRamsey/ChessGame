@@ -33,7 +33,7 @@ void WQueen::wurmSpots(vector<coord> &spots, Chess* c)
 {
   for(int i=0;i<14;i++)
     for(int j=0;j<14;j++){
-      if(c->terrain[i][j] == 1)
+      if(c->terrain[i][j] == 1 && c->board[i][j] == NULL)
       {
 
 	Piece* dummy = new Queen(i*64,j*64,getNum());
