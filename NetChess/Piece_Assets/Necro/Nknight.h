@@ -5,6 +5,8 @@
 class NKnight : public Knight
 {
   private:
+    string soul;
+    Chess* priv_c;
   public:
     NKnight(int x, int y, int it);
     ~NKnight();

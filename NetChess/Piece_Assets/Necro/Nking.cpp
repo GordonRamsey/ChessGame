@@ -18,6 +18,7 @@ vector<coord> NKing::validSpots(Chess* c)
 {
   return King::validSpots(c);
 }
+
 vector<coord> NKing::validSLoc(Chess* c)
 {
   coord seek; 
@@ -75,44 +76,45 @@ vector<coord> NKing::validSLoc(Chess* c)
 
   for(int i=0;i<14;i++)
     for(int j=0;j<14;j++)
-      if(c->board[i][j]->debug_name == "Nrook")
-	if(c->board[i][j]->isLevel()){
-	  coord dad; dad.x = i; dad.y = j;
-	  dad.x++;
-	  validSpot.push_back(dad);
+      if(c->board[i][j] != NULL)
+	if(c->board[i][j]->debug_name == "Nrook")
+	  if(c->board[i][j]->isLevel()){
+	    coord dad; dad.x = i; dad.y = j;
+	    dad.x++;
+	    validSpot.push_back(dad);
 
-	  dad.x = i; dad.y = j;
-	  dad.y++;
-	  validSpot.push_back(dad);
+	    dad.x = i; dad.y = j;
+	    dad.y++;
+	    validSpot.push_back(dad);
 
-	  dad.x = i; dad.y = j;
-	  dad.x--;
-	  validSpot.push_back(dad);
+	    dad.x = i; dad.y = j;
+	    dad.x--;
+	    validSpot.push_back(dad);
 
-	  dad.x = i; dad.y = j;
-	  dad.y--;
-	  validSpot.push_back(dad);
+	    dad.x = i; dad.y = j;
+	    dad.y--;
+	    validSpot.push_back(dad);
 
-	  dad.x = i; dad.y = j;
-	  dad.y++;
-	  dad.x++;
-	  validSpot.push_back(dad);
+	    dad.x = i; dad.y = j;
+	    dad.y++;
+	    dad.x++;
+	    validSpot.push_back(dad);
 
-	  dad.x = i; dad.y = j;
-	  dad.y++;
-	  dad.x--;
-	  validSpot.push_back(dad);
+	    dad.x = i; dad.y = j;
+	    dad.y++;
+	    dad.x--;
+	    validSpot.push_back(dad);
 
-	  dad.x = i; dad.y = j;
-	  dad.y--;
-	  dad.x--;
-	  validSpot.push_back(dad);
+	    dad.x = i; dad.y = j;
+	    dad.y--;
+	    dad.x--;
+	    validSpot.push_back(dad);
 
-	  dad.x = i; dad.y = j;
-	  dad.y--;
-	  dad.x++;
-	  validSpot.push_back(dad);
-	}
+	    dad.x = i; dad.y = j;
+	    dad.y--;
+	    dad.x++;
+	    validSpot.push_back(dad);
+	  }
 
 
   return validSpot; 
