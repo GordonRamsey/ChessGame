@@ -82,22 +82,27 @@ bool NBishop::checkSpawn(coord spot, Chess* c)
 string NBishop::processClicks(vector<coord> clickedOn, Chess* c)
 {
   stringstream ss; 
-  if(clickedOn.size() != 2)
+  if(clickedOn.size() != 3)
     return "ERROR"; 
 
-  if(c->board[clickedOn[0].x/64][clickedOn[0].y/64]->getTeam() == getTeam())
+
+  if(c->board[clickedOn[0].x/64][clickedOn[0].y/64] == NULL)
+    return "ERROR";
+  
+  if(c->board[clickedOn[0].x/64][clickedOn[0].y/64]->getTeam() != getTeam())
+    return "ERROR";
+  
+  if(c->board[clickedOn[1].x/64][clickedOn[1].y/64]->getTeam() == getTeam())
   {
     coord spotcheck;
-    spotcheck.x = clickedOn[1].x/64;
-    spotcheck.y = clickedOn[1].y/64;
+    spotcheck.x = clickedOn[2].x/64;
+    spotcheck.y = clickedOn[2].y/64;
     
     if(!checkSpawn(spotcheck, c))
       return "ERROR";
     
     ss.str(""); 
-    string type = c->board[clickedOn[0].x/64][clickedOn[0].y/64]->debug_name;
-    if(type[0] != 'N')
-      return "ERROR";
+    string type = c->board[clickedOn[1].x/64][clickedOn[1].y/64]->debug_name;
 
     if(type.find("king") != string::npos)
       return "ERROR";
@@ -105,7 +110,9 @@ string NBishop::processClicks(vector<coord> clickedOn, Chess* c)
     if(type.find("queen") != string::npos)
       return "ERROR";
     
+    
     ss << "MOVE " << getNum() << " " << getPos().x << " " << getPos().y << " ~";
+    ss << "REMV " << c->board[clickedOn[0].x/64][clickedOn[0].y/64]->getNum() << " ~";
     ss << "PLAC " << type << " " << spotcheck.x << " " << spotcheck.y << " " << getTeam()-1 << " ~"; 
     return ss.str(); 
   }

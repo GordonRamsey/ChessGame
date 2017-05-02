@@ -127,7 +127,7 @@ void Piece::levelUp()
   }
   else if(debug_name == "Nbishop")
   {
-    clicks = 2;
+    clicks = 3;
   }
   else if(debug_name == "Gking")
   {
