@@ -18,7 +18,6 @@ vector<coord> NKing::validSpots(Chess* c)
 {
   return King::validSpots(c);
 }
-
 vector<coord> NKing::validSLoc(Chess* c)
 {
     coord seek; 

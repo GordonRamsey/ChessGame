@@ -339,6 +339,7 @@ int Menu::run_menu(SDL_Surface *screen)
 
   bool runMenu = true;
   int return_var = -1;
+  int wc = -1, pc = -1, fc = -1, gc = -1, nc = -1;
 
   Button *buttons [] = { submitButton, necroButton, wurmButton, portalButton, fighterButton, golemButton };
 
