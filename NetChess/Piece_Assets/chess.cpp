@@ -56,11 +56,14 @@ bool Chess::isCapturable(coord a_spot, coord d_spot, string &capicing)
 
     if(defending->m_level) //If it's leveled check if attacker is diagonal to it
     {
-        if(((a_spot.x < d_spot.x) and (a_spot.y < d_spot.y)) or
-           ((a_spot.x < d_spot.x) and (a_spot.y > d_spot.y)) or
-           ((a_spot.x > d_spot.x) and (a_spot.y > d_spot.y)) or
-           ((a_spot.x > d_spot.x) and (a_spot.y < d_spot.y)))
-           return false;
+        if(attacking->debug_name.find("knight") == string::npos)
+        {
+            if(((a_spot.x < d_spot.x) and (a_spot.y < d_spot.y)) or
+                ((a_spot.x < d_spot.x) and (a_spot.y > d_spot.y)) or
+                ((a_spot.x > d_spot.x) and (a_spot.y > d_spot.y)) or
+                ((a_spot.x > d_spot.x) and (a_spot.y < d_spot.y)))
+                    return false;
+        }
     }
   }
 
@@ -83,7 +86,13 @@ bool Chess::isCapturable(coord a_spot, coord d_spot, string &capicing)
     }
   }
 
-  //Run checks o3o
+  //Run King checks o3o
+  if(defending->debug_name.find("king") != string::npos)
+  {
+    stringstream ss;
+    ss << "DEAD " << defending->getTeam() << " ~";
+    capicing = ss.str();
+  }
 
   //Cannot capture walls!
   //if(defending->debug_name == "wall")

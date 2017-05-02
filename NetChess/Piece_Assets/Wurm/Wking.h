@@ -8,6 +8,7 @@ class WKing : public King
 	public:
 		WKing(int x, int y, int it);
 		~WKing();
+		string createCrater(coord spot, Chess* c);//going to setup similar to checkAdjacent from WKnight
 		string Move(coord newpos);
 		vector<coord> validSpots(Chess* c);
 };

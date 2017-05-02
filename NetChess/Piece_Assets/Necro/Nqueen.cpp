@@ -19,7 +19,7 @@ vector<coord> NQueen::validSpots(Chess* c)
   return Queen::validSpots(c);
 }
 
-string NQueen::processCliUcks(vector<coord> clickedOn, Chess* c)
+string NQueen::processClicks(vector<coord> clickedOn, Chess* c)
 {
     stringstream ss; 
     if(clickedOn.size() != 1)

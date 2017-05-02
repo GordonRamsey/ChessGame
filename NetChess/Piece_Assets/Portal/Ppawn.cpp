@@ -117,22 +117,22 @@ vector<coord> PPawn::validSpots(Chess* c)
   {
     if(dir == 'N'){
       seek.y -= 2;
-      if(c->board[seek.x][seek.y] == NULL && c->board[seek.x][seek.y-1] == NULL)
+      if(c->board[seek.x][seek.y] == NULL && c->board[seek.x][seek.y+1] == NULL)
 	spots.push_back(seek);
     }
     if(dir == 'S'){
       seek.y += 2;
-      if(c->board[seek.x][seek.y] == NULL && c->board[seek.x][seek.y+1] == NULL)
+      if(c->board[seek.x][seek.y] == NULL && c->board[seek.x][seek.y-1] == NULL)
 	spots.push_back(seek);
     }
     if(dir == 'E'){
       seek.x += 2;
-      if(c->board[seek.x][seek.y] == NULL && c->board[seek.x+1][seek.y] == NULL)
+      if(c->board[seek.x][seek.y] == NULL && c->board[seek.x-1][seek.y] == NULL)
 	spots.push_back(seek);
     }
     if(dir == 'W'){
       seek.x -= 2;
-      if(c->board[seek.x][seek.y] == NULL && c->board[seek.x-1][seek.y] == NULL)
+      if(c->board[seek.x][seek.y] == NULL && c->board[seek.x+1][seek.y] == NULL)
 	spots.push_back(seek);
     }
   }

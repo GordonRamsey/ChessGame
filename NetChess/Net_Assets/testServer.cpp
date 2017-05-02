@@ -7,6 +7,8 @@ struct player{
   Socket sock;
   int number;
   int team = -1;
+  bool alive = true;
+  bool connected = false;
 };
 
 Socket listener;
@@ -15,7 +17,9 @@ vector<player> players;
 stringstream ss;
 
 bool game_start = false;
+int faction_confirm = 0;
 int current_player = 1;
+int alive_players = -1;
 
 void startGame(SocketSet socs)
 {
@@ -23,8 +27,13 @@ void startGame(SocketSet socs)
   cerr << "[CURRENT PLAYER] = " << current_player << endl;
   socs.wait(2);
   game_start = true;
+  alive_players = 4;
   ss.str("");
-  ss << "STRT ~";
+  ss << "STRT ";
+  for(int i=0;i<4;i++){
+    ss << players[i].team << " ";  
+  }
+  ss << "~";
   for(unsigned int i=0;i<sockets.size();i++){
     sockets[i].writeString(ss.str());
   }
@@ -33,8 +42,14 @@ void startGame(SocketSet socs)
 void nextPlayer()
 {
   current_player++;
-  if(current_player == 5)
+  
+  if(current_player > players.size())
     current_player = 1;
+  
+  if(players[current_player-1].alive == false){  
+    cerr << "Player " << current_player << " is ded" << endl;
+    nextPlayer();
+  }
 
   cerr << "[CURRENT PLAYER] = " << current_player << endl;
   ss.str("");
@@ -52,6 +67,20 @@ int main(int argc, char* argv[])
   listener.joinGroup(&socketSet);
   string msg = "";
   cerr << "Server started, your IP information is:" << endl << listener.toString() << endl;
+  
+  //Init player slots
+  player newplayer;
+  player newplayer2;
+  player newplayer3;
+  player newplayer4;
+  newplayer.number = 1;
+  players.push_back(newplayer);
+  newplayer2.number = 2;
+  players.push_back(newplayer2);
+  newplayer3.number = 3;
+  players.push_back(newplayer3);
+  newplayer4.number = 4;
+  players.push_back(newplayer4);
 
   while(!listener.isClosed()){
     //XXX Dont know why this is here
@@ -64,19 +93,21 @@ int main(int argc, char* argv[])
       cout << sock.toString() << " has joined\n";
       sockets.push_back(sock);
       
+      for(int i=0;i<players.size();i++){
+	if(players[i].connected == false)
+	{  
+	  cerr << "checking slot:" << i << endl;
+	  player_num = players[i].number;
+          players[i].sock = sock;
+	  players[i].connected = true;
+	  break;
+	}
+      }
       ss.str("");
       ss << "REDY " << player_num << " ~";
       cerr << "Sending new Client player number:" << player_num << endl;
       sock.writeString(ss.str());
 
-      player newplayer;
-      newplayer.number = player_num;
-      newplayer.sock = sock;
-      players.push_back(newplayer);
-
-      player_num++;
-      if(player_num == 5)
-	startGame(socketSet);
     }
     else //Messages from client
     {
@@ -85,8 +116,8 @@ int main(int argc, char* argv[])
 	  int bytes = sockets[i].readString(msg,255);
 	  if(!sockets[i].isClosed())
 	  {
-	    cerr << msg << "\n";
-	    
+	    cerr << "[MESSAGE]" << msg << "\n";
+
 	    //Snip large messages so each command can be processed individually
 	    //Necessary incase of HOLD clobbering
 	    vector<string> snipped;
@@ -104,7 +135,41 @@ int main(int argc, char* argv[])
 	      msg = snipped[s];
 	      cerr << "Processing message:" << msg << endl;
 
-	      if(strncmp(msg.c_str(),"MOVE",4) == 0)
+	      if(strncmp(msg.c_str(),"FACT",4) == 0)
+	      {
+		cerr << "FACT command recognized" << endl;
+		string s_fact = "";
+		s_fact += msg[5];
+		int fact = atoi(s_fact.c_str());
+		bool good = true;
+		int index;
+		//check if team already in use
+		for(int j=0;j<players.size();j++){
+		  if(players[j].sock == sockets[i])
+		  {  
+		    index = j;
+		  }
+		  
+		  if(players[j].team == fact){
+		    cerr << "Faction " << fact << " already in use" << endl;
+		    sockets[i].writeString("BADD");
+		    good = false;
+		    break;
+		  }
+		}
+		if(good)//If open, assign to player
+		{
+		  players[index].team = fact;
+		  sockets[i].writeString("GOOD");
+		  cerr << "Player " << players[index].number << " faction set to " << fact << endl;
+		  faction_confirm++;
+		  if(faction_confirm == 4)
+		    startGame(socketSet);
+
+		}
+
+	      }//REDY state
+	      else if(strncmp(msg.c_str(),"MOVE",4) == 0)
 	      {
 		bool success = false;
 		cerr << "MOVE command recognized" << endl;
@@ -197,7 +262,51 @@ int main(int argc, char* argv[])
 		cerr << "CLIP Command recognized" << endl;
 		for(int j=0;j<sockets.size(); ++j)
 		  sockets[j].writeString(msg);
-	      }else //Anything that isnt a command
+	      }
+	      else if(strncmp(msg.c_str(), "DEAD", 4) == 0)
+	      {
+		cerr << "DEAD Command recognized" << endl;
+		for(int j=0;j<sockets.size(); ++j)
+		  sockets[j].writeString(msg);
+
+		string s_num = "";
+		s_num += msg[5];
+		int num = atoi(s_num.c_str());
+		cout << "Player:" << s_num << " is DEAD" << endl;
+
+		//remove player turn
+		for(int k=0;k<players.size();k++){
+		  if(players[k].number == num){
+		    players[k].alive = false;
+		    alive_players--;
+		    if(current_player == num)
+		      nextPlayer();
+		    break;
+		  }
+		}
+		//Debug
+		for(int k=0;k<players.size();k++){
+		  cerr << players[k].number << "." << players[k].alive << endl;
+		}
+
+		//check win
+		if(alive_players == 1)
+		{
+		  int winner_num;
+		  for(int k=0;k<players.size();k++){
+		    if(players[k].alive == true)
+		      winner_num = players[k].number;
+		  }
+		  ss.str("");
+		  ss << "WINN " << winner_num << " ~";
+		  for(int j=0;j<sockets.size(); ++j)
+		    sockets[j].writeString(ss.str());
+
+		  cout << "Player " << winner_num  << " won, thanks for playing!" << endl;
+		  exit(0);
+		}
+	      } 
+	      else //Anything that isnt a command
 	      {
 		cerr << "Sending unknown message to clients:" << msg << endl;
 		for(int j=0;j<sockets.size(); ++j){
@@ -207,12 +316,63 @@ int main(int argc, char* argv[])
 	      }
 	    }//for each snipped element of msg
 	  }//if- socket is not closed
-	  else{
+	  else{//If there is no connection with the socket
 	    cout << "Socket has been closed" << endl;
 	    Socket sock = sockets[i];
 	    sockets[i] = sockets[sockets.size()-1];
 	    sockets.pop_back();
 	    cout << "Socket:" << sock.toString() << " removed." << endl;
+	    for(unsigned int i=0;i<players.size();i++){	
+	      if(players[i].sock == sock){
+		if(game_start){
+		  stringstream ss;
+		  ss << "DEAD " << players[i].number << " ~";
+
+		  for(int j=0;j<sockets.size(); ++j)
+		    sockets[j].writeString(ss.str());
+
+		  cout << "Player:" << players[i].number << " disconnected and is DEAD" << endl;
+
+		  //remove player turn
+		  int num = players[i].number;
+		  for(int k=0;k<players.size();k++){
+		    if(players[k].number == num && players[k].alive == true){
+		     alive_players--;
+		      players[k].alive = false;
+		      if(current_player == num)
+			nextPlayer();
+		      break;
+		    }
+		  }
+		  //check win
+		  if(alive_players == 1)
+		  {
+		    int winner_num;
+		    for(int k=0;k<players.size();k++){
+		      if(players[k].alive == true)
+			winner_num = players[k].number;
+		    }
+		    ss.str("");
+		    ss <<  "WINN " << winner_num << " ~";
+		    for(int j=0;j<sockets.size(); ++j)
+		      sockets[j].writeString(ss.str());
+
+		    cout << "Player " << winner_num  << " won, thanks for playing!" << endl;
+		    exit(0);
+		  } 
+		  break;
+		}//if game start
+		else
+		{
+		  players[i].connected = false;
+		  players[i].team = -1;
+		  faction_confirm--;
+		  cout << "Removed prospective player from queue" << endl;
+		  cout << "Num players in queue:" << player_num << endl;
+		  break;
+		}
+	      }//if player socket found
+	    }//for all players
 
 	  }//else - if socket is closed
 	}//if- socket has event

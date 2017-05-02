@@ -99,9 +99,14 @@ string Piece::getCaptCmd(coord spot)
 
 void Piece::levelUp() 
 { 
-  if(!isLevel() && debug_name.find("pawn") == string::npos)
-    setClip(getClip()+12);
+  if(m_level)
+    return;
+  
   m_level = true;
+  
+  if(debug_name.find("pawn") == string::npos)
+    setClip(getClip()+12);
+  
   cerr << "Level up piece name:" << debug_name << endl;
   if(debug_name == "Fking")
   { 
@@ -127,6 +132,18 @@ void Piece::levelUp()
   else if(debug_name == "Gking")
   {
     clicks = 1;
+  }
+  else if(debug_name == "Pking")
+  {
+    clicks = 2;
+  }
+  else if(debug_name == "Pqueen")
+  {
+    clicks = 2;
+  }
+  else if(debug_name == "Pknight")
+  {
+    clicks = 2;
   }
 }
 void Piece::Rock()
