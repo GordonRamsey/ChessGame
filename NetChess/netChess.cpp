@@ -260,7 +260,7 @@ bool load_files()
   
   portalSheet = load_image("Graphic_Assets/portalPieces.png");
   fighterSheet = load_image("Graphic_Assets/Fighter-Pieces.png");
-  golemSheet = load_image("Graphic_Assets/basicPieces642.png");
+  golemSheet = load_image("Graphic_Assets/Golem-Pieces.png");
   necroSheet = load_image("Graphic_Assets/basicPieces643.png");
   wurmSheet = load_image("Graphic_Assets/wurmSheet.png");
   

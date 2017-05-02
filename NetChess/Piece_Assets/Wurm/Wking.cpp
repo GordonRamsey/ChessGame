@@ -36,42 +36,42 @@ string WKing::createCrater(coord spot, Chess* c)
   stringstream ss;
 
   //Check North:
-  if(c->board[spot.x][spot.y+1] != NULL && y < 14)
+  if(c->board[spot.x][spot.y+1] != NULL && spot.y < 14)
   {   
     ss << "REMV " << c->board[spot.x][spot.y+1]->getNum() << " ~";
     ss << "PLAC Tunnel " << getSpot().x << " " << getSpot().y+1 << " -1 ~";	
   }
-  if(c->board[spot.x][spot.y-1] != NULL && y > -1)
+  if(c->board[spot.x][spot.y-1] != NULL && spot.y > -1)
   {
     ss << "REMV " << c->board[spot.x][spot.y-1]->getNum() << " ~";
     ss << "PLAC Tunnel " << getSpot().x << " " << getSpot().y-1 << " -1 ~";	
   }
-  if(c->board[spot.x+1][spot.y] != NULL && x < 14)
+  if(c->board[spot.x+1][spot.y] != NULL && spot.x < 14)
   {
     ss << "REMV " << c->board[spot.x+1][spot.y]->getNum() << " ~";
     ss << "PLAC Tunnel " << getSpot().x+1 << " " << getSpot().y << " -1 ~";	
   }
-  if(c->board[spot.x+1][spot.y+1] != NULL && x < 14 && y < 14)
+  if(c->board[spot.x+1][spot.y+1] != NULL && spot.x < 14 && spot.y < 14)
   {
     ss << "REMV " << c->board[spot.x+1][spot.y+1]->getNum() << " ~";
     ss << "PLAC Tunnel " << getSpot().x+1 << " " << getSpot().y+1 << " -1 ~";	
   }
-  if(c->board[spot.x+1][spot.y-1] != NULL && x < 14 && y > -1)
+  if(c->board[spot.x+1][spot.y-1] != NULL && spot.x < 14 && spot.y > -1)
   {
     ss << "REMV " << c->board[spot.x+1][spot.y-1]->getNum() << " ~";
     ss << "PLAC Tunnel " << getSpot().x+1 << " " << getSpot().y-1 << " -1 ~";	
   }
-  if(c->board[spot.x-1][spot.y] != NULL && x > -1)
+  if(c->board[spot.x-1][spot.y] != NULL && spot.x > -1)
   {
     ss << "REMV " << c->board[spot.x-1][spot.y]->getNum() << " ~";
     ss << "PLAC Tunnel " << getSpot().x-1 << " " << getSpot().y << " -1 ~";	
   }
-  if(c->board[spot.x-1][spot.y+1] != NULL && x > -1 && y < 14)
+  if(c->board[spot.x-1][spot.y+1] != NULL && spot.x > -1 && spot.y < 14)
   {
     ss << "REMV " << c->board[spot.x-1][spot.y+1]->getNum() << " ~";
     ss << "PLAC Tunnel " << getSpot().x-1 << " " << getSpot().y+1 << " -1 ~";	
   }
-  if(c->board[spot.x-1][spot.y-1] != NULL && x > -1 && y > -1)
+  if(c->board[spot.x-1][spot.y-1] != NULL && spot.x > -1 && spot.y > -1)
   {
     ss << "REMV " << c->board[spot.x-1][spot.y-1]->getNum() << " ~";
     ss << "PLAC Tunnel " << getSpot().x-1 << " " << getSpot().y-1 << " -1 ~";

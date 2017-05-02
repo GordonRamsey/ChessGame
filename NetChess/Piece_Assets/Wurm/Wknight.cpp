@@ -18,56 +18,61 @@ string WKnight::checkAdjacent(coord spot, Chess* c)
   //Check North
   coord tmp = spot; ss.str("");
   tmp.y--;
-  if(c->board[tmp.x][tmp.y] != NULL)
-  {
-    //Check behind it
-    tmp.y--;
-    if(c->isValid(tmp.x,tmp.y))
-      if(c->board[tmp.x][tmp.y] == NULL){
-	ss << "SHOV " << c->board[spot.x][spot.y]->getNum() << " " << tmp.x << " " << tmp.y << " ~";
-	result.str(result.str() + ss.str());
-      }
-  }
+  if(c->isValid(tmp.x,tmp.y))
+    if(c->board[tmp.x][tmp.y] != NULL)
+    {
+      //Check behind it
+      tmp.y--;
+      if(c->isValid(tmp.x,tmp.y))
+	if(c->board[tmp.x][tmp.y] == NULL){
+	  ss << "SHOV " << c->board[tmp.x][tmp.y+1]->getNum() << " " << tmp.x << " " << tmp.y << " ~";
+	  result.str(result.str() + ss.str());
+	}
+    }
 
   //Check South
-   tmp = spot; ss.str("");
-   tmp.y++;
-  if(c->board[tmp.x][tmp.y] != NULL)
-  {
-    //Check behind it
-    tmp.y++;
-    if(c->isValid(tmp.x,tmp.y))
-      if(c->board[tmp.x][tmp.y] == NULL){
-	ss << "SHOV " << c->board[spot.x][spot.y]->getNum() << " " << tmp.x << " " << tmp.y << " ~";
-	result.str(result.str() + ss.str());
-      }
-  }
+  tmp = spot; ss.str("");
+  tmp.y++;
+  if(c->isValid(tmp.x,tmp.y))
+    if(c->board[tmp.x][tmp.y] != NULL)
+    {
+      //Check behind it
+      tmp.y++;
+      if(c->isValid(tmp.x,tmp.y))
+	if(c->board[tmp.x][tmp.y] == NULL){
+	  ss << "SHOV " << c->board[tmp.x][tmp.y-1]->getNum() << " " << tmp.x << " " << tmp.y << " ~";
+	  result.str(result.str() + ss.str());
+	}
+    }
+
   //Check East
-   tmp = spot; ss.str("");
-   tmp.x++;
-  if(c->board[tmp.x][tmp.y] != NULL)
-  {
-    //Check behind it
-    tmp.x++;
-    if(c->isValid(tmp.x,tmp.y))
-      if(c->board[tmp.x][tmp.y] == NULL){
-	ss << "SHOV " << c->board[spot.x][spot.y]->getNum() << " " << tmp.x << " " << tmp.y << " ~";
-	result.str(result.str() + ss.str());
-      }
-  }
+  tmp = spot; ss.str("");
+  tmp.x++;
+  if(c->isValid(tmp.x,tmp.y))
+    if(c->board[tmp.x][tmp.y] != NULL)
+    {
+      //Check behind it
+      tmp.x++;
+      if(c->isValid(tmp.x,tmp.y))
+	if(c->board[tmp.x][tmp.y] == NULL){
+	  ss << "SHOV " << c->board[tmp.x-1][tmp.y]->getNum() << " " << tmp.x << " " << tmp.y << " ~";
+	  result.str(result.str() + ss.str());
+	}
+    }
   //Check West
-   tmp = spot; ss.str("");
-   tmp.x--;
-  if(c->board[tmp.x][tmp.y] != NULL)
-  {
-    //Check behind it
-    tmp.x--;
-    if(c->isValid(tmp.x,tmp.y))
-      if(c->board[tmp.x][tmp.y] == NULL){
-	ss << "SHOV " << c->board[spot.x][spot.y]->getNum() << " " << tmp.x << " " << tmp.y << " ~";
-	result.str(result.str() + ss.str());
-      }
-  }
+  tmp = spot; ss.str("");
+  tmp.x--;
+  if(c->isValid(tmp.x,tmp.y))
+    if(c->board[tmp.x][tmp.y] != NULL)
+    {
+      //Check behind it
+      tmp.x--;
+      if(c->isValid(tmp.x,tmp.y))
+	if(c->board[tmp.x][tmp.y] == NULL){
+	  ss << "SHOV " << c->board[tmp.x+1][tmp.y]->getNum() << " " << tmp.x << " " << tmp.y << " ~";
+	  result.str(result.str() + ss.str());
+	}
+    }
 
   return result.str();
 
@@ -96,7 +101,7 @@ string WKnight::Move(coord newpos)
 {
   if(m_level)
   {
-    
+
     string result = checkAdjacent(newpos,priv_c);
     if(result == "")
       return "DEFAULT";
@@ -309,8 +314,8 @@ vector<coord> WKnight::validSpots(Chess* c)
     }
     else
     {
-	if(c->terrain[seek.x][seek.y] == 1)
-	  wurmSpots(spots,c);
+      if(c->terrain[seek.x][seek.y] == 1)
+	wurmSpots(spots,c);
       spots.push_back(seek);
     }
   }
