@@ -117,9 +117,6 @@ vector<coord> WKnight::validSpots(Chess* c)
 {
   priv_c = c;
 
-  if(!m_level)
-    return Knight::validSpots(c);
-
   coord seek;
   vector<coord> spots;
   stringstream ss;

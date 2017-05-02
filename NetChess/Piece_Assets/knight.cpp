@@ -28,7 +28,7 @@ vector<coord> Knight::validSpots(Chess* c)
   while(true){//Checking untill 1. hit board limit 2. hit a piece
     seek.y-=2;
     seek.x-=1;
-    if(seek.y < 0 or seek.x > 13)//Out of bounds
+    if(seek.y < 0 or seek.x < 0)//Out of bounds
       break;
     if(c->validspots[seek.x][seek.y] == 0)//valid spot
       break;
@@ -100,7 +100,7 @@ vector<coord> Knight::validSpots(Chess* c)
   while(true){//Checking untill 1. hit board limit 2. hit a piece
     seek.x+=2;
     seek.y+=1;
-    if(seek.y < 0 or seek.x > 13)//Out of bounds
+    if(seek.y > 13 or seek.x > 13)//Out of bounds
       break;
     if(c->validspots[seek.x][seek.y] == 0)//valid spot
       break;
@@ -124,7 +124,7 @@ vector<coord> Knight::validSpots(Chess* c)
   while(true){//Checking untill 1. hit board limit 2. hit a piece
     seek.y+=2;
     seek.x+=1;
-    if(seek.y < 0 or seek.x > 13)//Out of bounds
+    if(seek.y > 13 or seek.x > 13)//Out of bounds
       break;
     if(c->validspots[seek.x][seek.y] == 0)//valid spot
       break;
@@ -148,7 +148,7 @@ vector<coord> Knight::validSpots(Chess* c)
   while(true){//Checking untill 1. hit board limit 2. hit a piece
     seek.y+=2;
     seek.x-=1;
-    if(seek.y < 0 or seek.x > 13)//Out of bounds
+    if(seek.y > 13 or seek.x < 0)//Out of bounds
       break;
     if(c->validspots[seek.x][seek.y] == 0)//valid spot
       break;
@@ -172,7 +172,7 @@ vector<coord> Knight::validSpots(Chess* c)
   while(true){//Checking untill 1. hit board limit 2. hit a piece
     seek.x-=2;
     seek.y-=1;
-    if(seek.y < 0 or seek.x > 13)//Out of bounds
+    if(seek.y < 0 or seek.x < 0)//Out of bounds
       break;
     if(c->validspots[seek.x][seek.y] == 0)//valid spot
       break;
@@ -196,7 +196,7 @@ vector<coord> Knight::validSpots(Chess* c)
   while(true){//Checking untill 1. hit board limit 2. hit a piece
     seek.x-=2;
     seek.y+=1;
-    if(seek.y < 0 or seek.x > 13)//Out of bounds
+    if(seek.y > 13 or seek.x < 0)//Out of bounds
       break;
     if(c->validspots[seek.x][seek.y] == 0)//valid spot
       break;
