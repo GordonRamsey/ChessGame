@@ -1485,6 +1485,7 @@ int main ( int argc, char* argv[] )
 	    clicked_spots.clear();
 	    click_mode = false;
 	    cerr << "[DEBUG] Click mode exited" << endl;
+	    addChar("Alt mode exit");
 	    continue;
 	  }
 	  else if(click_mode)//If we are clicking for an ability
