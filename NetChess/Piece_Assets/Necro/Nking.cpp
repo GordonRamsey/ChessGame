@@ -27,43 +27,51 @@ vector<coord> NKing::validSLoc(Chess* c)
   //up
   spot.x = seek.x; 
   spot.y = seek.y-1; 
-  if((spot.y >= 0) && (c->validspots[spot.x][spot.y] != 0))
-    validSpot.push_back(spot); 
+  if((spot.y >= 0)) 
+    if(c->validspots[spot.x][spot.y] != 0)
+      validSpot.push_back(spot); 
   //down
   spot.x = seek.x; 
   spot.y = seek.y+1; 
-  if((spot.y < 14) && (c->validspots[spot.x][spot.y] != 0))
-    validSpot.push_back(spot);
+  if((spot.y < 14)) 
+    if(c->validspots[spot.x][spot.y] != 0)
+      validSpot.push_back(spot);
   //left
   spot.x = seek.x-1; 
   spot.y = seek.y; 
-  if((spot.x >= 0) && (c->validspots[spot.x][spot.y] != 0))
-    validSpot.push_back(spot);
+  if((spot.x >= 0)) 
+    if(c->validspots[spot.x][spot.y] != 0)
+      validSpot.push_back(spot);
   //right
   spot.x = seek.x+1; 
   spot.y = seek.y; 
-  if((spot.x < 14) && (c->validspots[spot.x][spot.y] != 0))
-    validSpot.push_back(spot);
+  if((spot.x < 14))
+    if(c->validspots[spot.x][spot.y] != 0)
+      validSpot.push_back(spot);
   //top left
   spot.x = seek.x-1; 
   spot.y = seek.y-1; 
-  if(spot.x >= 0 && spot.y >= 0 && (c->validspots[spot.x][spot.y] != 0))
-    validSpot.push_back(spot);   
+  if(spot.x >= 0 && spot.y >= 0)
+    if(c->validspots[spot.x][spot.y] != 0)
+      validSpot.push_back(spot);   
   //top right
   spot.x = seek.x+1; 
   spot.y = seek.y-1; 
-  if(spot.x < 14 && spot.y >= 0 && (c->validspots[spot.x][spot.y] != 0))
-    validSpot.push_back(spot);
+  if(spot.x < 14 && spot.y >= 0)
+    if(c->validspots[spot.x][spot.y] != 0)
+      validSpot.push_back(spot);
   //bottom left
   spot.x = seek.x-1; 
   spot.y = seek.y+1; 
-  if(spot.y < 14 && spot.x >= 0 && (c->validspots[spot.x][spot.y] != 0))
-    validSpot.push_back(spot);
+  if(spot.y < 14 && spot.x >= 0)
+    if(c->validspots[spot.x][spot.y] != 0)
+      validSpot.push_back(spot);
   //bottom right
   spot.x = seek.x+1; 
   spot.y = seek.y+1; 
-  if(spot.x < 14 && spot.y < 14 && (c->validspots[spot.x][spot.y] != 0))
-    validSpot.push_back(spot);
+  if(spot.x < 14 && spot.y < 14)
+    if(c->validspots[spot.x][spot.y] != 0)
+      validSpot.push_back(spot);
 
   for(int i=0;i<14;i++)
     for(int j=0;j<14;j++)
@@ -72,19 +80,19 @@ vector<coord> NKing::validSLoc(Chess* c)
 	  coord dad; dad.x = i; dad.y = j;
 	  dad.x++;
 	  validSpot.push_back(dad);
-	  
+
 	  dad.x = i; dad.y = j;
 	  dad.y++;
 	  validSpot.push_back(dad);
-	  
+
 	  dad.x = i; dad.y = j;
 	  dad.x--;
 	  validSpot.push_back(dad);
-	  
+
 	  dad.x = i; dad.y = j;
 	  dad.y--;
 	  validSpot.push_back(dad);
-	  
+
 	  dad.x = i; dad.y = j;
 	  dad.y++;
 	  dad.x++;
@@ -94,12 +102,12 @@ vector<coord> NKing::validSLoc(Chess* c)
 	  dad.y++;
 	  dad.x--;
 	  validSpot.push_back(dad);
-	  
+
 	  dad.x = i; dad.y = j;
 	  dad.y--;
 	  dad.x--;
 	  validSpot.push_back(dad);
-	  
+
 	  dad.x = i; dad.y = j;
 	  dad.y--;
 	  dad.x++;
