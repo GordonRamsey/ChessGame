@@ -70,11 +70,41 @@ vector<coord> NKing::validSLoc(Chess* c)
       if(c->board[i][j]->debug_name == "Nrook")
 	if(c->board[i][j]->isLevel()){
 	  coord dad; dad.x = i; dad.y = j;
+	  dad.x++;
+	  validSpot.push_back(dad);
+	  
+	  dad.x = i; dad.y = j;
+	  dad.y++;
+	  validSpot.push_back(dad);
+	  
+	  dad.x = i; dad.y = j;
+	  dad.x--;
+	  validSpot.push_back(dad);
+	  
+	  dad.x = i; dad.y = j;
+	  dad.y--;
+	  validSpot.push_back(dad);
+	  
+	  dad.x = i; dad.y = j;
+	  dad.y++;
+	  dad.x++;
+	  validSpot.push_back(dad);
 
-
+	  dad.x = i; dad.y = j;
+	  dad.y++;
+	  dad.x--;
+	  validSpot.push_back(dad);
+	  
+	  dad.x = i; dad.y = j;
+	  dad.y--;
+	  dad.x--;
+	  validSpot.push_back(dad);
+	  
+	  dad.x = i; dad.y = j;
+	  dad.y--;
+	  dad.x++;
+	  validSpot.push_back(dad);
 	}
-
-    
 
 
   return validSpot; 
