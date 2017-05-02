@@ -69,22 +69,17 @@ vector<coord> NKing::validSLoc(Chess* c)
   return validSpot; 
 }
 
-bool NKing::isValid(vector<coord> validSLoc, vector<coord> clickedOn, Chess* c)
+bool NKing::isValid(vector<coord> validSLoc, coord click, Chess* c)
 {
 
-  int count = 0; 
-  for(unsigned int i = 0; i < clickedOn.size(); ++i){
-    for(unsigned int j = 0; j < validSLoc.size(); ++j){
-      if(clickedOn[i] == validSLoc[j])
-	++count; 
-    }
+  click.x = click.x/64;
+  click.y = click.y/64;
+  for(unsigned int j = 0; j < validSLoc.size(); ++j){
+    if(click == validSLoc[j])
+      return true; 
   }
 
-
-  if(count <= 3 && count != 0)
-    return true; 
-  else 
-    return false; 
+  return false; 
 }
 
 string NKing::processClicks(vector<coord> clickedOn, Chess* c)
@@ -104,17 +99,23 @@ string NKing::processClicks(vector<coord> clickedOn, Chess* c)
       return "ERROR";
 
   vector<coord> tmp(validSLoc(c));  
-  if(isValid(tmp, clickedOn, c))
+  int count = 0;
+  if(isValid(tmp, clickedOn[0], c))
   {
-    ss.str(""); 
-    ss << "MOVE " << getNum() << " " << getPos().x << getPos().y << " ~"; 
-    for(unsigned int i = 1; i < clickedOn.size(); ++i){
-      ss << "PLAC Npawn " << " " << clickedOn[i].x/64 << " " << clickedOn[i].y/64 << " " << getTeam()-1 << " ~"; 
+    count++;
+    if(isValid(tmp, clickedOn[1], c))
+    {
+      count++;
+      if(isValid(tmp,clickedOn[2],c))
+	count++;
     }
-    return ss.str(); 
   }
-  else
-    return "DEFAULT"; 
+  ss.str(""); 
+  ss << "MOVE " << getNum() << " " << getPos().x << getPos().y << " ~"; 
+  for(int i = 0; i < count; ++i){
+    ss << "PLAC Npawn " << " " << clickedOn[i].x/64 << " " << clickedOn[i].y/64 << " " << getTeam()-1 << " ~"; 
+  }
+  return ss.str(); 
 
 
   return "DEFAULT"; 
