@@ -14,8 +14,14 @@ void WPawn::wurmSpots(vector<coord> &spots, Chess* c)
     for(int j=0;j<14;j++){
       if(c->terrain[i][j] == 1)
       {
-	vector<coord> newstuff = Pawn::validSpots(c);
+	Piece* dummy = new Pawn(i*64,j*64,getNum(),getdir());
+	dummy->setTeam(getTeam()-1);
+	cerr << "My team:" << getTeam();
+	cerr << "Dummy team:" << dummy->getTeam()-1;
+	vector<coord> newstuff = dummy->validSpots(c);
+	captureMap.insert(dummy->captureMap.begin(), dummy->captureMap.end());
 	spots.insert(spots.end(), newstuff.begin(), newstuff.end());
+	delete dummy;
       }
     }
 

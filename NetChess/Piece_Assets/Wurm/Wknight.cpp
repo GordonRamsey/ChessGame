@@ -17,6 +17,7 @@ string WKnight::checkAdjacent(coord spot, Chess* c)
   
   //Check North
   coord tmp = spot; ss.str("");
+  tmp.y--;
   if(c->board[tmp.x][tmp.y] != NULL)
   {
     //Check behind it
@@ -30,6 +31,7 @@ string WKnight::checkAdjacent(coord spot, Chess* c)
 
   //Check South
    tmp = spot; ss.str("");
+   tmp.y++;
   if(c->board[tmp.x][tmp.y] != NULL)
   {
     //Check behind it
@@ -42,6 +44,7 @@ string WKnight::checkAdjacent(coord spot, Chess* c)
   }
   //Check East
    tmp = spot; ss.str("");
+   tmp.x++;
   if(c->board[tmp.x][tmp.y] != NULL)
   {
     //Check behind it
@@ -54,6 +57,7 @@ string WKnight::checkAdjacent(coord spot, Chess* c)
   }
   //Check West
    tmp = spot; ss.str("");
+   tmp.x--;
   if(c->board[tmp.x][tmp.y] != NULL)
   {
     //Check behind it
@@ -75,8 +79,14 @@ void WKnight::wurmSpots(vector<coord> &spots, Chess* c)
     for(int j=0;j<14;j++){
       if(c->terrain[i][j] == 1)
       {
-	vector<coord> newstuff = Knight::validSpots(c);
+	Piece* dummy = new Knight(i*64,j*64,getNum());
+	dummy->setTeam(getTeam()-1);
+	cerr << "My team:" << getTeam();
+	cerr << "Dummy team:" << dummy->getTeam()-1;
+	vector<coord> newstuff = dummy->validSpots(c);
+	captureMap.insert(dummy->captureMap.begin(), dummy->captureMap.end());
 	spots.insert(spots.end(), newstuff.begin(), newstuff.end());
+	delete dummy;
       }
     }
 
@@ -86,11 +96,12 @@ string WKnight::Move(coord newpos)
 {
   if(m_level)
   {
-    stringstream ss;
-    ss.str("");
+    
     string result = checkAdjacent(newpos,priv_c);
-    ss << result;
-    return ss.str();
+    if(result == "")
+      return "DEFAULT";
+    else
+      return result;
   }
   else
     return "DEFAULT";
@@ -100,7 +111,7 @@ string WKnight::Move(coord newpos)
 vector<coord> WKnight::validSpots(Chess* c)
 {
   priv_c = c;
-  
+
   if(!m_level)
     return Knight::validSpots(c);
 
@@ -326,8 +337,8 @@ vector<coord> WKnight::validSpots(Chess* c)
     }
     else
     {
-	if(c->terrain[seek.x][seek.y] == 1)
-	  wurmSpots(spots,c);
+      if(c->terrain[seek.x][seek.y] == 1)
+	wurmSpots(spots,c);
       spots.push_back(seek);
     }
   }

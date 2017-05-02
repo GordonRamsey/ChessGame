@@ -2,7 +2,7 @@
 
 WBishop::WBishop(int x, int y, int it) : Bishop(x, y, it)
 {
-	debug_name = "Wbishop";
+  debug_name = "Wbishop";
 }
 
 WBishop::~WBishop()
@@ -13,8 +13,8 @@ string WBishop::Move(coord newpos)
   if(m_level)
   {
     stringstream ss;
-    ss << "PLAC Tunnel " << newpos.x << " " << newpos.y << " -1 ~";
-    ss << "PLAC Tunnel " << getSpot().x << " " << getSpot().y << " -1 ~";
+    ss << "PLAC Tunnel " << newpos.x << " " << newpos.y << " " << getTeam() << " ~";
+    ss << "PLAC Tunnel " << getSpot().x << " " << getSpot().y << " " << getTeam() << " ~";
     return ss.str();  
   }
   else
@@ -28,8 +28,14 @@ void WBishop::wurmSpots(vector<coord> &spots, Chess* c)
     for(int j=0;j<14;j++){
       if(c->terrain[i][j] == 1)
       {
-	vector<coord> newstuff = Bishop::validSpots(c);
+	Piece* dummy = new Bishop(i*64,j*64,getNum());
+	dummy->setTeam(getTeam()-1);
+	cerr << "My team:" << getTeam();
+	cerr << "Dummy team:" << dummy->getTeam()-1;
+	vector<coord> newstuff = dummy->validSpots(c);
+	captureMap.insert(dummy->captureMap.begin(), dummy->captureMap.end());
 	spots.insert(spots.end(), newstuff.begin(), newstuff.end());
+	delete dummy;
       }
     }
 
@@ -63,7 +69,7 @@ vector<coord> WBishop:: validSpots(Chess* c)
 		break;
     }
     if(c->terrain[seek.x][seek.y] == 1)
-      wurmSpots(spots,c);
+      wurmSpots(spots, c);
     spots.push_back(seek);
   }
 
@@ -88,7 +94,7 @@ vector<coord> WBishop:: validSpots(Chess* c)
 	break;
     }
     if(c->terrain[seek.x][seek.y] == 1)
-      wurmSpots(spots,c);
+      wurmSpots(spots, c);
     spots.push_back(seek);
   }
 
@@ -113,7 +119,7 @@ vector<coord> WBishop:: validSpots(Chess* c)
 	break;
     }
     if(c->terrain[seek.x][seek.y] == 1)
-      wurmSpots(spots,c);
+      wurmSpots(spots, c);
     spots.push_back(seek);
   }
 
@@ -138,7 +144,7 @@ vector<coord> WBishop:: validSpots(Chess* c)
 	break;
     }
     if(c->terrain[seek.x][seek.y] == 1)
-      wurmSpots(spots,c);
+      wurmSpots(spots, c);
     spots.push_back(seek);
   }
   return spots;

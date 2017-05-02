@@ -895,8 +895,9 @@ void pieceSpawn(string name, int x, int y, int team)
   }
   else if(name == "Tunnel")
   {
-    c->terrain[coordx][coordy] = 1;
-    c->it--;
+    c->terrain[x][y] = 1;
+    cerr << c->terrain[x][y] << endl;
+    return;
   }
   else if(name == "")
   {
@@ -1706,6 +1707,13 @@ int main ( int argc, char* argv[] )
     for(unsigned int i=lastMove.size()-2;i<lastMove.size();i++){
       apply_surface(lastMove[i].x*64, lastMove[i].y*64, highlight, screen, &clips[2]);
     }
+    
+    //Draw terrain
+    for(int i=0;i<14;i++)
+      for(int j=0;j<14;j++)
+	if(c->terrain[i][j] == 1)
+	  apply_surface(i*64, j*64, highlight, screen, &clips[4]);
+
 
     //Show() pieces
     for(unsigned int i=0;i<pieces.size();i++)

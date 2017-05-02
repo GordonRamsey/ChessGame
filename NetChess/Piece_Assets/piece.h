@@ -27,7 +27,7 @@ class Piece {
 	bool rock = false;
     
     public:
-    bool undead = false;         
+	bool undead = false;         
 	bool m_level = false;
     Piece(int x, int y, int num); //Constructor
     ~Piece();//Deconstructor

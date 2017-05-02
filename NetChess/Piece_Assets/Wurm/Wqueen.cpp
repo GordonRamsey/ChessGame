@@ -25,7 +25,7 @@ string WQueen::processClicks(vector<coord> clickedOn, Chess* c)
   if(c->board[x][y] != NULL)
     return "ERROR";
 
-  ss << "PLAC Tunnel " << x << " " << y << " -1 ~";
+  ss << "PLAC Tunnel " << x << " " << y << " " << getTeam() << " ~";
   return ss.str();
 }
 
@@ -35,8 +35,17 @@ void WQueen::wurmSpots(vector<coord> &spots, Chess* c)
     for(int j=0;j<14;j++){
       if(c->terrain[i][j] == 1)
       {
-	vector<coord> newstuff = Queen::validSpots(c);
+
+	Piece* dummy = new Queen(i*64,j*64,getNum());
+	dummy->setTeam(getTeam()-1);
+	cerr << "My team:" << getTeam();
+	cerr << "Dummy team:" << dummy->getTeam()-1;
+	vector<coord> newstuff = dummy->validSpots(c);
+	captureMap.insert(dummy->captureMap.begin(), dummy->captureMap.end());
 	spots.insert(spots.end(), newstuff.begin(), newstuff.end());
+	delete dummy;
+
+
       }
     }
 
@@ -44,8 +53,8 @@ void WQueen::wurmSpots(vector<coord> &spots, Chess* c)
 
 vector<coord> WQueen::validSpots(Chess* c)
 {
-  
- //c->board
+
+  //c->board
   coord seek;
   vector<coord> spots;
   stringstream ss;
@@ -61,9 +70,9 @@ vector<coord> WQueen::validSpots(Chess* c)
       break;
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
-        spots.push_back(seek);
+	spots.push_back(seek);
 	ss.str("");
-        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 	captureMap[seek] = ss.str();
 
 	break;
@@ -89,13 +98,13 @@ vector<coord> WQueen::validSpots(Chess* c)
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
 	spots.push_back(seek);
 	ss.str("");
-        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 	captureMap[seek] = ss.str();
-        
+
 	break;
       }
       else
-	    break;
+	break;
     }
     if(c->terrain[seek.x][seek.y] == 1)
       wurmSpots(spots,c);
@@ -112,11 +121,11 @@ vector<coord> WQueen::validSpots(Chess* c)
       break;
     if(c->board[seek.x][seek.y] != NULL){
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){
-        spots.push_back(seek);
+	spots.push_back(seek);
 	ss.str("");
-        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 	captureMap[seek] = ss.str();
-        break;
+	break;
       }
       else
 	break;

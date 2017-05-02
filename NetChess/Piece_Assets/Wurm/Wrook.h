@@ -3,8 +3,6 @@
 #include "../rook.h"
 class WRook : public Rook
 {
-  private:
-    string debug_name;
   public:
     WRook(int x, int y, int it);
     ~WRook();

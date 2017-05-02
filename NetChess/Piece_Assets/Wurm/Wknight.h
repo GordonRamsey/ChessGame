@@ -4,7 +4,6 @@
 class WKnight : public Knight
 {
   private:
-    string debug_name;
     Chess* priv_c;
   public:
     WKnight(int x, int y, int it);

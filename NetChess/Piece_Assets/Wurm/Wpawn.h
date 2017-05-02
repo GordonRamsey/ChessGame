@@ -3,8 +3,6 @@
 #include "../pawn.h"
 class WPawn : public Pawn
 {
-  private:
-    string debug_name;
   public:
     WPawn(int x, int y, int it, char dir);
     ~WPawn();

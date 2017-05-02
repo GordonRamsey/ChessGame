@@ -12,6 +12,7 @@ class Pawn : public Piece
     ~Pawn();
     string Move(coord newpos);
     vector<coord> validSpots(Chess* c);
+    char getdir(){ return dir; }
     virtual string processClicks(vector<coord> clickedOn, Chess* c) 
       { return "DEFAULT"; }
 };

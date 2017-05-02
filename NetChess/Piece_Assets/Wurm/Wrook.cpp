@@ -13,8 +13,8 @@ string WRook::Move(coord newpos)
 	if(m_level)
 	{
 	  stringstream ss;
-	  ss << "PLAC Tunnel " << newpos.x << " " << newpos.y << " -1 ~";
-	  ss << "PLAC Tunnel " << getSpot().x << " " << getSpot().y << " -1 ~";
+	  ss << "PLAC Tunnel " << newpos.x << " " << newpos.y << " " << getTeam() << " ~";
+	  ss << "PLAC Tunnel " << getSpot().x << " " << getSpot().y << " " << getTeam() << " ~";
 	  return ss.str();
 	}
 	else
@@ -27,16 +27,24 @@ void WRook::wurmSpots(vector<coord> &spots, Chess* c)
     for(int j=0;j<14;j++){
       if(c->terrain[i][j] == 1)
       {
-	vector<coord> newstuff = Rook::validSpots(c);
+	Piece* dummy = new Rook(i*64,j*64,getNum());
+	dummy->setTeam(getTeam()-1);
+	cerr << "My team:" << getTeam();
+	cerr << "Dummy team:" << dummy->getTeam()-1;
+	vector<coord> newstuff = dummy->validSpots(c);
+	captureMap.insert(dummy->captureMap.begin(), dummy->captureMap.end());
 	spots.insert(spots.end(), newstuff.begin(), newstuff.end());
+	delete dummy;
+
       }
+
     }
 
 }
 
 vector<coord> WRook::validSpots(Chess* c)
 {
- //c->board
+  //c->board
   stringstream ss;
   coord seek;
   vector<coord> spots;
@@ -54,7 +62,7 @@ vector<coord> WRook::validSpots(Chess* c)
       {
 	spots.push_back(seek);
 	ss.str("");
-        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 	captureMap[seek] = ss.str();
 	break;
       }
@@ -80,7 +88,7 @@ vector<coord> WRook::validSpots(Chess* c)
       {
 	spots.push_back(seek);
 	ss.str("");
-        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 	captureMap[seek] = ss.str();
 	break;
       }
@@ -106,7 +114,7 @@ vector<coord> WRook::validSpots(Chess* c)
       {
 	spots.push_back(seek);
 	ss.str("");
-        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 	captureMap[seek] = ss.str();
 	break;
       }

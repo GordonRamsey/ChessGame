@@ -36,30 +36,46 @@ string WKing::createCrater(coord spot, Chess* c)
   stringstream ss;
 
   //Check North:
-  if(c->board[spot.x][spot.y+1] != NULL)
+  if(c->board[spot.x][spot.y+1] != NULL && y < 14)
+  {   
     ss << "REMV " << c->board[spot.x][spot.y+1]->getNum() << " ~";
-  if(c->board[spot.x][spot.y-1] != NULL)
+    ss << "PLAC Tunnel " << getSpot().x << " " << getSpot().y+1 << " -1 ~";	
+  }
+  if(c->board[spot.x][spot.y-1] != NULL && y > -1)
+  {
     ss << "REMV " << c->board[spot.x][spot.y-1]->getNum() << " ~";
-  if(c->board[spot.x+1][spot.y] != NULL)
+    ss << "PLAC Tunnel " << getSpot().x << " " << getSpot().y-1 << " -1 ~";	
+  }
+  if(c->board[spot.x+1][spot.y] != NULL && x < 14)
+  {
     ss << "REMV " << c->board[spot.x+1][spot.y]->getNum() << " ~";
-  if(c->board[spot.x+1][spot.y+1] != NULL)
+    ss << "PLAC Tunnel " << getSpot().x+1 << " " << getSpot().y << " -1 ~";	
+  }
+  if(c->board[spot.x+1][spot.y+1] != NULL && x < 14 && y < 14)
+  {
     ss << "REMV " << c->board[spot.x+1][spot.y+1]->getNum() << " ~";
-  if(c->board[spot.x+1][spot.y-1] != NULL)
+    ss << "PLAC Tunnel " << getSpot().x+1 << " " << getSpot().y+1 << " -1 ~";	
+  }
+  if(c->board[spot.x+1][spot.y-1] != NULL && x < 14 && y > -1)
+  {
     ss << "REMV " << c->board[spot.x+1][spot.y-1]->getNum() << " ~";
-  if(c->board[spot.x-1][spot.y] != NULL)
+    ss << "PLAC Tunnel " << getSpot().x+1 << " " << getSpot().y-1 << " -1 ~";	
+  }
+  if(c->board[spot.x-1][spot.y] != NULL && x > -1)
+  {
     ss << "REMV " << c->board[spot.x-1][spot.y]->getNum() << " ~";
-  if(c->board[spot.x-1][spot.y+1] != NULL)
+    ss << "PLAC Tunnel " << getSpot().x-1 << " " << getSpot().y << " -1 ~";	
+  }
+  if(c->board[spot.x-1][spot.y+1] != NULL && x > -1 && y < 14)
+  {
     ss << "REMV " << c->board[spot.x-1][spot.y+1]->getNum() << " ~";
-  if(c->board[spot.x-1][spot.y-1] != NULL)
+    ss << "PLAC Tunnel " << getSpot().x-1 << " " << getSpot().y+1 << " -1 ~";	
+  }
+  if(c->board[spot.x-1][spot.y-1] != NULL && x > -1 && y > -1)
+  {
     ss << "REMV " << c->board[spot.x-1][spot.y-1]->getNum() << " ~";
-  ss << "PLAC Tunnel " << getSpot().x << " " << getSpot().y+1 << " -1 ~";	
-  ss << "PLAC Tunnel " << getSpot().x << " " << getSpot().y-1 << " -1 ~";	
-  ss << "PLAC Tunnel " << getSpot().x+1 << " " << getSpot().y << " -1 ~";	
-  ss << "PLAC Tunnel " << getSpot().x+1 << " " << getSpot().y+1 << " -1 ~";	
-  ss << "PLAC Tunnel " << getSpot().x+1 << " " << getSpot().y-1 << " -1 ~";	
-  ss << "PLAC Tunnel " << getSpot().x-1 << " " << getSpot().y << " -1 ~";	
-  ss << "PLAC Tunnel " << getSpot().x-1 << " " << getSpot().y+1 << " -1 ~";	
-  ss << "PLAC Tunnel " << getSpot().x-1 << " " << getSpot().y-1 << " -1 ~";
+    ss << "PLAC Tunnel " << getSpot().x-1 << " " << getSpot().y-1 << " -1 ~";
+  }
 
   return ss.str();
 
@@ -71,8 +87,17 @@ void WKing::wurmSpots(vector<coord> &spots, Chess* c)
     for(int j=0;j<14;j++){
       if(c->terrain[i][j] == 1)
       {
-	vector<coord> newstuff = King::validSpots(c);
+
+	Piece* dummy = new King(i*64,j*64,getNum());
+	dummy->setTeam(getTeam()-1);
+	cerr << "My team:" << getTeam();
+	cerr << "Dummy team:" << dummy->getTeam()-1;
+	vector<coord> newstuff = dummy->validSpots(c);
+	captureMap.insert(dummy->captureMap.begin(), dummy->captureMap.end());
 	spots.insert(spots.end(), newstuff.begin(), newstuff.end());
+	delete dummy;
+
+
       }
     }
 
@@ -80,7 +105,7 @@ void WKing::wurmSpots(vector<coord> &spots, Chess* c)
 
 vector<coord> WKing::validSpots(Chess* c)
 {
- //c->board
+  //c->board
   vector<coord> spots;
   stringstream ss;
   //North
@@ -92,7 +117,7 @@ vector<coord> WKing::validSpots(Chess* c)
       if(c->board[seek.x][seek.y]->getTeam() != getTeam()){	
 	spots.push_back(seek);
 	ss.str("");
-        ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
+	ss << "CAPT " << getNum() << " " << c->board[seek.x][seek.y]->getNum() << " ~";
 	captureMap[seek] = ss.str();
       }
     }
