@@ -91,7 +91,7 @@ string NBishop::processClicks(vector<coord> clickedOn, Chess* c)
     spotcheck.x = clickedOn[1].x/64;
     spotcheck.y = clickedOn[1].y/64;
     
-    if(!checkSpawn(spot, c))
+    if(!checkSpawn(spotcheck, c))
       return "ERROR";
     
     ss.str(""); 
