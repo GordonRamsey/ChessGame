@@ -1509,6 +1509,7 @@ int main ( int argc, char* argv[] )
 
 	      if(result == "ERROR"){
 		cerr << "[ERROR] ERROR return, something was clicked incorrectly" << endl;
+		addChat("ERROR: Clicks");
 		continue;
 	      }
 	      if(result == "DEFAULT"){
